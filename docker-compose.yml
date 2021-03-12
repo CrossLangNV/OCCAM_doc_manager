@@ -12,6 +12,16 @@ services:
     ports:
       - "8000:8000"
 
+  react:
+    build: ./frontend
+    volumes:
+    - ./frontend:/frontend
+    - /frontend/node_modules
+    ports:
+      - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
 
   # Not working yet!! Fix later for production
   django_nginx:

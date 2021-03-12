@@ -15,7 +15,7 @@ function start_development() {
 function start_production() {
     # use gunicorn for production server here
     manage_app &
-    gunicorn leadmanager.wsgi -w 4 -b 0.0.0.0:8000
+    gunicorn docmanager.wsgi -w 4 -b 0.0.0.0:8000
 }
 
 if [ ${DJANGO_DEBUG} == "True" ]; then
