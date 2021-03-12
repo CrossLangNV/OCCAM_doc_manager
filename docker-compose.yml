@@ -1,0 +1,21 @@
+version: '3'
+services:
+  django:
+    build: ./backend
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+    - ./backend:/backend
+    command: ./start.sh
+    restart:
+      always
+    ports:
+      - "8000:8000"
+
+
+  # Not working yet!! Fix later for production
+  django_nginx:
+    restart: always
+    build: ./backend/nginx
+    depends_on:
+      - django
