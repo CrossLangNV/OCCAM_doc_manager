@@ -10,6 +10,8 @@ django = "*"
 djangorestframework = "*"
 django-rest-knox = "*"
 gunicorn = "*"
+coreapi = "*"
+djangorestframework-simplejwt = "*"
 
 [requires]
 python_version = "3.9"
