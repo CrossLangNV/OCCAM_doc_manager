@@ -9,11 +9,11 @@ from documents.serializers import DocumentSerializer, ImageSerializer
 
 class DocumentViewSet(viewsets.ModelViewSet):
     queryset = Document.objects.all()
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     serializer_class = DocumentSerializer
 
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     serializer_class = ImageSerializer
