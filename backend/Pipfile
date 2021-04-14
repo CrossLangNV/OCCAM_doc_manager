@@ -13,6 +13,7 @@ gunicorn = "*"
 coreapi = "*"
 djangorestframework-simplejwt = "*"
 pyyaml = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.9"
