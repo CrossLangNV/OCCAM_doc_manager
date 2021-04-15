@@ -32,7 +32,7 @@ class GetAllDocumentsTest(TestCase):
         documents = Document.objects.all()
         serializer = DocumentSerializer(documents, many=True)
 
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data.get('results'), serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -53,7 +53,7 @@ class GetAllImagesTest(TestCase):
         images = Image.objects.all()
         serializer = ImageSerializer(images, many=True)
 
-        self.assertEqual(response.data, serializer.data)
+        self.assertEqual(response.data.get('results'), serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 

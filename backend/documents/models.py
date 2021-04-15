@@ -1,5 +1,3 @@
-from django.db import models
-
 import uuid
 
 from django.db import models
@@ -31,6 +29,9 @@ class Document(models.Model):
 
     def __str__(self):
         return self.name
+
+    def __repr__(self):
+        return self.name + ' is added.'
 
 
 class Image(models.Model):
