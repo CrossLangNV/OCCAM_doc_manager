@@ -1,4 +1,4 @@
-from documents.models import Document, Image
+from documents.models import Document, Page
 
 
 def create():
@@ -11,7 +11,7 @@ def create():
     width = 10
     height = 20
 
-    Image.objects.create(
+    Page.objects.create(
         filename=name,
         path=path,
         width=width,

@@ -1,3 +1,5 @@
+import {DocumentActionTypes} from "../constants/document-action-types";
+
 const DefaultState = {
     loading: false,
     data: [],
@@ -8,21 +10,21 @@ const DefaultState = {
 
 const DocumentListReducer = (state = DefaultState, action) => {
     switch (action.type) {
-        case 'DOCUMENT_LIST_LOADING':
+        case DocumentActionTypes.DOCUMENT_LIST_LOADING:
             return {
                 ...state,
                 loading: true,
                 errorMsg: "",
                 count: 0
             }
-        case 'DOCUMENT_LIST_FAIL':
+        case DocumentActionTypes.DOCUMENT_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
                 errorMsg: "Unable to fetch document",
                 count: 0
             }
-        case 'DOCUMENT_LIST_SUCCESS':
+        case DocumentActionTypes.DOCUMENT_LIST_SUCCESS:
             return {
                 ...state,
                 loading: false,

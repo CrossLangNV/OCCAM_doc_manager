@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from documents.models import Document, Image
+from documents.models import Document, Page
 
 admin.site.register(Document)
-admin.site.register(Image)
+admin.site.register(Page)

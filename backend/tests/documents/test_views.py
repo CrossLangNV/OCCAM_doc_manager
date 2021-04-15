@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from rest_framework import status
 
-from documents.models import Document, Image
+from documents.models import Document, Page
 from documents.serializers import DocumentSerializer, ImageSerializer
-from tests.backend.documents.create_database_mock import create
+from backend.tests.documents.create_database_mock import create
 
 
 class GetAllDocumentsTest(TestCase):
@@ -50,7 +50,7 @@ class GetAllImagesTest(TestCase):
         url = '/documents/api/images/'
         response = self.client_object.get(url)
 
-        images = Image.objects.all()
+        images = Page.objects.all()
         serializer = ImageSerializer(images, many=True)
 
         self.assertEqual(response.data.get('results'), serializer.data)

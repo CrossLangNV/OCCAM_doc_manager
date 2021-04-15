@@ -1,3 +1,5 @@
+import {DocumentActionTypes} from "../constants/document-action-types";
+
 const DefaultState = {
     loading: false,
     data: {},
@@ -6,19 +8,19 @@ const DefaultState = {
 
 const DocumentMultipleReducer = (state = DefaultState, action) => {
     switch (action.type) {
-        case 'DOCUMENT_MULTIPLE_LOADING':
+        case DocumentActionTypes.DOCUMENT_MULTIPLE_LOADING:
             return {
                 ...state,
                 loading: true,
                 errorMsg: ""
             }
-        case 'DOCUMENT_MULTIPLE_FAIL':
+        case DocumentActionTypes.DOCUMENT_MULTIPLE_FAIL:
             return {
                 ...state,
                 loading: false,
                 errorMsg: "Unable to find document"
             }
-        case 'DOCUMENT_MULTIPLE_SUCCESS':
+        case DocumentActionTypes.DOCUMENT_MULTIPLE_SUCCESS:
             return {
                 ...state,
                 loading: false,

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from documents.models import Document, Image
+from documents.models import Document, Page
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -10,5 +10,5 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
+        model = Page
         fields = "__all__"

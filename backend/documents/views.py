@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
-from documents.models import Document, Image
+from documents.models import Document, Page
 from documents.serializers import DocumentSerializer, ImageSerializer
 
 
@@ -21,7 +21,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
 
 class ImageViewSet(viewsets.ModelViewSet):
-    queryset = Image.objects.all()
+    queryset = Page.objects.all()
     pagination_class = SmallResultsSetPagination
 
     # TODO: Remove AllowAny

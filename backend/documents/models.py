@@ -34,7 +34,7 @@ class Document(models.Model):
         return self.name + ' is added.'
 
 
-class Image(models.Model):
+class Page(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     filename = models.CharField(max_length=200)
     path = models.TextField()
@@ -44,8 +44,8 @@ class Image(models.Model):
     image_hash = models.TextField()
 
     document = models.ForeignKey(
-        "Document",
-        related_name="image_document",
+        Document,
+        related_name="document_page",
         on_delete=models.CASCADE,
     )
 

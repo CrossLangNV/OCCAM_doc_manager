@@ -2,7 +2,7 @@ from django.test import TestCase
 
 # The following import gives an error:
 # from backend.documents.models import Document
-from documents.models import Document, Image
+from documents.models import Document, Page
 
 
 class DocumentTest(TestCase):
@@ -52,7 +52,7 @@ class ImageTest(TestCase):
         self.width = 10
         self.height = 20
 
-        Image.objects.create(
+        Page.objects.create(
             filename=self.name,
             path=self.path,
             width=self.width,
@@ -61,11 +61,11 @@ class ImageTest(TestCase):
         )
 
     def test_image_content(self):
-        image_test = Image.objects.get(filename=self.name)
+        image_test = Page.objects.get(filename=self.name)
 
         self.assertEqual(image_test.path, self.path)
 
     def test_string_representation(self):
-        image_test = Image.objects.get(filename=self.name)
+        image_test = Page.objects.get(filename=self.name)
 
         self.assertEqual(str(image_test), self.name)
