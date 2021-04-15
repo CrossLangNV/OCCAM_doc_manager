@@ -13,7 +13,8 @@ export const GetDocumentList = (rows, page) => async dispatch => {
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_LIST_SUCCESS,
-            payload: res.data
+            payload: res.data,
+            rows: rows
         });
     } catch (e) {
         dispatch({

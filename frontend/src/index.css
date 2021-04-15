@@ -1,3 +1,66 @@
 .space {
   padding: 20px;
 }
+
+.pagination {
+  width: 500px;
+  display: flex;
+  margin: auto;
+  list-style: none;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.pagination > li {
+  margin-left: 10px;
+}
+
+.pagination > li > a {
+  padding: 10px;
+}
+
+.pagination > .active > a {
+  background-color: #ffffff;
+  border: solid 1px #b4b4b4;
+  padding: 10px;
+  border-radius: 3px;
+  color: #159cdb !important;
+}
+
+
+/*.pagination {*/
+/*  width: 500px;*/
+/*  display: flex;*/
+/*  margin: auto;*/
+/*  list-style: none;*/
+/*  outline: none;*/
+/*  padding: 10px;*/
+/*  border-radius: 5px;*/
+/*}*/
+/*.pagination > .active > a{*/
+/*  background-color: #47ccde ;*/
+/*  border-color: #47ccde ;*/
+/*  color: #fff;*/
+/*  border-radius: 5px;*/
+/*}*/
+/*.pagination > li > a{*/
+/*  border: 1px solid #47ccde ;*/
+/*  padding: 5px 10px;*/
+/*  outline: none;*/
+/*  cursor: pointer;*/
+/*  border-radius: 5px;*/
+/*}*/
+/*.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus{*/
+/*  background-color: #47ccde ;*/
+/*  border-color: #47ccde;*/
+/*  border-radius: 5px;*/
+/*}*/
+/*.pagination > li > a, .pagination > li > span{*/
+/*  color: #47ccde;*/
+/*  border-radius: 5px;*/
+/*}*/
+/*.pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span{*/
+/*  border-radius: 5px;*/
+/*}*/

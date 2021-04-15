@@ -3,7 +3,8 @@ import _ from 'lodash';
 import {GetDocumentList} from "../actions/documentActions";
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Table} from "react-bootstrap";
+import {Button, Pagination, Table} from "react-bootstrap";
+import ReactPagiate from "react-paginate"
 
 const DocumentList = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const DocumentList = () => {
     }
 
     const renderDocumentsTable = () => {
+        if (documentList.loading) {
+            return <p>loading...</p>
+        }
+
         if (!_.isEmpty(documentList.data)) {
             return (
                 <>
@@ -34,9 +39,7 @@ const DocumentList = () => {
             )
         }
 
-        if (documentList.loading) {
-            return <p>loading...</p>
-        }
+
 
         if (documentList.errorMsg !== "") {
             return <p> {documentList.errorMsg} </p>
@@ -63,9 +66,19 @@ const DocumentList = () => {
                 </tbody>
             </Table>
 
-
+            {!_.isEmpty(documentList.data) && (
+                <ReactPagiate
+                    pageCount={Math.ceil(documentList.count / documentList.rows)}
+                    pageRangeDisplayed={2}
+                    pageMarginDisplayed={1}
+                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1)}
+                    containerClassName={"pagination"}
+                    activeClassName={'active'}
+                    breakClassName={'page-item'}
+                />
+            )}
         </div>
     )
-}
+};
 
 export default DocumentList

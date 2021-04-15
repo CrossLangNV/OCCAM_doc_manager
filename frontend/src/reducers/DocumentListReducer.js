@@ -4,7 +4,8 @@ const DefaultState = {
     loading: false,
     data: [],
     errorMsg: "",
-    count: 0
+    count: 0,
+    rows: 0,
 
 };
 
@@ -15,14 +16,16 @@ const DocumentListReducer = (state = DefaultState, action) => {
                 ...state,
                 loading: true,
                 errorMsg: "",
-                count: 0
+                count: 0,
+                rows: 0
             }
         case DocumentActionTypes.DOCUMENT_LIST_FAIL:
             return {
                 ...state,
                 loading: false,
                 errorMsg: "Unable to fetch document",
-                count: 0
+                count: 0,
+                rows: 0
             }
         case DocumentActionTypes.DOCUMENT_LIST_SUCCESS:
             return {
@@ -30,7 +33,8 @@ const DocumentListReducer = (state = DefaultState, action) => {
                 loading: false,
                 data: action.payload.results,
                 errorMsg: "",
-                count: action.payload.count
+                count: action.payload.count,
+                rows: action.rows
 
             }
 

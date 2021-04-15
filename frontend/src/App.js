@@ -3,6 +3,7 @@ import DocumentList from "./containers/DocumentList";
 import Document from "./containers/Document";
 import {Button, Navbar} from "react-bootstrap";
 import Header from "./containers/Header";
+import DocumentAdd from "./containers/DocumentAdd";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                     <Switch>
                         <Route path={"/"} exact component={DocumentList}/>
                         <Route path={"/document/:documentId"} exact component={Document}/>
+                        <Route path={"/document-add"} exact component={DocumentAdd}/>
                     </Switch>
                 </div>
             </div>
