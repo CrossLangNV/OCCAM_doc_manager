@@ -5,6 +5,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {Button, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
+import {Skeleton} from "primereact/skeleton";
 
 const DocumentList = () => {
     const dispatch = useDispatch();
@@ -18,13 +19,7 @@ const DocumentList = () => {
         dispatch(GetDocumentList(rows, page))
     }
 
-    const renderDocumentsTable = () => {
-        if (documentList.loading) {
-            return <tr>
-                <td>loading...</td>
-            </tr>
-        }
-
+    const loadTableRows = () => {
         if (!_.isEmpty(documentList.data)) {
             return (
                 <>
@@ -63,10 +58,11 @@ const DocumentList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {renderDocumentsTable()}
+                    {loadTableRows()}
                 </tbody>
             </Table>
 
+            {/* Pagination for the table */}
             {!_.isEmpty(documentList.data) && (
                 <ReactPagiate
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
@@ -78,6 +74,7 @@ const DocumentList = () => {
                     breakClassName={'page-item'}
                 />
             )}
+
         </div>
     )
 };

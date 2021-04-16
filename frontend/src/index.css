@@ -19,11 +19,12 @@
 
 .pagination > li > a {
   padding: 10px;
+  outline: none;
 }
 
 .pagination > .active > a {
   background-color: #ffffff;
-  border: solid 1px #b4b4b4;
+  /*border: solid 1px #b4b4b4;*/
   padding: 10px;
   border-radius: 3px;
   color: #159cdb !important;
