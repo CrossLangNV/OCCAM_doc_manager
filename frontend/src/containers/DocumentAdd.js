@@ -4,7 +4,7 @@ import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 
 
 const DocumentAdd = (props) => {
@@ -24,20 +24,33 @@ const DocumentAdd = (props) => {
 
     const footer =
         <span>
-            <Button onClick={handleSubmit} label="Save" icon="pi pi-check" style={{marginRight: '.25em'}}/>
-            <Button label="Cancel" icon="pi pi-times" className="p-button-secondary"/>
+            <Button onClick={handleSubmit}
+                    label="Save"
+                    icon="pi pi-check"
+                    style={{marginRight: '.25em'}}
+                    disabled={!title}
+            />
+            <Button
+                as={Link}
+                to="/"
+                label="Cancel"
+                icon="pi pi-times"
+                className="p-button-secondary"/>
         </span>;
 
     const addDocument = async (title, content) => {
-        const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
-            {
-                name: title,
-                content: content,
-                state: 'New'
-            }).then((res) => {
-            console.log(res);
+        if (title !== "") {
+            const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
+                {
+                    name: title,
+                    content: content,
+                    state: 'New'
+                }).then((res) => {
+                console.log(res);
 
-        });
+            });
+        }
+
     }
 
     return (

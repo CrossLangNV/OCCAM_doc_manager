@@ -1,12 +1,12 @@
 import {Switch, Route, Redirect, NavLink, Link} from 'react-router-dom'
 import DocumentList from "./containers/DocumentList";
 import Document from "./containers/Document";
-import {Button, Navbar} from "react-bootstrap";
 import Header from "./containers/Header";
 import DocumentAdd from "./containers/DocumentAdd";
 import 'primeflex/primeflex.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css'
 
 function App() {
     return (
