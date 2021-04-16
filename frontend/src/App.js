@@ -4,6 +4,9 @@ import Document from "./containers/Document";
 import {Button, Navbar} from "react-bootstrap";
 import Header from "./containers/Header";
 import DocumentAdd from "./containers/DocumentAdd";
+import 'primeflex/primeflex.css';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
 
 function App() {
     return (

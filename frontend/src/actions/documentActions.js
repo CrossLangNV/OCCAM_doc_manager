@@ -43,3 +43,30 @@ export const GetDocument = (id) => async dispatch => {
         });
     }
 }
+
+export const AddDocument = (title, content) => async dispatch => {
+    try {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_ADD_LOADING
+        });
+
+        const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
+            {
+                name: title,
+                content: content,
+                state: 'New'
+            }).then((res) => {
+                console.log(res);
+        });
+
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_ADD_SUCCESS,
+            payload: res.data,
+            documentId: res.data.id
+        });
+    } catch (e) {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_ADD_FAIL
+        });
+    }
+}

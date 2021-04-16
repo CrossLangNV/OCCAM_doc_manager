@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {GetDocumentList} from "../actions/documentActions";
 import React from "react";
 import {Link} from "react-router-dom";
-import {Button, Pagination, Table} from "react-bootstrap";
+import {Button, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 
 const DocumentList = () => {
@@ -20,7 +20,9 @@ const DocumentList = () => {
 
     const renderDocumentsTable = () => {
         if (documentList.loading) {
-            return <p>loading...</p>
+            return <tr>
+                <td>loading...</td>
+            </tr>
         }
 
         if (!_.isEmpty(documentList.data)) {
@@ -39,18 +41,17 @@ const DocumentList = () => {
             )
         }
 
-
-
         if (documentList.errorMsg !== "") {
-            return <p> {documentList.errorMsg} </p>
+            return <tr>
+                <td>{documentList.errorMsg}</td>
+            </tr>
         }
-
-        return <p>Unable to get data</p>
     }
     return (
         <div>
             <Button as={Link} to="/document-add">Add new document</Button>
             <br/><br/>
+
             <Table striped borderless hover>
                 <thead>
                     <tr>
