@@ -51,7 +51,7 @@ const DocumentList = () => {
         <div>
             <Button as={Link} to="/document-add">Add new document</Button>
             <br/><br/>
-            <Table striped bordered hover>
+            <Table striped borderless hover>
                 <thead>
                     <tr>
                         <th width="2rem">Preview</th>
