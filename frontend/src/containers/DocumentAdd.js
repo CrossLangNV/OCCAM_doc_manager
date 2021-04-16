@@ -5,6 +5,7 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {Link, useHistory} from "react-router-dom";
+import {FileUpload} from "primereact/fileupload";
 
 
 const DocumentAdd = (props) => {
@@ -12,6 +13,8 @@ const DocumentAdd = (props) => {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     let history = useHistory();
+
+    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -31,10 +34,9 @@ const DocumentAdd = (props) => {
                     disabled={!title}
             />
             <Button
-                as={Link}
-                to="/"
                 label="Cancel"
                 icon="pi pi-times"
+                onClick={() => history.push("/")}
                 className="p-button-secondary"/>
         </span>;
 
@@ -59,26 +61,42 @@ const DocumentAdd = (props) => {
             <br/>
 
             <Card footer={footer}>
+                <h5>Document information</h5>
                 <span className="p-float-label">
                     <InputText
                         id="title"
                         value={title}
-                        onChange={(e) => setTitle(e.target.value)} />
+                        autoComplete={"off"}
+                        onChange={(e) => setTitle(e.target.value)}/>
                     <label htmlFor="title">Title</label>
                 </span>
 
-                <br/><br/>
+                <br/>
 
                 <span className="p-float-label">
-                <InputTextarea
-                    id="content"
-                    value={content}
-                    rows={5}
-                    cols={30}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-                <label htmlFor="content">Content</label>
-            </span>
+                    <InputTextarea
+                        id="content"
+                        value={content}
+                        rows={5}
+                        cols={30}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                    <label htmlFor="content">Content</label>
+                </span>
+
+                <br/>
+                <h5>Upload pages</h5>
+
+                <div>
+                    <FileUpload
+                        name="demo[]"
+                        url="./upload"
+                        multiple
+                        accept={ACCEPTED_FILE_TYPES}
+                        maxFileSize="1000000"
+                    />
+                </div>
+
 
             </Card>
 

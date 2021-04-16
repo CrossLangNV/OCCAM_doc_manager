@@ -2,14 +2,16 @@ import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {GetDocumentList} from "../actions/documentActions";
 import React from "react";
-import {Link} from "react-router-dom";
-import {Button, Table} from "react-bootstrap";
+import {Link, useHistory} from "react-router-dom";
+import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 import {Skeleton} from "primereact/skeleton";
+import {Button} from "primereact/button";
 
 const DocumentList = () => {
     const dispatch = useDispatch();
     const documentList = useSelector(state => state.documentList);
+    let history = useHistory();
 
     React.useEffect(() => {
         fetchDocuments(5, 1);
@@ -44,7 +46,10 @@ const DocumentList = () => {
     }
     return (
         <div>
-            <Button as={Link} to="/document-add">Add new document</Button>
+            <Button onClick={() => history.push("/document-add")}
+                    label="New document"
+                    icon="pi pi-plus"
+            />
             <br/><br/>
 
             <Table striped borderless hover>

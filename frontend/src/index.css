@@ -23,9 +23,9 @@
 }
 
 .pagination > .active > a {
-  background-color: #ffffff;
+  background-color: white;
   /*border: solid 1px #b4b4b4;*/
   padding: 10px;
   border-radius: 3px;
-  color: #159cdb !important;
+  color: #2196F3 !important;
 }
