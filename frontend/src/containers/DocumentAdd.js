@@ -9,20 +9,25 @@ import {FileUpload} from "primereact/fileupload";
 
 
 const DocumentAdd = (props) => {
+    let history = useHistory();
+    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    let history = useHistory();
 
-    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
-
-    const handleSubmit = (evt) => {
+    const handleSubmit = async (evt) => {
         evt.preventDefault();
-        addDocument(title, content).then(r => {
-            setTitle("");
-            setContent("");
-            history.push("/")
-        })
+
+        if (title !== "") {
+            const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
+                {
+                    name: title,
+                    content: content,
+                    state: 'New'
+                }).then((res) => {
+                    history.push('/document/' + res.data.id)
+            });
+        }
     }
 
     const footer =
@@ -43,21 +48,6 @@ const DocumentAdd = (props) => {
     const pagesUploader = (event) => {
         const files = event.files
         console.log(files)
-    }
-
-    const addDocument = async (title, content) => {
-        if (title !== "") {
-            const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
-                {
-                    name: title,
-                    content: content,
-                    state: 'New'
-                }).then((res) => {
-                console.log(res);
-
-            });
-        }
-
     }
 
     return (
@@ -104,10 +94,7 @@ const DocumentAdd = (props) => {
                         uploadHandler={pagesUploader}
                     />
                 </div>
-
-
             </Card>
-
         </>
     );
 };

@@ -6,6 +6,8 @@ import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 import {Button} from "primereact/button";
+import { Tag } from 'primereact/tag';
+
 
 const DocumentList = () => {
     const dispatch = useDispatch();
@@ -20,6 +22,15 @@ const DocumentList = () => {
         dispatch(GetDocumentList(rows, page))
     }
 
+    const getStateIcon = (state) => {
+        switch (state) {
+            case "OCR completed.":
+                return <Tag value={state} icon="pi pi-check" severity="success"/>
+            default:
+                return <Tag value={state} />
+        }
+    }
+
     const loadTableRows = () => {
         if (!_.isEmpty(documentList.data)) {
             return (
@@ -28,9 +39,11 @@ const DocumentList = () => {
                         return <tr key={item.id}>
                             <td></td>
                             <td><Link to={`/document/${item.id}`}>{item.name}</Link></td>
-                            <td>{item.state}</td>
+                            <td>{getStateIcon(item.state)}</td>
                             <td>{item.created_at}</td>
-                            <td></td>
+                            <td>
+                                <Button label="" icon="pi pi-trash" className="p-button-danger"/>
+                            </td>
                         </tr>
                     })}
                 </>
