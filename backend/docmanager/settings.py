@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'documents',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'minio_storage',
 ]
 
 # Rest Framework
@@ -136,4 +137,23 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+MINIO_STORAGE_ENDPOINT = "minio:9000"
+MINIO_STORAGE_ACCESS_KEY = os.environ["MINIO_ACCESS_KEY"]
+MINIO_STORAGE_SECRET_KEY = os.environ["MINIO_SECRET_KEY"]
+MINIO_STORAGE_USE_HTTPS = os.environ.get("MINIO_HTTPS", False) == "True"
+MINIO_STORAGE_MEDIA_BUCKET_NAME = "local-media"
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = "WRITE_ONLY"
+MINIO_STORAGE_STATIC_BUCKET_NAME = "local-static"
+MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+
+MINIO_STORAGE_MEDIA_URL = os.environ["MINIO_STORAGE_MEDIA_URL"]
+MINIO_STORAGE_STATIC_URL = os.environ["MINIO_STORAGE_STATIC_URL"]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
