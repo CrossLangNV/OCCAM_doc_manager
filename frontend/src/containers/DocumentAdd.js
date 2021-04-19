@@ -4,7 +4,7 @@ import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {FileUpload} from "primereact/fileupload";
 
 
@@ -62,6 +62,7 @@ const DocumentAdd = (props) => {
 
             <Card footer={footer}>
                 <h5>Document information</h5>
+                <br/>
                 <span className="p-float-label">
                     <InputText
                         id="title"

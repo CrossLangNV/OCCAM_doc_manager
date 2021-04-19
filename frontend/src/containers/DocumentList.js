@@ -5,7 +5,6 @@ import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
-import {Skeleton} from "primereact/skeleton";
 import {Button} from "primereact/button";
 
 const DocumentList = () => {
