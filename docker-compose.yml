@@ -29,3 +29,16 @@ services:
     build: ./backend/nginx
     depends_on:
       - django
+
+
+  occ_postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - occ_postgres:/var/lib/postgresql/data
+
+volumes:
+  occ_postgres:

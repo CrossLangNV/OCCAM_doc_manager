@@ -14,6 +14,7 @@ coreapi = "*"
 djangorestframework-simplejwt = "*"
 pyyaml = "*"
 django-cors-headers = "*"
+psycopg2-binary = "==2.8.5"
 
 [requires]
 python_version = "3.9"

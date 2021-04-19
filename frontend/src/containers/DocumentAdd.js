@@ -40,6 +40,11 @@ const DocumentAdd = (props) => {
                 className="p-button-secondary"/>
         </span>;
 
+    const pagesUploader = (event) => {
+        const files = event.files
+        console.log(files)
+    }
+
     const addDocument = async (title, content) => {
         if (title !== "") {
             const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
@@ -94,7 +99,9 @@ const DocumentAdd = (props) => {
                         url="./upload"
                         multiple
                         accept={ACCEPTED_FILE_TYPES}
-                        maxFileSize="1000000"
+                        maxFileSize={1000000}
+                        customUpload
+                        uploadHandler={pagesUploader}
                     />
                 </div>
 
