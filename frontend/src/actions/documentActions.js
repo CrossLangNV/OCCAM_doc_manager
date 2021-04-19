@@ -44,29 +44,23 @@ export const GetDocument = (id) => async dispatch => {
     }
 }
 
-export const AddDocument = (title, content) => async dispatch => {
+export const DeleteDocument = (id) => async dispatch => {
     try {
         dispatch({
-            type: DocumentActionTypes.DOCUMENT_ADD_LOADING
+            type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
         });
 
-        const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
-            {
-                name: title,
-                content: content,
-                state: 'New'
-            }).then((res) => {
+        const res = await axios.delete(`http://localhost:8000/documents/api/documents/${id}`)
+            .then((res) => {
                 console.log(res);
         });
 
         dispatch({
-            type: DocumentActionTypes.DOCUMENT_ADD_SUCCESS,
-            payload: res.data,
-            documentId: res.data.id
+            type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
         });
     } catch (e) {
         dispatch({
-            type: DocumentActionTypes.DOCUMENT_ADD_FAIL
+            type: DocumentActionTypes.DOCUMENT_DELETE_FAIL
         });
     }
 }

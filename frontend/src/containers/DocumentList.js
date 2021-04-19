@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
-import {GetDocumentList} from "../actions/documentActions";
+import {DeleteDocument, GetDocumentList} from "../actions/documentActions";
 import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
@@ -8,6 +8,8 @@ import ReactPagiate from "react-paginate"
 import {Button} from "primereact/button";
 import { Tag } from 'primereact/tag';
 import Moment from 'react-moment';
+import {confirmPopup} from "primereact/confirmpopup";
+import axios from "axios";
 
 
 const DocumentList = () => {
@@ -32,20 +34,38 @@ const DocumentList = () => {
         }
     }
 
+    const confirmDeleteDoc = (event) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: 'Are you sure you want to proceed?',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => deleteDocument(event),
+        });
+    }
+
+    const deleteDocument = async (id) => {
+        DeleteDocument(id)
+    }
+
     const loadTableRows = () => {
         if (!_.isEmpty(documentList.data)) {
             return (
                 <>
                     {documentList.data.map(item => {
                         return <tr key={item.id}>
-                            <td></td>
-                            <td><Link to={`/document/${item.id}`}>{item.name}</Link></td>
+                            <td className='w-10'></td>
+                            <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>{getStateIcon(item.state)}</td>
-                            <td>
+                            <td className='w-25'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
                             </td>
-                            <td>
-                                <Button label="" icon="pi pi-trash" className="p-button-danger"/>
+                            <td className='w-25'>
+                                <Button
+                                    onClick={() => confirmDeleteDoc(item.id)}
+                                    label=""
+                                    icon="pi pi-trash"
+                                    className="p-button-danger"
+                                />
                             </td>
                         </tr>
                     })}

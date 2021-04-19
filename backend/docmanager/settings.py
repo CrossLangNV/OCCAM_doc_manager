@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -139,7 +139,7 @@ USE_TZ = True
 
 DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
 STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
-MINIO_STORAGE_ENDPOINT = "minio:9000"
+MINIO_STORAGE_ENDPOINT = os.environ["MINIO_STORAGE_ENDPOINT"]
 MINIO_STORAGE_ACCESS_KEY = os.environ["MINIO_ACCESS_KEY"]
 MINIO_STORAGE_SECRET_KEY = os.environ["MINIO_SECRET_KEY"]
 MINIO_STORAGE_USE_HTTPS = os.environ.get("MINIO_HTTPS", False) == "True"
@@ -157,3 +157,13 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+# Caching
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "TIMEOUT": 60,
+        "OPTIONS": {"MAX_ENTRIES": 1000},
+    }
+}

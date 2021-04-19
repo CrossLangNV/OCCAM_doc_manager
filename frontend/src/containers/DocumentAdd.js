@@ -25,7 +25,7 @@ const DocumentAdd = (props) => {
                     content: content,
                     state: 'New'
                 }).then((res) => {
-                    history.push('/document/' + res.data.id)
+                    history.push('/document/' + res.data.id + "/")
             });
         }
     }

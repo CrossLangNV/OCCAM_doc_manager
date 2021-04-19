@@ -1,5 +1,4 @@
 from rest_framework import routers
-
 from .views import DocumentViewSet, ImageViewSet
 
 router = routers.DefaultRouter()

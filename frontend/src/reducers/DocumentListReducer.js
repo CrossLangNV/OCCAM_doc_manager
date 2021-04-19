@@ -38,6 +38,12 @@ const DocumentListReducer = (state = DefaultState, action) => {
 
             }
 
+        case DocumentActionTypes.DOCUMENT_DELETE_SUCCESS:
+            return {
+                // Filter out the id
+            }
+
+
         default:
             return state
     }
