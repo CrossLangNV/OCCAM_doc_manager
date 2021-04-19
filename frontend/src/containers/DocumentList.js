@@ -7,6 +7,7 @@ import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 import {Button} from "primereact/button";
 import { Tag } from 'primereact/tag';
+import Moment from 'react-moment';
 
 
 const DocumentList = () => {
@@ -40,7 +41,9 @@ const DocumentList = () => {
                             <td></td>
                             <td><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>{getStateIcon(item.state)}</td>
-                            <td>{item.created_at}</td>
+                            <td>
+                                <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
+                            </td>
                             <td>
                                 <Button label="" icon="pi pi-trash" className="p-button-danger"/>
                             </td>
