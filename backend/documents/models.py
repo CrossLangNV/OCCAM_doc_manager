@@ -56,3 +56,32 @@ class Page(models.Model):
 
     def __str__(self):
         return self.filename
+
+
+class Overlay(models.Model):
+    """
+    Can be both transcription, translation.
+    Saved as Page XML.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    xml = models.FileField(null=True,
+                           blank=True,
+                           upload_to='overlays')
+
+    # TODO
+    # source_lang = # TODO Single language? Use choice and a abbreviation to full name conversion
+    # target_lang = # TODO List (again based on choice/list)
+
+    page = models.ForeignKey(
+        Page,
+        related_name="overlay_page",
+        on_delete=models.CASCADE
+    )
+
+    def update_xml(self, file):
+        self.xml.save(file.name, file)
+        self.save()
+
+    def __str__(self):
+        return f"Overlay of '{self.page.filename}'" + ' ' + '*source lang*' + ' ' + '*target lang*'

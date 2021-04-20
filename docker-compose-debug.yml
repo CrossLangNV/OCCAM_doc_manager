@@ -1,0 +1,42 @@
+version: '3'
+services:
+  django:
+    build: ./backend
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - ./backend:/backend
+    command: ./start.sh
+    restart:
+      always
+    ports:
+      - "8000:8000"
+
+  react:
+    build: ./frontend
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+
+  # Not working yet!! Fix later for production
+  django_nginx:
+    restart: always
+    build: ./backend/nginx
+    depends_on:
+      - django
+
+  # Deprecated. Access container through PyCharm directly when working locally.
+  django_remote:
+    build:
+      context: ./backend
+      dockerfile: ./tests/Dockerfile
+    depends_on:
+      - django
+    ports:
+      - 3999:5000
+
