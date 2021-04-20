@@ -39,13 +39,14 @@ const DocumentList = () => {
             target: event.currentTarget,
             message: 'Are you sure you want to proceed?',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => deleteDocument(event),
+            accept: () => dispatch(DeleteDocument(event)),
         });
     }
 
-    const deleteDocument = async (id) => {
-        DeleteDocument(id)
-    }
+    // const deleteDocument = async (id) => {
+    //     DeleteDocument(id)
+    //     console.log('called deletedoc')
+    // }
 
     const loadTableRows = () => {
         if (!_.isEmpty(documentList.data)) {

@@ -37,13 +37,19 @@ const DocumentListReducer = (state = DefaultState, action) => {
                 rows: action.rows
 
             }
-
         case DocumentActionTypes.DOCUMENT_DELETE_SUCCESS:
+
+            const newState = state.data.filter(document =>
+                document.id !== action.payload.id
+            )
+
             return {
-                // Filter out the id
+                data: newState,
+                loading: false,
+                errorMsg: "",
+                count: state.count-1,
+                rows: state.rows
             }
-
-
         default:
             return state
     }
