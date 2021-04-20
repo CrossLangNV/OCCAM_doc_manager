@@ -10,7 +10,6 @@ import {FileUpload} from "primereact/fileupload";
 
 const DocumentAdd = (props) => {
     let history = useHistory();
-    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -63,7 +62,9 @@ const DocumentAdd = (props) => {
                         id="title"
                         value={title}
                         autoComplete={"off"}
-                        onChange={(e) => setTitle(e.target.value)}/>
+                        onChange={(e) => setTitle(e.target.value)}
+                        autoFocus={true}
+                    />
                     <label htmlFor="title">Title</label>
                 </span>
 
@@ -79,21 +80,6 @@ const DocumentAdd = (props) => {
                     />
                     <label htmlFor="content">Content</label>
                 </span>
-
-                <br/>
-                <h5>Upload pages</h5>
-
-                <div>
-                    <FileUpload
-                        name="demo[]"
-                        url="./upload"
-                        multiple
-                        accept={ACCEPTED_FILE_TYPES}
-                        maxFileSize={1000000}
-                        customUpload
-                        uploadHandler={pagesUploader}
-                    />
-                </div>
             </Card>
         </>
     );

@@ -8,7 +8,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ImageSerializer(serializers.ModelSerializer):
+class PageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = "__all__"

@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
 from documents.models import Document, Page
-from documents.serializers import DocumentSerializer, ImageSerializer
+from documents.serializers import DocumentSerializer, PageSerializer
 
 
 class SmallResultsSetPagination(LimitOffsetPagination):
@@ -12,7 +12,7 @@ class SmallResultsSetPagination(LimitOffsetPagination):
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
-    queryset = Document.objects.all()
+    queryset = Document.objects.order_by('created_at')
     pagination_class = SmallResultsSetPagination
 
     # TODO: Remove AllowAny
@@ -20,10 +20,10 @@ class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
 
 
-class ImageViewSet(viewsets.ModelViewSet):
+class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
     pagination_class = SmallResultsSetPagination
 
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
-    serializer_class = ImageSerializer
+    serializer_class = PageSerializer

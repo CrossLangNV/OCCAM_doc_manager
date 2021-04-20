@@ -57,10 +57,10 @@ const DocumentList = () => {
                             <td className='w-10'></td>
                             <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>{getStateIcon(item.state)}</td>
-                            <td className='w-25'>
+                            <td className='w-10'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
                             </td>
-                            <td className='w-25'>
+                            <td className='w-10'>
                                 <Button
                                     onClick={() => confirmDeleteDoc(item.id)}
                                     label=""

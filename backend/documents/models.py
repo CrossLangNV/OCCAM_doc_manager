@@ -36,12 +36,11 @@ class Document(models.Model):
 
 class Page(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    filename = models.CharField(max_length=200)
-    path = models.TextField()
-    width = models.IntegerField()
-    height = models.IntegerField()
+    file = models.FileField()
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
-    image_hash = models.TextField()
+    image_hash = models.TextField(null=True, blank=True)
 
     document = models.ForeignKey(
         Document,
