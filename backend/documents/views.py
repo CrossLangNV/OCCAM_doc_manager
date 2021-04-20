@@ -1,8 +1,8 @@
 from rest_framework import viewsets, permissions
 from rest_framework.pagination import LimitOffsetPagination
 
-from documents.models import Document, Page
-from documents.serializers import DocumentSerializer, PageSerializer
+from documents.models import Document, Page, Overlay
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 
 
 class SmallResultsSetPagination(LimitOffsetPagination):
@@ -27,3 +27,12 @@ class PageViewSet(viewsets.ModelViewSet):
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
     serializer_class = PageSerializer
+
+
+class OverlayViewSet(viewsets.ModelViewSet):
+    queryset = Overlay.objects.all()
+    pagination_class = SmallResultsSetPagination
+
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+    serializer_class = OverlaySerializer

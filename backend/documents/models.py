@@ -31,7 +31,7 @@ class Document(models.Model):
         return self.name
 
     def __repr__(self):
-        return self.name + ' is added.'
+        return self.name + " is added."
 
 
 class Page(models.Model):
@@ -54,4 +54,19 @@ class Page(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.filename
+        return str(self.file)
+
+
+class Overlay(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(null=True, blank=True)
+    translation_file = models.FileField(null=True, blank=True)
+
+    page = models.ForeignKey(
+        Page,
+        related_name="page_overlay",
+        on_delete=models.CASCADE,
+    )
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)

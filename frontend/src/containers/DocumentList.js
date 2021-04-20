@@ -9,7 +9,6 @@ import {Button} from "primereact/button";
 import { Tag } from 'primereact/tag';
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
-import axios from "axios";
 
 
 const DocumentList = () => {
@@ -87,7 +86,6 @@ const DocumentList = () => {
                     icon="pi pi-plus"
             />
             <br/><br/>
-
             <Table striped borderless hover>
                 <thead>
                     <tr>
@@ -115,7 +113,6 @@ const DocumentList = () => {
                     breakClassName={'page-item'}
                 />
             )}
-
         </div>
     )
 };

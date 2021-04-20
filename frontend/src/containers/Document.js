@@ -8,6 +8,7 @@ import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
+import Moment from "react-moment";
 
 const Document = (props) => {
     const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
@@ -58,18 +59,24 @@ const Document = (props) => {
                                 className="p-button-danger"
                             />
                         </Col>
-
                     </Row>
 
-
-
-
-
-                    <p>{documentData.content}</p>
-                    <p>State: {documentData.state}</p>
-                    <p>Created at: {documentData.created_at}</p>
+                    <p><b>Content: </b> {documentData.content}</p>
+                    <p><b>State:</b> {documentData.state}</p>
+                    <p><b>Created at:</b> <Moment format="DD/MM/YYYY H:mm" date={documentData.created_at} /></p>
 
                     <br/>
+                    {!_.isEmpty(documentData.document_page) && (
+                        <div>
+                            <h5>Pages</h5>
+
+                            {documentData.document_page}
+
+                            <br/><br/>
+                        </div>
+
+                    )}
+
                     <h5>Upload pages</h5>
 
                     <div>
