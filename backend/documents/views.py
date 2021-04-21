@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions, views
 from rest_framework.exceptions import ParseError
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
 from documents.models import Document, Page, Overlay
@@ -8,9 +9,17 @@ from rest_framework.parsers import FileUploadParser
 
 import logging as logger
 
+from rest_framework.response import Response
+
 
 class SmallResultsSetPagination(LimitOffsetPagination):
     default_limit = 5
+    limit_query_param = "rows"
+    offset_query_param = "offset"
+
+
+class BigResultsSetPagination(LimitOffsetPagination):
+    default_limit = 100
     limit_query_param = "rows"
     offset_query_param = "offset"
 
@@ -24,28 +33,27 @@ class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
 
 
-class PageViewSet(viewsets.ModelViewSet):
+class PageListAPIView(ListCreateAPIView):
     queryset = Page.objects.all()
-    pagination_class = SmallResultsSetPagination
-
+    pagination_class = BigResultsSetPagination
+    serializer_class = PageSerializer
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
-    serializer_class = PageSerializer
 
+    def get_queryset(self):
+        q = Page.objects.all()
 
-class PageUploadView(views.APIView):
-    parser_class = (FileUploadParser, )
+        print(q)
 
-    def put(self, request, filename):
-        if 'file' not in request.data:
-            raise ParseError("Empty content")
+        document_id = self.request.GET.get("document", "")
 
-        f = request.data['file']
-        print(f)
+        print(document_id)
+        if document_id:
+            # doc = Document.objects.get(pk=document_id)
+            q = q.filter(document__id=str(document_id))
+            print('qqqq: ', q)
 
-
-
-
+        return q
 
 
 class OverlayViewSet(viewsets.ModelViewSet):

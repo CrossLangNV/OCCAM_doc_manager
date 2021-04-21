@@ -3,24 +3,28 @@ import {DeleteDocument, GetDocument} from "../actions/documentActions";
 import React from "react";
 import _ from "lodash"
 import {FileUpload} from "primereact/fileupload";
-import {Card} from "primereact/card";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
-import {Col, Row} from "react-bootstrap";
+import {Col, Image, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import Moment from "react-moment";
+import {GetPageList} from "../actions/pageActions";
+import {Card} from "primereact/card";
 
 const Document = (props) => {
     const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
-
     const documentId = props.match.params.documentId
+
     const dispatch = useDispatch()
     const documentState = useSelector(state => state.document)
+    const pageList = useSelector(state => state.pageList);
+
 
     let history = useHistory();
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId))
+        dispatch(GetPageList(100, 1, documentId))
     }, [])
 
     const pagesUploader = (event) => {
@@ -70,7 +74,14 @@ const Document = (props) => {
                         <div>
                             <h5>Pages</h5>
 
-                            {documentData.document_page}
+                            {pageList.data.map(page => {
+                                return <Card key={page.id}>
+                                    <Col xs={6} md={4}>
+                                        <Image src={page.file} />
+                                    </Col>
+
+                                </Card>
+                            })}
 
                             <br/><br/>
                         </div>
