@@ -1,7 +1,5 @@
 import requests
-from rest_framework import generics
-from rest_framework import mixins
-from rest_framework import viewsets, permissions, views
+from rest_framework import generics, status, mixins, viewsets, permissions, views
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
@@ -108,7 +106,11 @@ class OverlayTranslationView(views.APIView):
         headers = request.data
 
         # overlay0 = next(filter(lambda x: x.xml, Overlay.objects.all()))
-        overlay0 = Overlay.objects.get(id=headers['id'])
+        try:
+            overlay0 = Overlay.objects.get(id=headers['id'])
+        except:
+            content = {'message': 'Overlay id not found.'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
         with overlay0.xml.open('rb') as f:
             files = {'file': f}
