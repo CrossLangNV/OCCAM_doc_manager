@@ -11,6 +11,9 @@ services:
       always
     ports:
       - "8000:8000"
+    depends_on:
+      - occ_postgres
+      - occ_minio
 
   react:
     build: ./frontend
@@ -29,3 +32,28 @@ services:
     build: ./backend/nginx
     depends_on:
       - django
+
+
+  occ_postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - occ_postgres:/var/lib/postgresql/data
+
+  occ_minio:
+    image: minio/minio
+    command: server /data
+    ports:
+      - "19000:9000"
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - occ_minio:/data
+
+
+volumes:
+  occ_postgres:
+  occ_minio:

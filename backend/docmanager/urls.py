@@ -1,9 +1,10 @@
 from django.conf.urls import url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views import generic
-from rest_framework import serializers, views, status
-from rest_framework.response import Response
+from docmanager import settings
+from rest_framework import serializers
 from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -15,14 +16,6 @@ class MessageSerializer(serializers.Serializer):
     message = serializers.CharField()
 
 
-class EchoView(views.APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = MessageSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED)
-
-
 urlpatterns = [
     url(r'^$', generic.RedirectView.as_view(
          url='/api/', permanent=False)),
@@ -32,9 +25,10 @@ urlpatterns = [
     url(r'^api/auth/token/obtain/$', TokenObtainPairView.as_view()),
     url(r'^api/auth/token/refresh/$', TokenRefreshView.as_view()),
 
-    url(r'^api/echo/$', EchoView.as_view()),
-
-
     path('admin/', admin.site.urls),
     path('documents/', include(('documents.urls', 'documents'), namespace='documents')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

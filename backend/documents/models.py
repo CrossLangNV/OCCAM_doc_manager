@@ -31,17 +31,16 @@ class Document(models.Model):
         return self.name
 
     def __repr__(self):
-        return self.name + ' is added.'
+        return self.name + " is added."
 
 
 class Page(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    filename = models.CharField(max_length=200)
-    path = models.TextField()
-    width = models.IntegerField()
-    height = models.IntegerField()
+    file = models.FileField()
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
     deleted = models.BooleanField(default=False)
-    image_hash = models.TextField()
+    image_hash = models.TextField(null=True, blank=True)
 
     document = models.ForeignKey(
         Document,
@@ -55,7 +54,7 @@ class Page(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.filename
+        return str(self.file)
 
 
 class Overlay(models.Model):
@@ -64,24 +63,28 @@ class Overlay(models.Model):
     Saved as Page XML.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(null=True,
+                            blank=True,
+                            upload_to='overlays')
+    translation_file = models.FileField(null=True, blank=True,
+                                        upload_to='overlays_trans')
 
-    xml = models.FileField(null=True,
-                           blank=True,
-                           upload_to='overlays')
+    page = models.ForeignKey(
+        Page,
+        related_name="page_overlay",
+        on_delete=models.CASCADE,
+    )
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
     # TODO
     # source_lang = # TODO Single language? Use choice and a abbreviation to full name conversion
     # target_lang = # TODO List (again based on choice/list)
 
-    page = models.ForeignKey(
-        Page,
-        related_name="overlay_page",
-        on_delete=models.CASCADE
-    )
-
     def update_xml(self, file):
-        self.xml.save(file.name, file)
+        self.file.save(file.name, file)
         self.save()
 
     def __str__(self):
-        return f"Overlay of '{self.page.filename}'" + ' ' + '*source lang*' + ' ' + '*target lang*'
+        return f"Overlay of '{self.page.file.name}'" + ' ' + '*source lang*' + ' ' + '*target lang*'

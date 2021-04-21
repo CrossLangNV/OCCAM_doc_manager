@@ -4,7 +4,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
 from documents.models import Document, Page, Overlay
-from documents.serializers import DocumentSerializer, ImageSerializer, OverlaySerializer
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 
 URL_TRANSLATE = 'http://192.168.105.41:9050/translate/xml/blocking'
 
@@ -16,7 +16,7 @@ class SmallResultsSetPagination(LimitOffsetPagination):
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
-    queryset = Document.objects.all()
+    queryset = Document.objects.order_by('created_at')
     pagination_class = SmallResultsSetPagination
 
     # TODO: Remove AllowAny
@@ -24,13 +24,13 @@ class DocumentViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentSerializer
 
 
-class ImageViewSet(viewsets.ModelViewSet):
+class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all()
     pagination_class = SmallResultsSetPagination
 
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
-    serializer_class = ImageSerializer
+    serializer_class = PageSerializer
 
 
 class OverlayViewSet(viewsets.ModelViewSet):
@@ -40,6 +40,7 @@ class OverlayViewSet(viewsets.ModelViewSet):
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
     serializer_class = OverlaySerializer
+
 
 
 class OverlayList(mixins.ListModelMixin,

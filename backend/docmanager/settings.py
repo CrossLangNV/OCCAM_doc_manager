@@ -9,25 +9,25 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%!91096kdmoi#=qxm1*a*g$&v^2db%i=5c)0bk!mta$io*x8e('
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", False) == "True"
 
-# ALLOWED_HOSTS = ['0.0.0.0', 'localhost']
-# CORS_ALLOWED_ORIGINS = ['http://localhost:3000', 'http://localhost:3000/']
-CORS_ORIGIN_ALLOW_ALL = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [h for h in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost django").split(" ")]
+CORS_ORIGIN_WHITELIST = [
+    h for h in os.environ.get("DJANGO_CORS_ORIGIN_WHITELIST", "http://localhost:3000").split(" ")
+]
 
 # Application definition
 
@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'documents',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'minio_storage',
 ]
 
 # Rest Framework
@@ -91,9 +93,13 @@ WSGI_APPLICATION = 'docmanager.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["POSTGRES_DB"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ["POSTGRES_HOST"],
+        "PORT": os.environ["POSTGRES_PORT"],
     }
 }
 
@@ -131,4 +137,35 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+MINIO_STORAGE_ENDPOINT = os.environ["MINIO_STORAGE_ENDPOINT"]
+MINIO_STORAGE_ACCESS_KEY = os.environ["MINIO_ACCESS_KEY"]
+MINIO_STORAGE_SECRET_KEY = os.environ["MINIO_SECRET_KEY"]
+MINIO_STORAGE_USE_HTTPS = os.environ.get("MINIO_HTTPS", False) == "True"
+MINIO_STORAGE_MEDIA_BUCKET_NAME = "local-media"
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_AUTO_CREATE_MEDIA_POLICY = "WRITE_ONLY"
+MINIO_STORAGE_STATIC_BUCKET_NAME = "local-static"
+MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+
+MINIO_STORAGE_MEDIA_URL = os.environ["MINIO_STORAGE_MEDIA_URL"]
+MINIO_STORAGE_STATIC_URL = os.environ["MINIO_STORAGE_STATIC_URL"]
+
+# APPEND_SLASH = False
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+# Caching
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "TIMEOUT": 60,
+        "OPTIONS": {"MAX_ENTRIES": 1000},
+    }
+}

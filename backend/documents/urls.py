@@ -1,11 +1,11 @@
 from django.urls import path
 from rest_framework import routers
 
-from .views import DocumentViewSet, ImageViewSet, OverlayViewSet, OverlayTranslationView, OverlayDetail, OverlayList
+from .views import DocumentViewSet, PageViewSet, OverlayViewSet, OverlayTranslationView, OverlayDetail, OverlayList
 
 router = routers.DefaultRouter()
 router.register('api/documents', DocumentViewSet, 'documents')
-router.register('api/images', ImageViewSet, 'images')
+router.register('api/pages', PageViewSet, 'pages')
 router.register('api/overlays', OverlayViewSet, 'overlays')
 
 urlpatterns = router.urls

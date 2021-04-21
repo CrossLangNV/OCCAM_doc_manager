@@ -13,7 +13,8 @@ export const GetDocumentList = (rows, page) => async dispatch => {
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_LIST_SUCCESS,
-            payload: res.data
+            payload: res.data,
+            rows: rows
         });
     } catch (e) {
         dispatch({
@@ -41,4 +42,18 @@ export const GetDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_MULTIPLE_FAIL
         });
     }
+}
+
+export const DeleteDocument = (id) => async dispatch => {
+    dispatch({
+        type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
+    });
+
+    const res = await axios.delete(`http://localhost:8000/documents/api/documents/${id}`)
+        .then((res) => {
+            dispatch({
+                type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
+                payload: {id}
+            })
+        })
 }
