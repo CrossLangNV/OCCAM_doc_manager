@@ -1,8 +1,12 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, views
+from rest_framework.exceptions import ParseError
 from rest_framework.pagination import LimitOffsetPagination
 
 from documents.models import Document, Page, Overlay
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
+from rest_framework.parsers import FileUploadParser
+
+import logging as logger
 
 
 class SmallResultsSetPagination(LimitOffsetPagination):
@@ -27,6 +31,21 @@ class PageViewSet(viewsets.ModelViewSet):
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
     serializer_class = PageSerializer
+
+
+class PageUploadView(views.APIView):
+    parser_class = (FileUploadParser, )
+
+    def put(self, request, filename):
+        if 'file' not in request.data:
+            raise ParseError("Empty content")
+
+        f = request.data['file']
+        print(f)
+
+
+
+
 
 
 class OverlayViewSet(viewsets.ModelViewSet):
