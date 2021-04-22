@@ -1,14 +1,25 @@
-import React from 'react';
+import React, {useRef, useState} from 'react';
 import {FileUpload} from "primereact/fileupload";
+import axios from "axios";
+import {useDispatch} from "react-redux";
+import {AddPage} from "../actions/pageActions";
+import {Toast} from "primereact/toast";
 
 const PageAdd = (props) => {
+    const dispatch = useDispatch();
     const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
     const documentId = props.documentId
+    const toast = useRef(null);
 
-    const pagesUploader = (event) => {
+    const pagesUploader = async (event) => {
         const files = event.files
-        console.log(files)
+
+        if (files) {
+            dispatch(AddPage(documentId, files))
+            toast.current.show({severity: 'success', summary: 'Success Message', detail: 'Pages have been uploaded.'});
+        }
     }
+
     return (
         <div>
             <FileUpload
@@ -20,6 +31,8 @@ const PageAdd = (props) => {
                 customUpload
                 uploadHandler={pagesUploader}
             />
+            <Toast ref={toast} />
+
         </div>
     );
 };

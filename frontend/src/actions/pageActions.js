@@ -58,3 +58,31 @@ export const DeletePage = (id) => async dispatch => {
             })
         })
 }
+
+export const AddPage = (documentId, files) => async dispatch => {
+    dispatch({
+        type: PageActionTypes.PAGE_ADD_LOADING
+    });
+
+    files.forEach(file => {
+        const formData = new FormData();
+        formData.append("document", documentId)
+        formData.append("file", file)
+
+        const res = axios.post(`http://localhost:8000/documents/api/pages`, formData, {
+            headers: {
+                'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+            }
+        }).then((res) => {
+            console.log(res)
+            dispatch({
+                type: PageActionTypes.PAGE_ADD_SUCCESS,
+                payload: res.data
+            })
+        });
+    })
+
+
+
+
+}

@@ -64,16 +64,18 @@ const Document = (props) => {
                     <p><b>Created at:</b> <Moment format="DD/MM/YYYY H:mm" date={documentData.created_at} /></p>
 
                     <br/>
-                    {!_.isEmpty(documentData.document_page) && (
+
                         <div>
                             <h5>Pages</h5>
+                            {_.isEmpty(documentData.document_page) && (
+                                <p>No pages are uploaded yet.</p>
+                            )}
 
                             <PageList documentId={documentId} />
 
                             <br/><br/>
                         </div>
 
-                    )}
 
                     <h5>Upload pages</h5>
                     <PageAdd documentId={documentId} />

@@ -50,8 +50,19 @@ const PageListReducer = (state = DefaultState, action) => {
                 count: state.count-1,
                 rows: state.rows
             }
+
+        case PageActionTypes.PAGE_ADD_SUCCESS:
+            return {
+                ...state,
+                data: [...state.data, action.payload],
+                loading: false,
+                errorMsg: "",
+                count: state.count+1,
+                rows: state.rows
+            }
         default:
             return state
+
     }
 };
 
