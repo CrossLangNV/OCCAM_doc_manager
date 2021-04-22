@@ -23,6 +23,7 @@ function App() {
                 </div>
             </div>
 
+            <div className="space"></div>
 
         </div>
     );

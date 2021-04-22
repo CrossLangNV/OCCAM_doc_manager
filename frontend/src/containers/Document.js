@@ -51,10 +51,20 @@ const Document = (props) => {
                         </Col>
                         <Col>
                             <Button
+                                onClick={() => console.log("Not implemented")}
+                                label=""
+                                icon="pi pi-play"
+                                className="p-button-primary"
+                                tooltip="Run OCR"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                            <Button
                                 onClick={() => confirmDeleteDoc(documentId)}
                                 label=""
                                 icon="pi pi-trash"
-                                className="p-button-danger"
+                                className="p-button-danger btn-margin-left"
+                                tooltip="Delete document"
+                                tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
                     </Row>
