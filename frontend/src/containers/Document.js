@@ -11,27 +11,20 @@ import Moment from "react-moment";
 import {GetPageList} from "../actions/pageActions";
 import {Card} from "primereact/card";
 import {ScrollPanel} from "primereact/scrollpanel";
+import PageAdd from "./PageAdd";
+import PageList from "./PageList";
 
 const Document = (props) => {
-    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
     const documentId = props.match.params.documentId
 
     const dispatch = useDispatch()
     const documentState = useSelector(state => state.document)
-    const pageList = useSelector(state => state.pageList);
-
 
     let history = useHistory();
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId))
-        dispatch(GetPageList(100, 1, documentId))
     }, [])
-
-    const pagesUploader = (event) => {
-        const files = event.files
-        console.log(files)
-    }
 
     const confirmDeleteDoc = (event) => {
         confirmPopup({
@@ -75,14 +68,7 @@ const Document = (props) => {
                         <div>
                             <h5>Pages</h5>
 
-                            <Row className='scroll-horizontally'>
-                                {pageList.data.map(page => {
-                                    return <Card key={page.id} className='page-card'>
-                                        <Image className='page-card-img' src={page.file} />
-                                    </Card>
-                                })}
-                            </Row>
-
+                            <PageList documentId={documentId} />
 
                             <br/><br/>
                         </div>
@@ -90,18 +76,8 @@ const Document = (props) => {
                     )}
 
                     <h5>Upload pages</h5>
+                    <PageAdd documentId={documentId} />
 
-                    <div>
-                        <FileUpload
-                            name="demo[]"
-                            url="./upload"
-                            multiple
-                            accept={ACCEPTED_FILE_TYPES}
-                            maxFileSize={1000000}
-                            customUpload
-                            uploadHandler={pagesUploader}
-                        />
-                    </div>
                 </div>
             )
         }
