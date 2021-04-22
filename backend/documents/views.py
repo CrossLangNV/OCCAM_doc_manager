@@ -42,16 +42,10 @@ class PageListAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         q = Page.objects.all()
-
-        print(q)
-
         document_id = self.request.GET.get("document", "")
 
-        print(document_id)
         if document_id:
-            # doc = Document.objects.get(pk=document_id)
             q = q.filter(document__id=str(document_id))
-            print('qqqq: ', q)
 
         return q
 
