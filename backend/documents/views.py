@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions, views
 from rest_framework.exceptions import ParseError
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
 from documents.models import Document, Page, Overlay
@@ -54,6 +54,13 @@ class PageListAPIView(ListCreateAPIView):
             print('qqqq: ', q)
 
         return q
+
+
+class PageDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
 
 
 class OverlayViewSet(viewsets.ModelViewSet):

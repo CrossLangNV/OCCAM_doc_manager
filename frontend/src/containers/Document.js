@@ -8,7 +8,7 @@ import {confirmPopup} from "primereact/confirmpopup";
 import {Col, Image, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import Moment from "react-moment";
-import {GetPageList} from "../actions/pageActions";
+import {DeletePage, GetPageList} from "../actions/pageActions";
 import {Card} from "primereact/card";
 import {ScrollPanel} from "primereact/scrollpanel";
 import PageAdd from "./PageAdd";
@@ -29,7 +29,7 @@ const Document = (props) => {
     const confirmDeleteDoc = (event) => {
         confirmPopup({
             target: event.currentTarget,
-            message: 'Are you sure you want to proceed?',
+            message: 'Are you sure you want to delete this document?',
             icon: 'pi pi-exclamation-triangle',
             accept: () =>
             {

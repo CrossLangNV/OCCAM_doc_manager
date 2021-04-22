@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework import routers
-from .views import DocumentViewSet, OverlayViewSet, PageListAPIView
+from .views import DocumentViewSet, OverlayViewSet, PageListAPIView, PageDetailAPIView
 
 router = routers.DefaultRouter()
 router.register('api/documents', DocumentViewSet, 'documents')
@@ -11,6 +11,7 @@ urlpatterns = router.urls
 
 urlpatterns.extend(
     [
-        path('api/pages', PageListAPIView.as_view(), name='pages_list_api')
+        path('api/pages', PageListAPIView.as_view(), name='pages_list_api'),
+        path("api/page/<str:pk>", PageDetailAPIView.as_view(), name="page_api_detail"),
     ]
 )

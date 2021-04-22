@@ -50,7 +50,7 @@ export const DeletePage = (id) => async dispatch => {
         type: PageActionTypes.PAGE_DELETE_LOADING
     });
 
-    const res = await axios.delete(`http://localhost:8000/documents/api/pages/${id}`)
+    const res = await axios.delete(`http://localhost:8000/documents/api/page/${id}`)
         .then((res) => {
             dispatch({
                 type: PageActionTypes.PAGE_DELETE_SUCCESS,
