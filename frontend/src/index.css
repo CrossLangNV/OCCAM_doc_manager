@@ -31,3 +31,18 @@
   border-radius: 3px;
   color: #2196F3 !important;
 }
+
+.page-card {
+  width: 20rem !important;
+  margin-left: 15px;
+  margin-bottom: 10px;
+}
+
+.page-card-img {
+  width: 18rem !important;
+}
+
+.scroll-horizontally {
+  overflow-x: auto;
+  overflow-y: hidden;
+}

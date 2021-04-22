@@ -10,6 +10,7 @@ import {useHistory} from "react-router-dom";
 import Moment from "react-moment";
 import {GetPageList} from "../actions/pageActions";
 import {Card} from "primereact/card";
+import {ScrollPanel} from "primereact/scrollpanel";
 
 const Document = (props) => {
     const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
@@ -74,14 +75,14 @@ const Document = (props) => {
                         <div>
                             <h5>Pages</h5>
 
-                            {pageList.data.map(page => {
-                                return <Card key={page.id}>
-                                    <Col xs={6} md={4}>
-                                        <Image src={page.file} />
-                                    </Col>
+                            <Row className='scroll-horizontally'>
+                                {pageList.data.map(page => {
+                                    return <Card key={page.id} className='page-card'>
+                                        <Image className='page-card-img' src={page.file} />
+                                    </Card>
+                                })}
+                            </Row>
 
-                                </Card>
-                            })}
 
                             <br/><br/>
                         </div>
