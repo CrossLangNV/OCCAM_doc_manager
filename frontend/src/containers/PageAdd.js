@@ -16,7 +16,7 @@ const PageAdd = (props) => {
 
         if (files) {
             dispatch(AddPage(documentId, files))
-            toast.current.show({severity: 'success', summary: 'Success Message', detail: 'Page(s) have been uploaded.'});
+            toast.current.show({severity: 'success', summary: 'Success', detail: 'Page(s) have been uploaded.'});
         }
     }
 

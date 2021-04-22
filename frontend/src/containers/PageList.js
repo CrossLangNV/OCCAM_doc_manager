@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {Card} from "primereact/card";
 import {Image, Row} from "react-bootstrap";
 import {useSelector, useDispatch} from "react-redux";
 import {DeletePage, GetPageList} from "../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
+import {Toast} from "primereact/toast";
 
 
 const PageList = (props) => {
@@ -12,6 +13,9 @@ const PageList = (props) => {
 
     const pageList = useSelector(state => state.pageList);
     const documentId = props.documentId;
+
+    const toast = useRef(null);
+
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
@@ -25,6 +29,7 @@ const PageList = (props) => {
             accept: () =>
             {
                 dispatch(DeletePage(event))
+                toast.current.show({severity: 'success', summary: 'Success', detail: 'Page has been deleted'});
             },
         });
     }
@@ -44,6 +49,7 @@ const PageList = (props) => {
                     />
                 </Card>
             })}
+            <Toast ref={toast} />
         </Row>
     );
 };
