@@ -6,6 +6,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from documents.models import Document, Page, Overlay
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 from rest_framework.parsers import FileUploadParser
+from rest_framework.views import APIView
+from scheduler.translation_tasks import translate_page
 
 import logging as logger
 
@@ -64,3 +66,18 @@ class OverlayViewSet(viewsets.ModelViewSet):
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
     serializer_class = OverlaySerializer
+
+
+class TranslatePageAPIView(APIView):
+    queryset = Page.objects.none()
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None, *args, **kwargs):
+        page = request.data["page"]
+        source = request.data["source"]
+        target = request.data["target"]
+
+        logger.info("Starting celery task for translation")
+
+        translate_page.delay(page, source, target)

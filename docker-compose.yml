@@ -53,6 +53,26 @@ services:
     volumes:
       - occ_minio:/data
 
+  celery:
+    build: ./backend
+    command: celery -A scheduler worker -l info
+    volumes:
+      - ./backend:/backend
+    env_file:
+      - ./secrets/django-docker.env
+    restart:
+      always
+    depends_on:
+      - django
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq
+    env_file:
+      - ./secrets/django-docker.env
+    ports:
+      - "5672:5672"
+
 
 volumes:
   occ_postgres:
