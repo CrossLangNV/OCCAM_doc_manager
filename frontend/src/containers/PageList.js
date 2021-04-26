@@ -43,7 +43,7 @@ const PageList = (props) => {
                         onClick={() => confirmDeletePage(page.id)}
                         label=""
                         icon="pi pi-trash"
-                        className="p-button-danger btn-margin-left"
+                        className="p-button-danger margin-left"
                         tooltip="Delete page"
                         tooltipOptions={{position: 'bottom'}}
                     />

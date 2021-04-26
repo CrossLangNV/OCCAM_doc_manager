@@ -57,3 +57,18 @@ export const DeleteDocument = (id) => async dispatch => {
             })
         })
 }
+
+export const ProcessOcrDocument = (id) => async dispatch => {
+    dispatch({
+        type: DocumentActionTypes.DOCUMENT_OCR_LOADING
+    });
+
+    const res = await axios.delete(`http://localhost:8000/documents/api/documents/${id}/ocr`)
+        .then((res) => {
+            dispatch({
+                type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,
+                payload: {id}
+            })
+        })
+}
+

@@ -47,6 +47,10 @@
   overflow-y: hidden;
 }
 
-.btn-margin-left {
+.margin-left {
   margin-left: 5px !important;
+}
+
+.margin-right {
+  margin-right: 5px !important;
 }

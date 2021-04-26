@@ -9,6 +9,7 @@ import {Button} from "primereact/button";
 import { Tag } from 'primereact/tag';
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
+import DocumentState from "./DocumentState";
 
 
 const DocumentList = () => {
@@ -22,15 +23,6 @@ const DocumentList = () => {
 
     const fetchDocuments = (rows, page) => {
         dispatch(GetDocumentList(rows, page))
-    }
-
-    const getStateIcon = (state) => {
-        switch (state) {
-            case "OCR completed.":
-                return <Tag value={state} icon="pi pi-check" severity="success"/>
-            default:
-                return <Tag value={state} />
-        }
     }
 
     const confirmDeleteDoc = (event) => {
@@ -55,7 +47,9 @@ const DocumentList = () => {
                         return <tr key={item.id}>
                             <td className='w-10'></td>
                             <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
-                            <td>{getStateIcon(item.state)}</td>
+                            <td>
+                                <DocumentState state={item.state} />
+                            </td>
                             <td className='w-10'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
                             </td>
