@@ -55,12 +55,25 @@ const PageList = (props) => {
                                 tooltip="Delete page"
                                 tooltipOptions={{position: 'bottom'}}
                             />
+                            <Button
+                                className="margin-left"
+                                label=""
+                                icon="pi pi-search-plus"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    window.open(page.file, '_blank');
+                                }}
+                                tooltip="View full size page"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
                         </Col>
                     </Row>
                     <hr/>
                     <Row>
-                        <Col>
-                            <OverlayAdd pageId={page.id}/>
+                        <Col md={9}>
+                            <OverlayAdd
+                                pageId={page.id}
+                            />
                         </Col>
 
                         <Col>
@@ -68,12 +81,14 @@ const PageList = (props) => {
                                 <p>
                                     <Button
                                         className="margin-left"
-                                        label="View overlay"
+                                        label=""
                                         icon="pi pi-eye"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             window.open(page.page_overlay[0].file, '_blank');
                                         }}
+                                        tooltip="View overlay"
+                                        tooltipOptions={{position: 'bottom'}}
                                     />
                                 </p>
                             )}
