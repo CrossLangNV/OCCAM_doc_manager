@@ -20,6 +20,7 @@ export const AddOverlay = (pageId, files) => async dispatch => {
             console.log(res)
             dispatch({
                 type: OverlayActionTypes.OVERLAY_ADD_SUCCESS,
+                pageId: pageId,
                 payload: res.data
             })
         });

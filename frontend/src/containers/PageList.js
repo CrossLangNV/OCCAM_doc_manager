@@ -18,7 +18,6 @@ const PageList = (props) => {
 
     const toast = useRef(null);
 
-
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
     }, [])
