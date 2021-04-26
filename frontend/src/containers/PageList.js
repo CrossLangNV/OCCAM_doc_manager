@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {Card} from "primereact/card";
-import {Image, Row} from "react-bootstrap";
+import {Col, Image, Row} from "react-bootstrap";
 import {useSelector, useDispatch} from "react-redux";
 import {DeletePage, GetPageList} from "../actions/pageActions";
 import {Button} from "primereact/button";
@@ -40,31 +40,44 @@ const PageList = (props) => {
         <Row className='scroll-horizontally'>
             {pageList.data.map(page => {
                 return <Card key={page.id} className='page-card'>
-                    <Image className='page-card-img' src={page.file} />
-                    <Button
-                        onClick={() => confirmDeletePage(page.id)}
-                        label=""
-                        icon="pi pi-trash"
-                        className="p-button-danger"
-                        tooltip="Delete page"
-                        tooltipOptions={{position: 'bottom'}}
-                    />
+                    <Row>
+                        <Col className="page-container">
+                            <Image className='page-card-img' src={page.file} />
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Button
+                                onClick={() => confirmDeletePage(page.id)}
+                                label=""
+                                icon="pi pi-trash"
+                                className="p-button-danger"
+                                tooltip="Delete page"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                        </Col>
+                    </Row>
                     <hr/>
                     <Row>
-                        <OverlayAdd pageId={page.id}/>
-                        {(!_.isEmpty(page.page_overlay) &&
-                            <p>
-                                <Button
-                                    className="margin-left"
-                                    label="View overlay"
-                                    icon="pi pi-eye"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        window.open(page.page_overlay[0].file, '_blank');
-                                    }}
-                                />
-                            </p>
-                        )}
+                        <Col>
+                            <OverlayAdd pageId={page.id}/>
+                        </Col>
+
+                        <Col>
+                            {(!_.isEmpty(page.page_overlay) &&
+                                <p>
+                                    <Button
+                                        className="margin-left"
+                                        label="View overlay"
+                                        icon="pi pi-eye"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            window.open(page.page_overlay[0].file, '_blank');
+                                        }}
+                                    />
+                                </p>
+                            )}
+                        </Col>
                     </Row>
 
 

@@ -33,7 +33,7 @@
 }
 
 .page-card {
-  width: 22rem !important;
+  width: 25rem !important;
   margin-left: 15px;
   margin-bottom: 10px;
 }
@@ -53,4 +53,8 @@
 
 .margin-right {
   margin-right: 5px !important;
+}
+
+.page-container {
+  min-height: 408px;
 }
