@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../actions/documentActions";
-import React from "react";
+import React, {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
@@ -15,14 +15,15 @@ import DocumentState from "./DocumentState";
 const DocumentList = () => {
     const dispatch = useDispatch();
     const documentList = useSelector(state => state.documentList);
+    const uiStates = useSelector(state => state.uiStates);
     let history = useHistory();
 
     React.useEffect(() => {
-        fetchDocuments(5, 1);
+        fetchDocuments(5, 1, uiStates.documentQuery);
     }, []);
 
-    const fetchDocuments = (rows, page) => {
-        dispatch(GetDocumentList(rows, page))
+    const fetchDocuments = (rows, page, query) => {
+        dispatch(GetDocumentList(rows, page, query))
     }
 
     const confirmDeleteDoc = (event) => {
@@ -101,7 +102,7 @@ const DocumentList = () => {
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}
-                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1)}
+                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery)}
                     containerClassName={"pagination"}
                     activeClassName={'active'}
                     breakClassName={'page-item'}

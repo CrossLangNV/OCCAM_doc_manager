@@ -26,13 +26,29 @@ class BigResultsSetPagination(LimitOffsetPagination):
     offset_query_param = "offset"
 
 
-class DocumentViewSet(viewsets.ModelViewSet):
-    queryset = Document.objects.order_by('created_at')
+class DocumentListAPIView(ListCreateAPIView):
+    queryset = Document.objects.all()
     pagination_class = SmallResultsSetPagination
-
+    serializer_class = DocumentSerializer
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        q = Document.objects.all()
+        query = self.request.GET.get("query", "")
+
+        if len(query) > 0:
+            q = q.filter(name__icontains=query)
+            print("???")
+
+        return q
+
+
+class DocumentDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
 
 
 class PageListAPIView(ListCreateAPIView):

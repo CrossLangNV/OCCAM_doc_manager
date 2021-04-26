@@ -6,7 +6,6 @@ const DefaultState = {
     errorMsg: "",
     count: 0,
     rows: 0,
-
 };
 
 const DocumentListReducer = (state = DefaultState, action) => {
