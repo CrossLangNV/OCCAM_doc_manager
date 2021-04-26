@@ -1,20 +1,20 @@
 from rest_framework import serializers
 from documents.models import Document, Page, Overlay
 
-
-class PageSerializer(serializers.ModelSerializer):
-    document = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all())
-
-    class Meta:
-        model = Page
-        fields = "__all__"
-
-
 class OverlaySerializer(serializers.ModelSerializer):
-    Document = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all())
+    page = serializers.PrimaryKeyRelatedField(queryset=Page.objects.all())
 
     class Meta:
         model = Overlay
+        fields = "__all__"
+
+
+class PageSerializer(serializers.ModelSerializer):
+    document = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all())
+    page_overlay = OverlaySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Page
         fields = "__all__"
 
 

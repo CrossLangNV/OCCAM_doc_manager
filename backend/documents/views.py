@@ -52,20 +52,28 @@ class PageListAPIView(ListCreateAPIView):
         return q
 
 
+class OverlayListAPIView(ListCreateAPIView):
+    queryset = Overlay.objects.all()
+    pagination_class = BigResultsSetPagination
+    serializer_class = OverlaySerializer
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        q = Overlay.objects.all()
+        page_id = self.request.GET.get("page", "")
+
+        if page_id:
+            q = q.filter(page__id=str(page_id))
+
+        return q
+
+
 class PageDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     # TODO: Remove AllowAny
     permission_classes = [permissions.AllowAny]
-
-
-class OverlayViewSet(viewsets.ModelViewSet):
-    queryset = Overlay.objects.all()
-    pagination_class = SmallResultsSetPagination
-
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
-    serializer_class = OverlaySerializer
 
 
 class TranslatePageAPIView(APIView):

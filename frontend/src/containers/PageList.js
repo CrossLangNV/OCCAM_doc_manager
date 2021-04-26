@@ -6,6 +6,8 @@ import {DeletePage, GetPageList} from "../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
+import OverlayAdd from "./OverlayAdd";
+import _ from 'lodash'
 
 
 const PageList = (props) => {
@@ -43,10 +45,29 @@ const PageList = (props) => {
                         onClick={() => confirmDeletePage(page.id)}
                         label=""
                         icon="pi pi-trash"
-                        className="p-button-danger margin-left"
+                        className="p-button-danger"
                         tooltip="Delete page"
                         tooltipOptions={{position: 'bottom'}}
                     />
+                    <hr/>
+                    <Row>
+                        <OverlayAdd pageId={page.id}/>
+                        {(!_.isEmpty(page.page_overlay) &&
+                            <p>
+                                <Button
+                                    className="margin-left"
+                                    label="View overlay"
+                                    icon="pi pi-eye"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.open(page.page_overlay[0].file, '_blank');
+                                    }}
+                                />
+                            </p>
+                        )}
+                    </Row>
+
+
                 </Card>
             })}
             <Toast ref={toast} />
