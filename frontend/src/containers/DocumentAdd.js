@@ -18,7 +18,7 @@ const DocumentAdd = (props) => {
         evt.preventDefault();
 
         if (title !== "") {
-            const res = await axios.post(`http://localhost:8000/documents/api/documents/`,
+            const res = await axios.post(`http://localhost:8000/documents/api/documents`,
                 {
                     name: title,
                     content: content,

@@ -53,7 +53,7 @@ export const DeleteDocument = (id) => async dispatch => {
         type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
     });
 
-    const res = await axios.delete(`http://localhost:8000/documents/api/documents/${id}`)
+    const res = await axios.delete(`http://localhost:8000/documents/api/document/${id}`)
         .then((res) => {
             dispatch({
                 type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
