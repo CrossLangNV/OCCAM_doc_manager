@@ -61,6 +61,7 @@ class Overlay(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(null=True, blank=True)
     translation_file = models.FileField(null=True, blank=True)
+    geojson = models.FileField(null=True, blank=True)
 
     page = models.ForeignKey(
         Page,

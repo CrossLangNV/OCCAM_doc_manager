@@ -8,7 +8,7 @@ from documents.serializers import DocumentSerializer, PageSerializer, OverlaySer
 from rest_framework.parsers import FileUploadParser
 from rest_framework.views import APIView
 from scheduler.translation_tasks import translate_page
-
+from scheduler.ocr_tasks import ocr_page
 import logging as logger
 
 from rest_framework.response import Response
@@ -86,6 +86,13 @@ class OverlayListAPIView(ListCreateAPIView):
         return q
 
 
+class OverlayDetailAPIView(RetrieveUpdateDestroyAPIView):
+    queryset = Overlay.objects.all()
+    serializer_class = OverlaySerializer
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+
+
 class PageDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
@@ -106,3 +113,17 @@ class TranslatePageAPIView(APIView):
         logger.info("Starting celery task for translation")
 
         translate_page.delay(page, source, target)
+
+
+class PageLaunchOCRAPIView(APIView):
+    queryset = Page.objects.none()
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, format=None, *args, **kwargs):
+        page_id = request.data["page"]
+
+        ocr_page.delay(page_id)
+
+        logger.info("Starting celery task for translation")
+

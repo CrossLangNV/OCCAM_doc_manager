@@ -18,6 +18,7 @@ psycopg2-binary = "==2.8.5"
 django-minio-storage = "==0.3.8"
 minio = "==6.0.0"
 celery = "==4.4.7"
+lxml = "*"
 
 
 [requires]
