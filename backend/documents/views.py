@@ -37,9 +37,10 @@ class DocumentListAPIView(ListCreateAPIView):
         q = Document.objects.all()
         query = self.request.GET.get("query", "")
 
-        if len(query) > 0:
+        if query:
             q = q.filter(name__icontains=query)
-            print("???")
+            print(query)
+            print(q)
 
         return q
 

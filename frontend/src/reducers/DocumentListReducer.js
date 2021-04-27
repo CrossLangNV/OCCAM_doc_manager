@@ -34,7 +34,6 @@ const DocumentListReducer = (state = DefaultState, action) => {
                 errorMsg: "",
                 count: action.payload.count,
                 rows: action.rows
-
             }
         case DocumentActionTypes.DOCUMENT_DELETE_SUCCESS:
 

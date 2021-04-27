@@ -1,6 +1,5 @@
 import axios from 'axios'
 import {DocumentActionTypes} from "../constants/document-action-types";
-import {useSelector} from "react-redux";
 
 export const GetDocumentList = (rows, page, query) => async dispatch => {
     try {
@@ -11,10 +10,7 @@ export const GetDocumentList = (rows, page, query) => async dispatch => {
         });
 
         const offset = (page * rows) - rows;
-        let url = `http://localhost:8000/documents/api/documents?rows=${rows}&offset=${offset}`
-        if (query !== "") {
-            url = url + `&query=${query}`
-        }
+        let url = `http://localhost:8000/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`
         const res = await axios
             .get(url)
 

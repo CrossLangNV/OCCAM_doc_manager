@@ -12,9 +12,9 @@ const Header = () => {
 
     const uiStates = useSelector(state => state.uiStates);
 
-    const searchDocuments = (query) => {
+    const searchDocuments = async (query) => {
         dispatch(ModifyDocumentQuery(query))
-        dispatch(GetDocumentList(5, 1, uiStates.documentQuery))
+        dispatch(GetDocumentList(5, 1, query))
     }
 
     return (
@@ -33,7 +33,15 @@ const Header = () => {
                             placeholder="Search document"
                             className="mr-sm-2"
                             value={uiStates.documentQuery}
-                            onChange={e => searchDocuments(e.target.value)}
+                            onChange={(e) => {
+                                searchDocuments(e.target.value)
+                            }}
+                            onKeyPress={(e) => {
+                                if (e.key === "Enter") {
+                                    e.preventDefault()
+                                    searchDocuments(e.target.value)
+                                }
+                            }}
                         />
                         <Button variant="outline-info">Search</Button>
                     </Form>
