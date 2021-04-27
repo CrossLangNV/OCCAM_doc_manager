@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from scheduler.translation_tasks import translate_page
 from scheduler.ocr_tasks import ocr_page
 import logging as logger
+from rest_framework import status
 
 from rest_framework.response import Response
 
@@ -126,4 +127,6 @@ class PageLaunchOCRAPIView(APIView):
         ocr_page.delay(page_id)
 
         logger.info("Starting celery task for translation")
+
+        return Response("Task launched", status=status.HTTP_201_CREATED)
 
