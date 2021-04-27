@@ -1,16 +1,17 @@
 import io
 import logging as logger
 import time
+import warnings
 
 import requests
-from rest_framework import generics, mixins, permissions, views, status
+from rest_framework import permissions, views, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import warnings
 
 from documents.models import Document, Page, Overlay
+from documents.ocr_connector import get_request_id, upload_file, get_result, check_state
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 from scheduler.ocr_tasks import ocr_page
 from scheduler.translation_tasks import translate_page
@@ -204,6 +205,7 @@ class OverlayTranslationView(views.APIView):
         return django_response  # TODO
 
 
+# Deprecated, TODO TO be removed
 class PageTranscriptionView(views.APIView):
     """
     Does text region detection and OCR.
@@ -219,6 +221,8 @@ class PageTranscriptionView(views.APIView):
     def post(self,
              request,
              format=None):
+
+        warnings.warn('This is now part of a Celery task.', DeprecationWarning)
 
         headers = request.data
 
