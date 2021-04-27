@@ -84,7 +84,7 @@ const PageList = (props) => {
                                         icon="pi pi-eye"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            window.open(page.page_overlay[0].file, '_blank');
+                                            window.open(page.page_overlay[page.page_overlay.length-1].file, '_blank');
                                         }}
                                         tooltip="View overlay"
                                         tooltipOptions={{position: 'bottom'}}

@@ -41,5 +41,3 @@ def ocr_page(page_id):
 
     logger.info(geojson)
 
-
-
