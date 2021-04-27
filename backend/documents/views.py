@@ -168,6 +168,7 @@ class OverlayDetail(mixins.RetrieveModelMixin,
     #     return self.destroy(request, *args, **kwargs)
 
 
+# Deprecated, TODO TO be removed
 class OverlayTranslationView(views.APIView):
     """
     Test does this give some info?
