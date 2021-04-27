@@ -2,15 +2,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {DeleteDocument, GetDocument} from "../actions/documentActions";
 import React from "react";
 import _ from "lodash"
-import {FileUpload} from "primereact/fileupload";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
-import {Col, Image, Row} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import Moment from "react-moment";
-import {DeletePage, GetPageList} from "../actions/pageActions";
-import {Card} from "primereact/card";
-import {ScrollPanel} from "primereact/scrollpanel";
 import PageAdd from "./PageAdd";
 import PageList from "./PageList";
 import DocumentState from "./DocumentState";
@@ -32,10 +28,20 @@ const Document = (props) => {
             target: event.currentTarget,
             message: 'Are you sure you want to delete this document?',
             icon: 'pi pi-exclamation-triangle',
-            accept: () =>
-            {
+            accept: () => {
                 dispatch(DeleteDocument(event))
                 history.push("/")
+            },
+        });
+    }
+
+    const confirmStartOcr = (event) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: 'Do you want to start the OCR process for all the pages of this document?',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                console.log("Not implemented yet!")
             },
         });
     }
@@ -44,7 +50,7 @@ const Document = (props) => {
         if (!_.isEmpty(documentState.data[documentId])) {
 
             const documentData = documentState.data[documentId]
-            return(
+            return (
                 <div>
                     <Row>
                         <Col sm={11}>
@@ -52,7 +58,7 @@ const Document = (props) => {
                         </Col>
                         <Col>
                             <Button
-                                onClick={() => console.log("Not implemented")}
+                                onClick={() => confirmStartOcr(documentId)}
                                 label=""
                                 icon="pi pi-play"
                                 className="p-button-primary"

@@ -82,3 +82,20 @@ export const AddPage = (documentId, files) => async dispatch => {
         });
     })
 }
+
+export const OcrPage = (id) => async dispatch => {
+    dispatch({
+        type: PageActionTypes.PAGE_OCR_LOADING
+    });
+
+    const res = await axios.post(`http://localhost:8000/documents/api/pages/launch_ocr`,
+        {
+            page: id
+        })
+        .then((res) => {
+            dispatch({
+                type: PageActionTypes.PAGE_OCR_SUCCESS,
+                payload: {id}
+            })
+        })
+}

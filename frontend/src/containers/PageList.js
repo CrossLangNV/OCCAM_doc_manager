@@ -1,8 +1,8 @@
 import React, {useRef} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
-import {useSelector, useDispatch} from "react-redux";
-import {DeletePage, GetPageList} from "../actions/pageActions";
+import {useDispatch, useSelector} from "react-redux";
+import {DeletePage, GetPageList, OcrPage} from "../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -27,12 +27,16 @@ const PageList = (props) => {
             target: event.currentTarget,
             message: 'Are you sure you want to delete this page?',
             icon: 'pi pi-exclamation-triangle',
-            accept: () =>
-            {
+            accept: () => {
                 dispatch(DeletePage(event))
                 toast.current.show({severity: 'success', summary: 'Success', detail: 'Page has been deleted'});
             },
         });
+    }
+
+    const startOcrForPage = (pageId) => {
+        dispatch(OcrPage(pageId))
+        toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
     }
 
     return (
@@ -41,7 +45,7 @@ const PageList = (props) => {
                 return <Card key={page.id} className='page-card'>
                     <Row>
                         <Col className="page-container">
-                            <Image className='page-card-img' src={page.file} />
+                            <Image className='page-card-img' src={page.file}/>
                         </Col>
                     </Row>
                     <Row>
@@ -69,29 +73,44 @@ const PageList = (props) => {
                     </Row>
                     <hr/>
                     <Row>
-                        <Col md={9}>
+                        <Col md={7}>
                             <OverlayAdd
                                 pageId={page.id}
                             />
                         </Col>
 
-                        <Col>
-                            {(!_.isEmpty(page.page_overlay) &&
-                                <p>
+
+                        {(!_.isEmpty(page.page_overlay) &&
+                            <>
+                                <Col>
                                     <Button
                                         className="margin-left"
                                         label=""
                                         icon="pi pi-eye"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            window.open(page.page_overlay[page.page_overlay.length-1].file, '_blank');
+                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
                                         }}
                                         tooltip="View overlay"
                                         tooltipOptions={{position: 'bottom'}}
                                     />
-                                </p>
-                            )}
+
+                                </Col>
+                            </>
+                        )}
+
+                        <Col>
+                            <Button
+                                onClick={() => startOcrForPage(page.id)}
+                                label=""
+                                icon="pi pi-play"
+                                className="p-button-primary"
+                                tooltip="Run OCR"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
                         </Col>
+
+
                     </Row>
 
 
