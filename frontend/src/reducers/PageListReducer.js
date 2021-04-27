@@ -1,5 +1,6 @@
 import React from 'react';
 import {PageActionTypes} from "../constants/page-action-types";
+import {OverlayActionTypes} from "../constants/overlay-action-types";
 
 const DefaultState = {
     loading: false,
@@ -60,6 +61,21 @@ const PageListReducer = (state = DefaultState, action) => {
                 count: state.count+1,
                 rows: state.rows
             }
+
+        case OverlayActionTypes.OVERLAY_ADD_SUCCESS:
+
+            return {
+                ...state,
+                data: state.data.map(
+                    (page, i) => page.id === action.pageId ? {...page, page_overlay: [action.payload]}
+                        : page
+                ),
+                loading: false,
+                errorMsg: "",
+                count: state.count,
+                rows: state.rows
+            }
+
         default:
             return state
 

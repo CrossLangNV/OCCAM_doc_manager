@@ -67,7 +67,10 @@ class Overlay(models.Model):
                             blank=True,
                             upload_to='overlays')
     translation_file = models.FileField(null=True, blank=True,
-                                        upload_to='overlays_trans')
+                                        upload_to='overlays/trans')
+    geojson = models.FileField(null=True,
+                               blank=True,
+                               upload_to='overlays/geojson')
 
     page = models.ForeignKey(
         Page,

@@ -13,6 +13,7 @@ import {Card} from "primereact/card";
 import {ScrollPanel} from "primereact/scrollpanel";
 import PageAdd from "./PageAdd";
 import PageList from "./PageList";
+import DocumentState from "./DocumentState";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
@@ -62,16 +63,24 @@ const Document = (props) => {
                                 onClick={() => confirmDeleteDoc(documentId)}
                                 label=""
                                 icon="pi pi-trash"
-                                className="p-button-danger btn-margin-left"
+                                className="p-button-danger margin-left"
                                 tooltip="Delete document"
                                 tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
                     </Row>
 
-                    <p><b>Content: </b> {documentData.content}</p>
-                    <p><b>State:</b> {documentData.state}</p>
-                    <p><b>Created at:</b> <Moment format="DD/MM/YYYY H:mm" date={documentData.created_at} /></p>
+                    <p>
+                        <b>Content: </b> {documentData.content}
+                    </p>
+                    <p>
+                        <b className="margin-right">State:</b>
+                        <DocumentState state={documentData.state} />
+                    </p>
+                    <p>
+                        <b>Created at:</b>
+                        <Moment format="DD/MM/YYYY H:mm" date={documentData.created_at} />
+                    </p>
 
                     <br/>
 

@@ -81,8 +81,4 @@ export const AddPage = (documentId, files) => async dispatch => {
             })
         });
     })
-
-
-
-
 }

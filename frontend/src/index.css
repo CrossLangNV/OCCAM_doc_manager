@@ -33,7 +33,7 @@
 }
 
 .page-card {
-  width: 20rem !important;
+  width: 19% !important;
   margin-left: 15px;
   margin-bottom: 10px;
 }
@@ -47,6 +47,14 @@
   overflow-y: hidden;
 }
 
-.btn-margin-left {
+.margin-left {
   margin-left: 5px !important;
+}
+
+.margin-right {
+  margin-right: 5px !important;
+}
+
+.page-container {
+  min-height: 408px;
 }
