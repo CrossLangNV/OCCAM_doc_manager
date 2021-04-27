@@ -8,6 +8,7 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import warnings
 
 from documents.models import Document, Page, Overlay
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
@@ -191,6 +192,8 @@ class OverlayTranslationView(views.APIView):
             "target": "en"
         }
         """
+
+        warnings.warn('This is now part of a Celery task.', DeprecationWarning)
 
         headers = request.data
 
