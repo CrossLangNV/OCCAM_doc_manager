@@ -1,5 +1,6 @@
 import uuid
 
+from django.core.files import File
 from django.db import models
 from django.utils import timezone
 
@@ -53,6 +54,19 @@ class Page(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def update_image(self, file):
+        """ Save a file to the page.
+
+        Example:
+            >> page = Page().objects.create()
+            >> with open(filename_image, 'rb') as f:
+            >>    page.update_image(f)
+        """
+
+        with File(file) as django_file:
+            self.file.save(file.name, django_file)
+            self.save()
+
     def __str__(self):
         return str(self.file)
 
@@ -86,8 +100,23 @@ class Overlay(models.Model):
     # target_lang = # TODO List (again based on choice/list)
 
     def update_xml(self, file):
-        self.file.save(file.name, file)
-        self.save()
+        """ Save a file to overlay.
+
+        Example:
+            >> overlay = Overlay().objects.create()
+            >> with open(filename_xml, 'rb') as f:
+            >>    overlay.update_xml(f)
+
+        """
+        with File(file) as django_file:
+            self.file.save(file.name, django_file)
+            self.save()
+
+    def get_file(self):
+        return self.file
+
+    def get_translation_file(self):
+        return self.translation_file
 
     def __str__(self):
         return f"Overlay of '{self.page.file.name}'" + ' ' + '*source lang*' + ' ' + '*target lang*'

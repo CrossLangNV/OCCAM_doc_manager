@@ -1,6 +1,5 @@
 import os
 
-from django.db.models import FileField
 from django.test import TestCase
 
 # The following import gives an error:
@@ -8,6 +7,8 @@ from django.test import TestCase
 from documents.models import Document, Page, Overlay
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+FILENAME_IMAGE = os.path.join(ROOT, 'backend/tests/examples_data/19154766-page0.jpg')
+FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
 
 
 class DocumentTest(TestCase):
@@ -58,20 +59,22 @@ class ImageTest(TestCase):
         self.height = 20
 
         Page.objects.create(
-            filename=self.name,
-            path=self.path,
+            # filename=self.name,
+            # path=self.path,
             width=self.width,
             height=self.height,
             document=self.doc
         )
 
     def test_image_content(self):
-        image_test = Page.objects.get(filename=self.name)
+        # image_test = Page.objects.get(filename=self.name)
+        image_test = Page.objects.get(document=self.doc)
 
         self.assertEqual(image_test.path, self.path)
 
     def test_string_representation(self):
-        image_test = Page.objects.get(filename=self.name)
+        # image_test = Page.objects.get(filename=self.name)
+        image_test = Page.objects.get(document=self.doc)
 
         self.assertEqual(str(image_test), self.name)
 
@@ -92,12 +95,14 @@ class OverlayTest(TestCase):
         )
 
         self.page = Page.objects.create(
-            filename='image.jpg',
-            path='images/image.jpg',
+            # filename='image.jpg',
+            # path='images/image.jpg',
             width=10,
             height=20,
             document=self.doc
         )
+        with open(FILENAME_IMAGE, 'rb') as f:
+            self.page.update_image(f)
 
         self.overlay = Overlay.objects.create(
             page=self.page
@@ -111,16 +116,24 @@ class OverlayTest(TestCase):
     def test_string_representation(self):
         overlay_test = Overlay.objects.get(page=self.page)
 
-        self.assertIn(self.page.filename, str(overlay_test))
+        self.assertIn(self.page.file.name, str(overlay_test))
 
     def test_load_xml(self):
-        self.assertFalse(self.overlay.xml, 'Sanity check, start with no xml.')
+        self.assertFalse(self.overlay.file, 'Sanity check, start with no xml.')
 
-        filename_xml = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
-
-        with open(filename_xml, 'r') as f:
+        with open(FILENAME_XML, 'rb') as f:
             self.overlay.update_xml(f)
 
-        self.assertTrue(self.overlay.xml, 'Overlay should contain an XML.')
+        self.assertTrue(self.overlay.file, 'Overlay should contain an XML.')
 
-        self.assertIsInstance(self.overlay.xml, FileField)
+        self.assertTrue(self.overlay.file.size, 'Should be non-empty')
+
+    def test_create_with_xml(self):
+        overlay = Overlay.objects.create(page=self.page)
+        with open(FILENAME_XML, 'rb') as f:
+            overlay.update_xml(f)
+
+        s_overlay = overlay.file.file.read()
+        with open(FILENAME_XML, 'rb') as f:
+            s_xml = f.read()
+        self.assertEqual(s_xml, s_overlay, 'Should have identical content.')

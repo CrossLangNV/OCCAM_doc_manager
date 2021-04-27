@@ -1,13 +1,12 @@
 import os
 
-from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase
 from rest_framework import status
 
-from backend.tests.documents.create_database_mock import create
+from backend.tests.documents.create_database_mock import create, login
 from documents.models import Document, Page, Overlay
-from documents.serializers import DocumentSerializer, ImageSerializer, OverlaySerializer
-from documents.views import OverlayTranslationView
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
+from documents.views import OverlayTranslationView, PageTranscriptionView
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 
@@ -43,22 +42,22 @@ class GetAllDocumentsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class GetAllImagesTest(TestCase):
-    """ Test module for GET all images API """
+class GetAllPagesTest(TestCase):
+    """ Test module for GET all pages API """
 
     def setUp(self):
-        create()
-
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
 
+        create(client=self.client_object)
+
     def test_get_all_images(self):
         # get API response
-        url = '/documents/api/images/'
+        url = '/documents/api/pages'  # Without the '/'!
         response = self.client_object.get(url)
 
         images = Page.objects.all()
-        serializer = ImageSerializer(images, many=True)
+        serializer = PageSerializer(images, many=True)
 
         self.assertEqual(response.data.get('results'), serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,10 +69,10 @@ class GetAllOverlaysTest(TestCase):
     url = '/documents/api/overlays/'
 
     def setUp(self):
-        create()
-
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
+
+        create(client=self.client_object)
 
     def test_get_all_overlays(self):
         # get API response
@@ -117,41 +116,63 @@ class OverlayTranslationViewTest(TestCase):
     url = '/documents/api/overlay/translation'
 
     def setUp(self):
-        create()
-
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
+
+        create(client=self.client_object)
 
     def test_post(self):
         # get API response
 
+        overlay = Overlay.objects.exclude(file='')[0]
+
         if 1:
-            response = self.client_object.post(self.url)
+            response = self.client_object.post(self.url,
+                                               data={'id': overlay.id,
+                                                     'source': 'nl',
+                                                     'target': 'en'
+                                                     })
         else:
             v = OverlayTranslationView()
             response = v.post(None)
 
-        overlay0 = next(filter(lambda x: x.xml, Overlay.objects.all()))
-
-        with overlay0.xml.open() as f:
+        # Get it again, to make sure it's updated.
+        overlay_after = Overlay.objects.get(id=overlay.id)
+        with overlay_after.file.open() as f:
             b_xml = f.read()
 
-        self.assertTrue(response.ok)
+        self.assertLess(response.status_code, 300)
         self.assertEqual(response.data, b_xml)
 
 
-def login(self):
-    username = 'dummy@gmail.com'
-    password = 'Dummy@123'
-    self.username = username
-    self.password = password
+class PageTranscriptionViewTest(TestCase):
+    url = '/documents/api/page/transcription/'
 
-    user = User.objects.create(username=username)
-    user.set_password(password)
-    user.save()
+    def setUp(self):
+        self.client_object, self.user = login(self)
+        self.content_type = 'application/json'
 
-    # initialize the APIClient app
-    client = Client()
-    b = client.login(username=username, password=password)
-    assert b
-    return client, user
+        create(client=self.client_object)
+
+    def test_post(self):
+        # get API response
+
+        page = next(filter(lambda x: 'jpg' in x.file.name, Page.objects.all())
+                    )
+
+        data = {'id': page.id,
+                }
+
+        if 1:
+            response = self.client_object.post(self.url,
+                                               data=data)
+        else:
+            v = PageTranscriptionView()
+
+            class RequestMock:
+                def __init__(self):
+                    self.data = data
+
+            response = v.post(RequestMock())
+
+        self.assertLess(response.status_code, 300)
