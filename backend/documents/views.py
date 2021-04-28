@@ -1,5 +1,6 @@
 import io
 import logging as logger
+import os
 import time
 import warnings
 
@@ -14,11 +15,11 @@ from documents.models import Document, Page, Overlay
 from documents.ocr_connector import get_request_id, upload_file, get_result, check_state
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 from scheduler.ocr_tasks import ocr_page
-from scheduler.translation_tasks import translate_page
+from scheduler.translation_tasks import translate_overlay
 
 URL_TRANSLATE = 'http://192.168.105.41:9050/translate/xml/blocking'
 
-API_KEY_PERO_OCR = '5eB8q7up0nb000J3KGEvtdNOmB52LvUrRWfNXelcLtg'
+API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 
 class SmallResultsSetPagination(LimitOffsetPagination):
@@ -119,7 +120,7 @@ class TranslatePageAPIView(APIView):
 
         logger.info("Starting celery task for translation")
 
-        translate_page.delay(page, source, target)
+        translate_overlay.delay(page, source, target)
 
 
 class PageLaunchOCRAPIView(APIView):
