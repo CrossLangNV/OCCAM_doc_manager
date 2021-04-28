@@ -19,6 +19,7 @@ django-minio-storage = "==0.3.8"
 minio = "==6.0.0"
 celery = "==4.4.7"
 lxml = "*"
+Pillow = "*"
 
 
 [requires]

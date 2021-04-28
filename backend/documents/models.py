@@ -37,9 +37,7 @@ class Document(models.Model):
 
 class Page(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField()
-    width = models.IntegerField(null=True, blank=True)
-    height = models.IntegerField(null=True, blank=True)
+    file = models.ImageField(upload_to="pages")
     deleted = models.BooleanField(default=False)
     image_hash = models.TextField(null=True, blank=True)
 

@@ -1,13 +1,12 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
-import axios from "axios";
 import {useDispatch} from "react-redux";
 import {AddPage} from "../actions/pageActions";
 import {Toast} from "primereact/toast";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
-    const ACCEPTED_FILE_TYPES = "image/*,application/pdf"
+    const ACCEPTED_FILE_TYPES = "image/*"
     const documentId = props.documentId
     const toast = useRef(null);
 
