@@ -10,16 +10,16 @@ import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
 import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
-import L from "leaflet"
+import {ModifySelectedPage} from "../actions/uiActions";
 
 
 const PageList = (props) => {
+    const documentId = props.documentId;
     const dispatch = useDispatch()
+    const toast = useRef(null);
 
     const pageList = useSelector(state => state.pageList);
-    const documentId = props.documentId;
-
-    const toast = useRef(null);
+    const uiStates = useSelector(state => state.uiStates);
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
@@ -42,6 +42,10 @@ const PageList = (props) => {
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
     }
 
+    const selectPage = (page) => {
+        dispatch(ModifySelectedPage(page))
+    }
+
     return (
         <>
             <Row className='scroll-horizontally'>
@@ -55,7 +59,12 @@ const PageList = (props) => {
                     return <Card key={page.id} className='page-card'>
                         <Row>
                             <Col className="page-container">
-                                <Image className='page-card-img' src={page.file}/>
+                                <Image
+                                    onClick={() => selectPage(page)}
+                                    className={uiStates.selectedPage.id == page.id ?
+                                        'page-card-img selectedPage' : 'page-card-img'}
+                                    src={page.file}
+                                />
                             </Col>
                         </Row>
                         <Row>
@@ -127,13 +136,12 @@ const PageList = (props) => {
 
             </Row>
 
+            <div className='space' />
+
             <Row>
-                <h1>Leaflet Demo (first page only)</h1>
-                {pageList.data.map(page => {
-                    return <PageLeaflet key={page.id} page={page} file={page.file}/>
-                })}
-
-
+                {uiStates.selectedPage !== "" && (
+                    <PageLeaflet />
+                )}
             </Row>
         </>
 

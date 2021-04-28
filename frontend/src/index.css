@@ -44,6 +44,8 @@
 
 .page-card-img {
   width: 18rem !important;
+  cursor: pointer;
+  margin-bottom: 8px;
 }
 
 .scroll-horizontally {
@@ -70,4 +72,8 @@
   right: 5%;
   width: 90%;
   height: 80vh;
+}
+
+.selectedPage {
+  border: 1px solid #2196F3;
 }

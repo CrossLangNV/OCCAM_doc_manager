@@ -8,3 +8,10 @@ export const ModifyDocumentQuery = (query) => async dispatch => {
         payload: query
     });
 }
+
+export const ModifySelectedPage = (query) => async dispatch => {
+    dispatch({
+        type: UiActionTypes.UI_DOCUMENT_SELECTED_PAGE_MODIFY,
+        payload: query
+    });
+}
