@@ -74,7 +74,6 @@ export const AddPage = (documentId, files) => async dispatch => {
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
             }
         }).then((res) => {
-            console.log(res)
             dispatch({
                 type: PageActionTypes.PAGE_ADD_SUCCESS,
                 payload: res.data

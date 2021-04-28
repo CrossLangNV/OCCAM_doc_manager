@@ -62,3 +62,12 @@
 .page-container {
   min-height: 408px;
 }
+
+#mapid { height: 180px; }
+
+.leaflet-container {
+  left: 5%;
+  right: 5%;
+  width: 90%;
+  height: 80vh;
+}

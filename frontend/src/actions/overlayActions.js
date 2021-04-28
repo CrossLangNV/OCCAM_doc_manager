@@ -17,7 +17,6 @@ export const AddOverlay = (pageId, files) => async dispatch => {
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
             }
         }).then((res) => {
-            console.log(res)
             dispatch({
                 type: OverlayActionTypes.OVERLAY_ADD_SUCCESS,
                 pageId: pageId,

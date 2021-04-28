@@ -46,7 +46,6 @@ const DocumentAdd = (props) => {
 
     const pagesUploader = (event) => {
         const files = event.files
-        console.log(files)
     }
 
     return (
