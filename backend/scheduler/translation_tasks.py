@@ -6,7 +6,7 @@ from django.core.files import File
 
 from celery import shared_task
 from documents.models import Overlay
-from documents.translation_connector import translate_file
+from documents.translation_connector import CEFeTranslationConnector
 
 logger = logging.getLogger(__name__)
 
@@ -26,12 +26,14 @@ def translate_overlay(overlay_id,
     logger.info("Source language: %s", source)
     logger.info("Target language: %s", target)
 
+    conn = CEFeTranslationConnector()
+
     # POST to XML Translation /translate/xml
     # Send a translation request and get the ID to poll to
     with overlay.get_file().open('rb') as f:
-        xml_trans = translate_file(f,
-                                   source,
-                                   target)
+        xml_trans = conn.translate_xml(f,
+                                       source,
+                                       target)
 
     # GET to XML Translation /translate/xml/{xml_id}
     # Keep polling until it's finished.

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15">
+    <Metadata>
+        <Creator>prov = Brno University of Technology/Faculty of Information Technology/Michal Hradi&#353;/
+            ihradis@fit.vut.cz: name = PERO OCR:
+        </Creator>
+        <Created>2021-02-26T18:00:01.337363</Created>
+        <LastChange>2021-02-26T18:00:01.337363</LastChange>
+    </Metadata>
+    <Page imageFilename="KB_JB840_1919-04-01_01_0.png" imageWidth="4058" imageHeight="5171">
+        <TextRegion id="r000">
+            <Coords
+                    points="1612,5582 1548,5582 1548,5649 1600,5656 2024,5644 2856,5644 3228,5825 3284,5825 3492,5644 3560,5568 3560,5505 1800,5505 1612,5582"/>
+            <TextLine id="r000-l072" custom="heights_v2:[46.4,17.0]">
+                <Coords
+                        points="3560,5568 3560,5505 3356,5505 3164,5505 2968,5505 2776,5505 2484,5505 2388,5509 2192,5505 2000,5505 1800,5505 1800,5568 2000,5568 2192,5568 2388,5572 2580,5564 2776,5568 2968,5568 3164,5568 3356,5568 3560,5568"/>
+                <Baseline
+                        points="1800,5552 2000,5552 2192,5552 2388,5556 2580,5548 2776,5552 2968,5552 3164,5552 3356,5552 3560,5552"/>
+                <TextEquiv>
+                    <Unicode>ayant pouvoir de représenter la personne morale à légard des tiers</Unicode>
+                </TextEquiv>
+            </TextLine>
+        </TextRegion>
+    </Page>
+</PcGts>

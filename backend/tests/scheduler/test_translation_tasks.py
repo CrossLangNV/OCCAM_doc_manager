@@ -7,7 +7,7 @@ from documents.models import Overlay
 from scheduler.translation_tasks import translate_overlay
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
-FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
+FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/page_minimal_working_example.xml')
 
 
 class TranslateOverlayTest(TestCase):
