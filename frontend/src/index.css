@@ -38,6 +38,10 @@
   margin-bottom: 10px;
 }
 
+.page-card-loading {
+  height: 589px;
+}
+
 .page-card-img {
   width: 18rem !important;
 }

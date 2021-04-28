@@ -8,6 +8,7 @@ import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
 import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
+import {Skeleton} from "primereact/skeleton";
 
 
 const PageList = (props) => {
@@ -41,6 +42,12 @@ const PageList = (props) => {
 
     return (
         <Row className='scroll-horizontally'>
+            {pageList.loading && (
+                <Col>
+                    <Skeleton width={'100%'} height={'380px'}></Skeleton>
+                </Col>
+            )}
+
             {pageList.data.map(page => {
                 return <Card key={page.id} className='page-card'>
                     <Row>

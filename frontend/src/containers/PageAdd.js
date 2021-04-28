@@ -36,7 +36,7 @@ const PageAdd = (props) => {
                 url="./upload"
                 multiple
                 accept={ACCEPTED_FILE_TYPES}
-                maxFileSize={1000000}
+                maxFileSize={10000000}
                 customUpload
                 uploadHandler={pagesUploader}
                 emptyTemplate={emptyTemplate}

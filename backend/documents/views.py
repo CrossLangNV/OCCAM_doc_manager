@@ -49,7 +49,7 @@ class DocumentListAPIView(ListCreateAPIView):
             print(query)
             print(q)
 
-        return q
+        return q.order_by('-updated_at')
 
 
 class DocumentDetailAPIView(RetrieveUpdateDestroyAPIView):
