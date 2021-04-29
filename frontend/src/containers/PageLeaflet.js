@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {MapContainer, TileLayer, Marker, Popup, ImageOverlay, useMap} from 'react-leaflet'
+import {MapContainer, TileLayer, Marker, Popup, ImageOverlay, useMap, Polygon} from 'react-leaflet'
 import {useSelector} from "react-redux";
 import Leaflet from "leaflet";
 import {CRS} from "leaflet/dist/leaflet-src.esm";
@@ -43,9 +43,8 @@ const PageLeaflet = (props) => {
     function GetGeoJsonRectangles() {
         const map = useMap()
 
-
         // const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const overlay = page.page_overlay[0]
+        const overlay = page.page_overlay[page.page_overlay.length -1]
         const geojson = overlay.geojson
 
 
@@ -61,13 +60,6 @@ const PageLeaflet = (props) => {
                     weight: 1,
                     color: '#ff7800',
                 }).addTo(map);
-                /*
-                Add .openTooltip() to show all tooltips
-                OR add {permanent: true} after name.
-                https://gis.stackexchange.com/questions/59571/how-to-add-text-only-labels-on-leaflet-map-with-no-icon
-                marker.bindTooltip(c.properties.name).openTooltip();
-                marker.bindTooltip(c.properties.name);
-                */
 
                 marker.bindTooltip(c.properties.name, {
                     // permanent: true,
