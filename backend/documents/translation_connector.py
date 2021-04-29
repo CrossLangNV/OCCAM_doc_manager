@@ -78,8 +78,3 @@ class CEFeTranslationConnector(TranslationConnector):
                                 )
 
         return response.content
-
-
-def upload_file():
-    raise NotImplementedError()
-    return  # TODO
