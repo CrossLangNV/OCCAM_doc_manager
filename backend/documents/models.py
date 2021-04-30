@@ -3,6 +3,7 @@ import uuid
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy
 
 
 class Document(models.Model):
@@ -120,3 +121,59 @@ class Overlay(models.Model):
 
     def __str__(self):
         return f"Overlay of '{self.page.file.name}'" + ' ' + '*source lang*' + ' ' + '*target lang*'
+
+
+class LanguageCodes(models.TextChoices):
+    NL = 'NL', gettext_lazy('Nederlands')
+    EN = 'EN', gettext_lazy('English')
+    FR = 'FR', gettext_lazy('Français')
+    DE = 'DE', gettext_lazy('Deutsch')
+
+
+class LangField(models.CharField):
+    def __init__(self,
+                 *args,
+                 choices=LanguageCodes.choices,
+                 max_length=2,
+                 **kwargs):
+        super(LangField, self).__init__(*args,
+                                        choices=choices,
+                                        max_length=max_length,
+                                        **kwargs)
+
+
+class Geojson(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # Language of text (can be after translation) (abbreviation)
+    lang = LangField()
+    overlay = models.ForeignKey(
+        Overlay,
+        related_name="overlay_geojson",
+        on_delete=models.CASCADE,
+        unique=False
+    )
+    # Is this the source overlay?
+    original = models.BooleanField()
+
+    # Geojson file
+    file = models.FileField(null=True,
+                            blank=True,
+                            upload_to='overlays/geojson')
+
+    # Language of original document
+    source_lang = LangField()
+    # Information about the translation engine (if applicable)
+    trans_engine = models.CharField(blank=True, max_length=50)
+
+    def update_file(self, file):
+        """ Save a geojson file to the geojson object.
+
+        Example:
+            >> geojson = Geojson.objects.create(...)
+            >> with open(filename_geojson, 'rb') as f:
+            >>    geojson.update_file(f)
+
+        """
+        with File(file) as django_file:
+            self.file.save(file.name, django_file)
+            self.save()

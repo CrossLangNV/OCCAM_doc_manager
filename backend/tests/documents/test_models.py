@@ -4,7 +4,7 @@ from django.test import TestCase
 
 # The following import gives an error:
 # from backend.documents.models import Document
-from documents.models import Document, Page, Overlay
+from documents.models import Document, Page, Overlay, Geojson
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 FILENAME_IMAGE = os.path.join(ROOT, 'backend/tests/examples_data/19154766-page0.jpg')
@@ -53,30 +53,31 @@ class ImageTest(TestCase):
             name='Declaration of Independence',
             content='Stolen by Nicolas Cage.'
         )
-        self.name = 'a test image'
         self.path = 'a/b/c.def'
         self.width = 10
         self.height = 20
 
         Page.objects.create(
-            # filename=self.name,
-            # path=self.path,
             width=self.width,
             height=self.height,
             document=self.doc
         )
 
     def test_image_content(self):
-        # image_test = Page.objects.get(filename=self.name)
         image_test = Page.objects.get(document=self.doc)
 
-        self.assertEqual(image_test.path, self.path)
+        self.assertTrue(image_test, 'Should return an object.')
+        self.assertIsInstance(image_test, Page)
 
     def test_string_representation(self):
-        # image_test = Page.objects.get(filename=self.name)
         image_test = Page.objects.get(document=self.doc)
 
-        self.assertEqual(str(image_test), self.name)
+        with open(FILENAME_IMAGE, 'rb') as f:
+            image_test.update_image(f)
+
+        basename = os.path.split(os.path.splitext(FILENAME_IMAGE)[0])[-1]
+
+        self.assertIn(basename, str(image_test))
 
 
 class OverlayTest(TestCase):
@@ -137,3 +138,54 @@ class OverlayTest(TestCase):
         with open(FILENAME_XML, 'rb') as f:
             s_xml = f.read()
         self.assertEqual(s_xml, s_overlay, 'Should have identical content.')
+
+
+class GeojsonTest(TestCase):
+    """
+    Test module for Geojson model
+    """
+
+    def setUp(self):
+        """
+        Builds up a test database and is cleaned after each test.
+        """
+
+        self.doc = Document.objects.create(
+            name='test doc',
+            content='test content.'
+        )
+
+        self.page = Page.objects.create(
+            width=10,
+            height=20,
+            document=self.doc
+        )
+        with open(FILENAME_IMAGE, 'rb') as f:
+            self.page.update_image(f)
+
+        self.overlay = Overlay.objects.create(
+            page=self.page
+        )
+
+    def test_create(self):
+        geojson = Geojson.objects.create(overlay=self.overlay,
+                                         original=True,
+                                         lang='en'
+                                         )
+        self.assertTrue(geojson)
+
+    def test_load_file(self):
+        geojson = Geojson.objects.create(overlay=self.overlay,
+                                         original=True,
+                                         lang='en'
+                                         )
+
+        self.assertFalse(geojson.file, 'Sanity check, start with no file.')
+
+        # TODO change to geojson object!
+        with open(FILENAME_XML, 'rb') as f:
+            geojson.update_file(f)
+
+        self.assertTrue(geojson.file, 'geojson should contain a file.')
+
+        self.assertTrue(geojson.file.size, 'Should be non-empty')
