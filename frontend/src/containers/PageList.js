@@ -23,6 +23,8 @@ const PageList = (props) => {
 
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
+
+
     const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
@@ -171,7 +173,7 @@ const PageList = (props) => {
 
             <Row>
                 {uiStates.selectedPage !== "" && (
-                    <PageLeaflet selectedPage={uiStates.selectedPage} leafletMarkers={leafletMarkers}/>
+                    <PageLeaflet key={uiStates.selectedPage.id} selectedPage={uiStates.selectedPage} leafletMarkers={leafletMarkers}/>
                 )}
             </Row>
         </>
