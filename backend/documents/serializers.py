@@ -1,10 +1,19 @@
 from rest_framework import serializers
 
-from documents.models import Document, Page, Overlay
+from documents.models import Document, Page, Overlay, Geojson
+
+
+class GeojsonSerializer(serializers.ModelSerializer):
+    overlay = serializers.PrimaryKeyRelatedField(queryset=Overlay.objects.all())
+
+    class Meta:
+        model = Geojson
+        fields = "__all__"
 
 
 class OverlaySerializer(serializers.ModelSerializer):
     page = serializers.PrimaryKeyRelatedField(queryset=Page.objects.all())
+    overlay_geojson = GeojsonSerializer(many=True, read_only=True)
 
     class Meta:
         model = Overlay

@@ -51,7 +51,7 @@ const PageList = (props) => {
         dispatch(ModifySelectedPage(page))
 
         const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const geojson = overlay.geojson
+        const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1].file
 
         const leafletMarkersArr = []
         const res = await axios.get(geojson).then((res) => {

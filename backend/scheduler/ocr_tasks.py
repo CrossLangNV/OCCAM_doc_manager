@@ -3,9 +3,9 @@ import logging
 import time
 from django.core.files import File
 import os
-from documents.models import Page, Document, Overlay
+from documents.models import Page, Overlay, Geojson
 from celery import shared_task
-from documents import pagexml2geojson
+
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 import json
 
@@ -60,18 +60,8 @@ def ocr_page(page_id):
     overlay = Overlay.objects.create(page=page)
     logger.info("OCR overlay: %s", overlay)
 
-
-
     # Save overlay XML to the object
     with io.BytesIO(overlay_xml) as f:
         f.name = basename + '.xml'
         logger.info("f name: %s", f.name)
         overlay.update_xml(f)
-
-    # Create Geojson overlay and save to the object
-    geojson = pagexml2geojson.main(io.BytesIO(overlay_xml))
-    logger.info(geojson)
-
-    with File(io.BytesIO(json.dumps(geojson).encode('utf-8'))) as django_file:
-        overlay.geojson.save(basename + '.geojson', django_file)
-        overlay.save()

@@ -1,3 +1,6 @@
+import io
+import json
+import os
 import uuid
 
 from django.core.files import File
@@ -5,20 +8,22 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy
 
+from documents import pagexml2geojson
+
+class DocumentState(models.TextChoices):
+    NEW = "New"
+    WAITING_LAYOUT_ANALYSIS = "Waiting on start of layout analysis"
+    RUNNING_LAYOUT_ANALYSIS = "Running layout analysis"
+    COMPLETED_LAYOUT_ANALYSIS = "Layout analysis completed"
+    WAITING_OCR = "Waiting on start of OCR"
+    RUNNING_OCR = "Running OCR"
+    COMPLETED_OCR = "OCR completed"
+
 
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(default="", max_length=1000)
     content = models.TextField(default="", blank=True)
-
-    class DocumentState(models.Choices):
-        NEW = "New"
-        WAITING_LAYOUT_ANALYSIS = "Waiting on start of layout analysis."
-        RUNNING_LAYOUT_ANALYSIS = "Running layout analysis."
-        COMPLETED_LAYOUT_ANALYSIS = "Layout analysis completed."
-        WAITING_OCR = "Waiting on start of OCR."
-        RUNNING_OCR = "Running OCR."
-        COMPLETED_OCR = "OCR completed."
 
     state = models.CharField(
         max_length=50,
@@ -81,9 +86,6 @@ class Overlay(models.Model):
                             upload_to='overlays')
     translation_file = models.FileField(null=True, blank=True,
                                         upload_to='overlays/trans')
-    geojson = models.FileField(null=True,
-                               blank=True,
-                               upload_to='overlays/geojson')
 
     page = models.ForeignKey(
         Page,
@@ -110,6 +112,28 @@ class Overlay(models.Model):
         with File(file) as django_file:
             self.file.save(file.name, django_file)
             self.save()
+
+        self.create_geojson()
+
+    def create_geojson(self):
+        """
+        Creates
+        """
+        assert self.file, 'Only make sense if overlay xml exists'
+
+        # Create Geojson overlay and save to the object
+        with self.file.open() as f:
+            geojson = pagexml2geojson.main(f)
+            # logger.info(geojson)
+
+        geojson_object = Geojson.objects.create(overlay=self,
+                                                original=True,
+                                                )
+
+        basename, _ = os.path.splitext(self.file.name)
+        with io.BytesIO(json.dumps(geojson).encode('utf-8')) as f:
+            f.name = basename + '.geojson'
+            geojson_object.update_file(f)
 
     def get_file(self):
         return self.file

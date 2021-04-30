@@ -1,8 +1,9 @@
 from django.contrib import admin
 
 # Register your models here.
-from documents.models import Document, Page, Overlay
+from documents.models import Document, Page, Overlay, Geojson
 
 admin.site.register(Document)
 admin.site.register(Page)
 admin.site.register(Overlay)
+admin.site.register(Geojson)
