@@ -17,36 +17,3 @@ export const ModifySelectedPage = (query) => async dispatch => {
         payload: query
     });
 }
-
-
-export const GetLeafletMarkers = (geojson) => async dispatch => {
-    dispatch({
-        type: UiActionTypes.UI_GET_LEAFLET_MARKERS_LOADING
-    });
-
-    const leafletMarkers = []
-
-    const res = axios.get(geojson).then((res) => {
-
-        for (const c of res.data.features) {
-            let marker;
-
-            const bounds = c.geometry.coordinates.map(hw);
-
-            marker = Leaflet.polygon(bounds, {
-                className: 'polygon',
-                weight: 1,
-                color: '#ff7800',
-            })
-
-            leafletMarkers.push({marker: marker, bounds: bounds})
-        }
-
-    })
-
-
-    dispatch({
-        type: UiActionTypes.UI_GET_LEAFLET_MARKERS_SUCCESS,
-        payload: leafletMarkers
-    });
-}

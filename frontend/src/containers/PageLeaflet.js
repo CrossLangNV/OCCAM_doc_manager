@@ -1,13 +1,11 @@
 import React, {useRef} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
-import {useSelector} from "react-redux";
 import Leaflet from "leaflet";
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import axios from "axios";
 import {hw} from "../constants/leafletFunctions";
 
 const PageLeaflet = (props) => {
-    // const uiStates = useSelector(state => state.uiStates);
     const page = props.selectedPage
     const file = page.file
     const leafletMarkers = props.leafletMarkers

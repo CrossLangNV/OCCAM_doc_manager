@@ -10,10 +10,9 @@ import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
 import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
-import {GetLeafletMarkers, ModifySelectedPage} from "../actions/uiActions";
+import {ModifySelectedPage} from "../actions/uiActions";
 import axios from "axios";
 import {hw} from "../constants/leafletFunctions";
-import Leaflet from "leaflet";
 
 
 const PageList = (props) => {
