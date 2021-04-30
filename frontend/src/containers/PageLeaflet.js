@@ -21,44 +21,13 @@ const PageLeaflet = (props) => {
     // Resize the map to fit with the image
     function ResizeComponent() {
         const map = useMap()
-
         map.fitBounds(imageBounds)
-        return null
-    }
-
-    function GetGeoJsonRectangles() {
-        const map = useMap()
-
-        const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const geojson = overlay.geojson
-
-        axios.get(geojson).then((res) => {
-
-            for (const c of res.data.features) {
-                let marker;
-
-                const bounds = c.geometry.coordinates.map(hw);
-                // marker = Leaflet.polygon(bounds, {color: '#ff7800', weight: 1}).addTo(map);
-                marker = Leaflet.polygon(bounds, {
-                    className: 'polygon',
-                    weight: 1,
-                    color: '#ff7800',
-                }).addTo(map);
-
-                marker.bindTooltip(c.properties.name, {
-                    // permanent: true,
-                    direction: 'bottom'
-                });
-            }
-        })
 
         return null
-
     }
-
 
     return (
-        <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={false} crs={CRS.Simple}>
+        <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
 
             <ImageOverlay
                 ref={mapRef}
@@ -69,8 +38,6 @@ const PageLeaflet = (props) => {
             />
 
             <ResizeComponent/>
-
-            {/*<GetGeoJsonRectangles/>*/}
 
             {leafletMarkers.map((marker, id) => {
                 return <Polygon key={id} positions={marker.bounds}>

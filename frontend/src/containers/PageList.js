@@ -53,8 +53,6 @@ const PageList = (props) => {
         const overlay = page.page_overlay[page.page_overlay.length - 1]
         const geojson = overlay.geojson
 
-        // dispatch(GetLeafletMarkers(geojson))
-
         const leafletMarkersArr = []
         const res = await axios.get(geojson).then((res) => {
 
@@ -68,10 +66,7 @@ const PageList = (props) => {
                 leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
             }
             setLeafletMarkers(leafletMarkersArr)
-
         })
-
-
     }
 
     return (
@@ -168,7 +163,11 @@ const PageList = (props) => {
 
             <Row>
                 {uiStates.selectedPage !== "" && (
-                    <PageLeaflet key={uiStates.selectedPage.id} selectedPage={uiStates.selectedPage} leafletMarkers={leafletMarkers}/>
+                    <PageLeaflet
+                        key={uiStates.selectedPage.id}
+                        selectedPage={uiStates.selectedPage}
+                        leafletMarkers={leafletMarkers}
+                    />
                 )}
             </Row>
         </>
