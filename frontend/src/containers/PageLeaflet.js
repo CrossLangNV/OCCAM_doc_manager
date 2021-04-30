@@ -1,8 +1,6 @@
 import React, {useRef} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
-import Leaflet from "leaflet";
 import {CRS} from "leaflet/dist/leaflet-src.esm";
-import axios from "axios";
 import {hw} from "../constants/leafletFunctions";
 
 const PageLeaflet = (props) => {
