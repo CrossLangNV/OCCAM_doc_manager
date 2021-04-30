@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {ImageOverlay, MapContainer, Polygon, useMap} from 'react-leaflet'
+import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
 import {useSelector} from "react-redux";
 import Leaflet from "leaflet";
 import {CRS} from "leaflet/dist/leaflet-src.esm";
@@ -74,8 +74,10 @@ const PageLeaflet = (props) => {
 
             {/*<GetGeoJsonRectangles/>*/}
 
-            {leafletMarkers.map(marker => {
-                return <Polygon key={marker.key} positions={marker.bounds} />
+            {leafletMarkers.map((marker, id) => {
+                return <Polygon key={id} positions={marker.bounds}>
+                    <Tooltip sticky>{marker.popupMessage}</Tooltip>
+                </Polygon>
             })}
         </MapContainer>
     )

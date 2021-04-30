@@ -64,13 +64,9 @@ const PageList = (props) => {
 
                 const bounds = c.geometry.coordinates.map(hw);
 
-                marker = Leaflet.polygon(bounds, {
-                    className: 'polygon',
-                    weight: 1,
-                    color: '#ff7800',
-                })
+                const popupMessage = c.properties.name
 
-                leafletMarkersArr.push({marker: marker, bounds: bounds})
+                leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
             }
             setLeafletMarkers(leafletMarkersArr)
 
