@@ -75,9 +75,8 @@ const PageLeaflet = (props) => {
             {/*<GetGeoJsonRectangles/>*/}
 
             {leafletMarkers.map(marker => {
-                return <Polygon positions={marker.bounds} />
+                return <Polygon key={marker.key} positions={marker.bounds} />
             })}
-            <p>aa</p>
         </MapContainer>
     )
 };
