@@ -1,6 +1,8 @@
 import axios from "axios";
 import {OverlayActionTypes} from "../constants/overlay-action-types";
 import {UiActionTypes} from "../constants/ui-action-types";
+import {hw} from "../constants/leafletFunctions";
+import Leaflet from "leaflet";
 
 export const ModifyDocumentQuery = (query) => async dispatch => {
     dispatch({

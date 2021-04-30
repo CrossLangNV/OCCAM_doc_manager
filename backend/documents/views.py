@@ -261,7 +261,7 @@ class PageTranscriptionView(views.APIView):
             try:
                 upload_file(file,
                             request_id=request_id,
-                            page_name=page_name,
+                            page_id=page_name,
                             )
             except Exception as e:
                 content = {'message': "PERO-OCR couldn't upload image",

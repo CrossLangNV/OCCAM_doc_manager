@@ -1,46 +1,49 @@
-import React from 'react';
-import {MapContainer, TileLayer, Marker, Popup, ImageOverlay} from 'react-leaflet'
-import {useSelector} from "react-redux";
+import React, {useRef} from 'react';
+import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
+import {CRS} from "leaflet/dist/leaflet-src.esm";
+import {hw} from "../constants/leafletFunctions";
 
 const PageLeaflet = (props) => {
+    const page = props.selectedPage
+    const file = page.file
+    const leafletMarkers = props.leafletMarkers
 
-    const position = [51.505, -0.09]
-
-    // const page = props.page
-    // const file = props.file
-
-
-
-    const uiStates = useSelector(state => state.uiStates);
-
-    const page = uiStates.selectedPage
-    const file = uiStates.selectedPage.file
+    // Calculate center and image bounds
+    const mapRef = useRef(null);
+    const center = hw([0, 0], null);
+    const width = page.image_width;
+    const height = page.image_height;
+    const imageBounds = [center, hw(height, width)];
 
 
-    console.log(page)
-    console.log(file)
+    // Resize the map to fit with the image
+    function ResizeComponent() {
+        const map = useMap()
+        map.fitBounds(imageBounds)
+
+        return null
+    }
 
     return (
-        // <MapContainer center={[0, 0]} zoom={13}>
-        //
-        // </MapContainer>
-        <MapContainer center={[70, 50]} zoom={3} scrollWheelZoom={false}>
-            <Marker position={[100, -0.09]}>
-                <Popup>
-                    A pretty CSS3 popup. <br /> Easily customizable.
-                </Popup>
-            </Marker>
+        <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
+
             <ImageOverlay
-                    url={file}
-                    bounds={[
-                        [100, 0],
-                        [-35, 100],
-                    ]}
-                    opacity={1}
-                    zIndex={10}
-                />
+                ref={mapRef}
+                url={file}
+                bounds={imageBounds}
+                opacity={1}
+                zIndex={10}
+            />
+
+            <ResizeComponent/>
+
+            {leafletMarkers.map((marker, id) => {
+                return <Polygon key={id} positions={marker.bounds}>
+                    <Tooltip sticky>{marker.popupMessage}</Tooltip>
+                </Polygon>
+            })}
         </MapContainer>
-    );
+    )
 };
 
 export default PageLeaflet;

@@ -18,21 +18,22 @@ def ocr_page(page_id):
 
     logger.info("Started OCR for page: %s", page)
 
-    page_name = page.file.name
+    page_id = str(page.id)
+    basename, _ = os.path.splitext(page.file.name)
 
-    logger.info("Page name: %s", page_name)
+    logger.info("Page name: %s", basename)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
-    request_id = get_request_id(page_name)
+    request_id = get_request_id(page_id)
     logger.info("Sent request to per ocr: %s", request_id)
 
-    # POST to Pero OCR /upload_image/{request_id}/{page_name}
+    # POST to Pero OCR /upload_image/{request_id}/{page_id}
     # Uploads image to the request
     with page.file.open() as file:
         upload_file(file,
                     request_id=request_id,
-                    page_name=page_name,
+                    page_id=page_id,
                     )
 
     # GET to Pero OCR /request_status/{request_id}
@@ -42,16 +43,16 @@ def ocr_page(page_id):
     logger.info("Waiting for document to be processed....")
     while True:
         if check_state(request_id,
-                       page_name):
+                       page_id):
             break
         else:  # 'PROCESSED'
             time.sleep(1)
     logger.info("Document is processed!")
 
-    # GET to Pero OCR /download_results/{request_id}/{page_name}/{format}
+    # GET to Pero OCR /download_results/{request_id}/{page_id}/{format}
     # Download results
     overlay_xml = get_result(request_id,
-                             page_name)
+                             page_id)
     logger.info("OCR overlay xml: %s", overlay_xml)
 
     # Create Overlay object in Djang
@@ -59,7 +60,7 @@ def ocr_page(page_id):
     overlay = Overlay.objects.create(page=page)
     logger.info("OCR overlay: %s", overlay)
 
-    basename, _ = os.path.splitext(page_name)
+
 
     # Save overlay XML to the object
     with io.BytesIO(overlay_xml) as f:

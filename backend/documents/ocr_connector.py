@@ -4,11 +4,11 @@ import requests
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 
-def get_request_id(page_name: str):
+def get_request_id(page_id: str):
     data = {
         "engine": 1,
         "images": {
-            page_name: None
+            page_id: None
         }
     }
 
@@ -29,7 +29,7 @@ def get_request_id(page_name: str):
 
 def upload_file(file,
                 request_id: str,
-                page_name: str,
+                page_id: str,
                 ):
     """
 
@@ -37,13 +37,13 @@ def upload_file(file,
         >> with page.file.open() as file:
         >>    upload_file(file,
         >>                request_id=request_id,
-        >>                page_name=page_name
+        >>                page_id=page_id
         >>                )
     """
 
     files = {'file': file}
 
-    response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_name}',
+    response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_id}',
                                           files=files,
                                           headers={'api-key': API_KEY_PERO_OCR,
                                                    },
@@ -54,7 +54,7 @@ def upload_file(file,
                          'content': response_upload_image.content})
 
 
-def check_state(request_id: str, page_name: str) -> bool:
+def check_state(request_id: str, page_id: str) -> bool:
     """
     Check state of OCR request.
 
@@ -66,13 +66,13 @@ def check_state(request_id: str, page_name: str) -> bool:
                  },
     )
 
-    state = response_status.json()['request_status'][page_name]['state']
+    state = response_status.json()['request_status'][page_id]['state']
 
     return not (state in ('WAITING', 'PROCESSING'))
 
 
 def get_result(request_id,
-               page_name,
+               page_id,
                result_format='page'  # alto, page, txt
                ):
     """
@@ -80,7 +80,7 @@ def get_result(request_id,
     """
 
     response_download_results = requests.get(
-        f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_name}/{result_format}',
+        f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_id}/{result_format}',
         headers={'api-key': API_KEY_PERO_OCR,
                  },
     )
