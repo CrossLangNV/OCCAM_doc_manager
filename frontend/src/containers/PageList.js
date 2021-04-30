@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +10,10 @@ import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
 import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
-import {ModifySelectedPage} from "../actions/uiActions";
+import {GetLeafletMarkers, ModifySelectedPage} from "../actions/uiActions";
+import axios from "axios";
+import {hw} from "../constants/leafletFunctions";
+import Leaflet from "leaflet";
 
 
 const PageList = (props) => {
@@ -20,6 +23,7 @@ const PageList = (props) => {
 
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
+    const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
@@ -42,8 +46,35 @@ const PageList = (props) => {
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
     }
 
-    const selectPage = (page) => {
+    const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
+
+        const overlay = page.page_overlay[page.page_overlay.length - 1]
+        const geojson = overlay.geojson
+
+        // dispatch(GetLeafletMarkers(geojson))
+
+        const leafletMarkersArr = []
+        const res = await axios.get(geojson).then((res) => {
+
+            for (const c of res.data.features) {
+                let marker;
+
+                const bounds = c.geometry.coordinates.map(hw);
+
+                marker = Leaflet.polygon(bounds, {
+                    className: 'polygon',
+                    weight: 1,
+                    color: '#ff7800',
+                })
+
+                leafletMarkersArr.push({marker: marker, bounds: bounds})
+            }
+            setLeafletMarkers(leafletMarkersArr)
+
+        })
+
+
     }
 
     return (
@@ -140,7 +171,7 @@ const PageList = (props) => {
 
             <Row>
                 {uiStates.selectedPage !== "" && (
-                    <PageLeaflet />
+                    <PageLeaflet selectedPage={uiStates.selectedPage} leafletMarkers={leafletMarkers}/>
                 )}
             </Row>
         </>

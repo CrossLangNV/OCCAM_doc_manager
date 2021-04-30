@@ -3,7 +3,11 @@ import {UiActionTypes} from "../constants/ui-action-types";
 
 const DefaultState = {
     documentQuery: "",
-    selectedPage: ""
+    selectedPage: "",
+    leafletMarkers: {
+        marker: [],
+        bounds: [],
+    }
 };
 
 const UiReducer = (state = DefaultState, action) => {
@@ -17,6 +21,11 @@ const UiReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 selectedPage: action.payload
+            }
+        case UiActionTypes.UI_GET_LEAFLET_MARKERS_SUCCESS:
+            return {
+                ...state,
+                leafletMarkers: action.payload
             }
         default:
             return state

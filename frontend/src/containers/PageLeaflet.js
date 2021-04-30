@@ -1,41 +1,29 @@
 import React, {useRef} from 'react';
-import {MapContainer, TileLayer, Marker, Popup, ImageOverlay, useMap, Polygon} from 'react-leaflet'
+import {ImageOverlay, MapContainer, Polygon, useMap} from 'react-leaflet'
 import {useSelector} from "react-redux";
 import Leaflet from "leaflet";
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import axios from "axios";
+import {hw} from "../constants/leafletFunctions";
 
 const PageLeaflet = (props) => {
-    const scale = .1; // TODO Change scale later
+    // const uiStates = useSelector(state => state.uiStates);
+    const page = props.selectedPage
+    const file = page.file
+    const leafletMarkers = props.leafletMarkers
 
-    const uiStates = useSelector(state => state.uiStates);
-
-    const page = uiStates.selectedPage
-    const file = uiStates.selectedPage.file
-
+    // Calculate center and image bounds
     const mapRef = useRef(null);
-
-    const hw = (h, w) => {
-        if (Leaflet.Util.isArray(h)) {    // When doing xy([x, y]);
-            return hw(h[0], h[1]);
-        }
-        // let height go from top to bottom
-        return Leaflet.latLng(-h * scale, w * scale);  // When doing xy(x, y);
-    }
-
-
     const center = hw([0, 0], null);
     const width = page.image_width;
     const height = page.image_height;
-
-    console.log(width)
-    console.log(height)
-
-
     const imageBounds = [center, hw(height, width)];
 
+
+    // Resize the map to fit with the image
     function ResizeComponent() {
         const map = useMap()
+
         map.fitBounds(imageBounds)
         return null
     }
@@ -43,10 +31,8 @@ const PageLeaflet = (props) => {
     function GetGeoJsonRectangles() {
         const map = useMap()
 
-        // const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const overlay = page.page_overlay[page.page_overlay.length -1]
+        const overlay = page.page_overlay[page.page_overlay.length - 1]
         const geojson = overlay.geojson
-
 
         axios.get(geojson).then((res) => {
 
@@ -73,7 +59,6 @@ const PageLeaflet = (props) => {
     }
 
 
-
     return (
         <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={false} crs={CRS.Simple}>
 
@@ -85,10 +70,14 @@ const PageLeaflet = (props) => {
                 zIndex={10}
             />
 
-            <ResizeComponent />
+            <ResizeComponent/>
 
-            <GetGeoJsonRectangles />
+            {/*<GetGeoJsonRectangles/>*/}
 
+            {leafletMarkers.map(marker => {
+                return <Polygon positions={marker.bounds} />
+            })}
+            <p>aa</p>
         </MapContainer>
     )
 };
