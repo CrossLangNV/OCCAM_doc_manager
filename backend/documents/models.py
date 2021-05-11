@@ -29,6 +29,9 @@ class Document(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.name
 
@@ -54,6 +57,9 @@ class Page(models.Model):
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def update_image(self, file):
         """ Save a file to the page.
@@ -99,6 +105,9 @@ class Overlay(models.Model):
     # TODO
     # source_lang = # TODO Single language? Use choice and a abbreviation to full name conversion
     # target_lang = # TODO List (again based on choice/list)
+
+    class Meta:
+        ordering = ['-created_at']
 
     def update_xml(self, file):
         """ Save a file to overlay.
@@ -164,6 +173,9 @@ class Geojson(models.Model):
     source_lang = LangField()
     # Information about the translation engine (if applicable)
     trans_engine = models.CharField(blank=True, max_length=50)
+
+    class Meta:
+        ordering = ['-overlay']
 
     def update_file(self, file):
         """ Save a geojson file to the geojson object.

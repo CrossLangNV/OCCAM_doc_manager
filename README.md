@@ -4,7 +4,7 @@ First enter django docker:
 
 `docker-compose exec django /bin/bash`
 
-You can create a admin user with these commands:
+You can create an admin user with these commands:
 
 `python manage.py createsuperuser --username $DJANGO_ADMIN_USERNAME --email $DJANGO_ADMIN_EMAIL`
 

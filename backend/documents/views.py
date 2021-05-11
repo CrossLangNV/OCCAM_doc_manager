@@ -288,9 +288,10 @@ class PageTranscriptionView(views.APIView):
                        }
             return Response(content, status=status.HTTP_418_IM_A_TEAPOT)
 
-        overlay = Overlay().objects.create(page=page)
+        overlay = Overlay.objects.create(page=page)
 
         with io.BytesIO(overlay_xml) as f:
+            f.name = 'io_bytes_xml'
             overlay.update_xml(f)
 
         content = {'message': "Successful",

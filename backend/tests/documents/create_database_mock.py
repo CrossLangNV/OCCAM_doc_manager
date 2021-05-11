@@ -6,6 +6,13 @@ from django.test import Client
 from documents.models import Document, Page, Overlay
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+URL_PAGE = '/documents/api/pages/'
+
+if 0:
+    FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
+else:
+    FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/page_minimal_working_example.xml')
+FILENAME_IMAGE = os.path.join(ROOT, 'backend/tests/examples_data/19154766-page0.jpg')
 
 
 def login(self=None):
@@ -44,18 +51,20 @@ def create(client=None):
         height=height,
         document=doc
     )
+    with open(FILENAME_IMAGE, 'rb') as f:
+        page.update_image(f)
 
     o1 = Overlay.objects.create(
         page=page
     )
+    with open(FILENAME_XML, 'rb') as f:
+        o1.update_xml(f)
 
     if client is None:
         # You might have to send the client with it
         client, _ = login()
 
-    URL_PAGE = '/documents/api/pages'
-    filename_image = os.path.join(ROOT, 'backend/tests/examples_data/19154766-page0.jpg')
-    with open(filename_image, 'rb') as f:
+    with open(FILENAME_IMAGE, 'rb') as f:
         files = {'file': f}
         response = client.post(URL_PAGE,
                                data={
@@ -64,8 +73,7 @@ def create(client=None):
                                },
                                files=files)
 
-    filename_xml = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
-    with open(filename_xml, 'rb') as f:
+    with open(FILENAME_XML, 'rb') as f:
         files = {'file': f}
         response = client.post(URL_PAGE,
                                data={
@@ -76,7 +84,7 @@ def create(client=None):
 
     # URL = '/documents/api/overlays/'
     URL = '/documents/overlays/'
-    with open(filename_xml, 'r') as f:
+    with open(FILENAME_XML, 'r') as f:
         files = {'file': f}
         response = client.post(URL,
                                data={
