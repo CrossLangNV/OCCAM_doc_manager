@@ -115,11 +115,26 @@ class Overlay(models.Model):
         Example:
             >> overlay = Overlay().objects.create()
             >> with open(filename_xml, 'rb') as f:
+            >>    # f.name = '<filename>'
             >>    overlay.update_xml(f)
 
         """
         with File(file) as django_file:
             self.file.save(file.name, django_file)
+            self.save()
+
+    def update_transl_xml(self, file):
+        """ Save a file to the translation overlay.
+
+        Example:
+            >> overlay = Overlay().objects.create()
+            >> with open(filename_transl_xml, 'rb') as f:
+            >>    # f.name = '<filename>'
+            >>    overlay.update_xml(f)
+
+        """
+        with File(file) as django_file:
+            self.translation_file.save(file.name, django_file)
             self.save()
 
     def get_file(self):
@@ -154,7 +169,10 @@ class LangField(models.CharField):
 class Geojson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # Language of text (can be after translation) (abbreviation)
-    lang = LangField()
+
+    lang = LangField(
+        null=True,  # to make this required.
+    )
     overlay = models.ForeignKey(
         Overlay,
         related_name="overlay_geojson",

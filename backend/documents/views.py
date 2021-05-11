@@ -134,7 +134,6 @@ class PageLaunchOCRAPIView(APIView):
         return Response("Task launched", status=status.HTTP_201_CREATED)
 
 
-# Deprecated, TODO TO be removed
 class PageTranscriptionView(views.APIView):
     """
     Does text region detection and OCR.
@@ -142,7 +141,6 @@ class PageTranscriptionView(views.APIView):
     Generates an Overlay
     """
 
-    # TODO still don't know what this does
     queryset = Page.objects.all()
 
     # TODO: Remove AllowAny
@@ -169,7 +167,6 @@ class PageTranscriptionView(views.APIView):
         return Response(content, status=status.HTTP_200_OK)
 
 
-# Deprecated, TODO TO be removed
 class OverlayTranslationView(views.APIView):
     """
     Test does this give some info?
