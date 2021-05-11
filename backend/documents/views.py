@@ -1,9 +1,7 @@
-import io
 import logging as logger
 import os
 import warnings
 
-import requests
 from rest_framework import permissions, views, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -202,38 +200,13 @@ class OverlayTranslationView(views.APIView):
         headers = request.data
 
         try:
-            overlay0 = Overlay.objects.get(id=headers['id'])
-        except:
-            content = {'message': 'Overlay id not found.'}
+            overlay_id = headers['id']
+        except KeyError:
+            content = {'message': "Headers should contain 'id' from overlay."}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-        with overlay0.get_file().open('rb') as f:
-            files = {'file': f}
+        translate_overlay(overlay_id)
 
-            response = requests.post(URL_TRANSLATE,
-                                     headers=headers,
-                                     files=files
-                                     )
-
-        if response.ok:
-            # TODO use overlay0.update_xml instead? This works though.
-            # TODO also update filename? Probably not necessary.
-
-            with io.BytesIO(response.content) as f:
-                f.name = overlay0.file.name  # Reuse name
-                overlay0.update_xml(f)
-
-            # with overlay0.file.open('wb') as f:
-            #     f.write(response.content)
-
-            # TODO add translated language info to overlay0 object.
-
-        django_response = Response(
-            # overlay0,
-            response.content,
-            status=response.status_code,
-            content_type=response.headers['Content-Type'],
-            headers=response.headers
-        )
-
-        return django_response  # TODO
+        content = {'message': "Successful",
+                   }
+        return Response(content, status=status.HTTP_200_OK)
