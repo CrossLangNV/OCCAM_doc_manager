@@ -1,7 +1,6 @@
 import io
 import logging as logger
 import os
-import time
 import warnings
 
 import requests
@@ -12,7 +11,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from documents.models import Document, Page, Overlay
-from documents.ocr_connector import get_request_id, upload_file, get_result, check_state
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 from scheduler.ocr_tasks import ocr_page
 from scheduler.translation_tasks import translate_overlay
@@ -139,6 +137,41 @@ class PageLaunchOCRAPIView(APIView):
 
 
 # Deprecated, TODO TO be removed
+class PageTranscriptionView(views.APIView):
+    """
+    Does text region detection and OCR.
+
+    Generates an Overlay
+    """
+
+    # TODO still don't know what this does
+    queryset = Page.objects.all()
+
+    # TODO: Remove AllowAny
+    permission_classes = [permissions.AllowAny]
+
+    def post(self,
+             request,
+             format=None):
+
+        warnings.warn('This is now part of a Celery task.', DeprecationWarning)
+
+        headers = request.data
+
+        try:
+            page_id = headers['id']
+        except KeyError:
+            content = {'message': "Headers should contain 'id' from page."}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+
+        ocr_page(page_id)
+
+        content = {'message': "Successful",
+                   }
+        return Response(content, status=status.HTTP_200_OK)
+
+
+# Deprecated, TODO TO be removed
 class OverlayTranslationView(views.APIView):
     """
     Test does this give some info?
@@ -204,96 +237,3 @@ class OverlayTranslationView(views.APIView):
         )
 
         return django_response  # TODO
-
-
-# Deprecated, TODO TO be removed
-class PageTranscriptionView(views.APIView):
-    """
-    Does text region detection and OCR.
-
-    Generates an Overlay
-    """
-    # TODO still don't know what this does
-    queryset = Page.objects.all()
-
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
-
-    def post(self,
-             request,
-             format=None):
-
-        warnings.warn('This is now part of a Celery task.', DeprecationWarning)
-
-        headers = request.data
-
-        try:
-            page = Page.objects.get(id=headers['id'])
-        except:
-            content = {'message': 'Page id is not found.'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
-
-        page_name = page.file.name
-
-        response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
-                                        headers={'api-key': API_KEY_PERO_OCR})
-
-        if not response_engines.ok:
-            content = {'message': 'PERO-OCR engines not found.',
-                       'status code': response_engines.status_code,
-                       'content': response_engines.content,
-                       }
-            return Response(content, status=status.HTTP_418_IM_A_TEAPOT)  # TODO proper status code.
-
-        model_czech = response_engines.json()['engines']['czech_old_printed']
-        model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
-        model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
-
-        try:
-            request_id = get_request_id(page_name)
-        except Exception as e:
-            content = {'message': "PERO-OCR couldn't retrieve request id",
-                       'error': e,
-                       }
-            return Response(content, status=status.HTTP_418_IM_A_TEAPOT)
-
-        with page.file.open() as file:
-            try:
-                upload_file(file,
-                            request_id=request_id,
-                            page_name=page_name,
-                            )
-            except Exception as e:
-                content = {'message': "PERO-OCR couldn't upload image",
-                           'error': e,
-                           }
-                return Response(content, status=status.HTTP_418_IM_A_TEAPOT)
-
-        # Check if finished!
-        while True:
-            b = check_state(request_id,
-                            page_name)
-
-            if b:
-                break
-            else:  # 'PROCESSED'
-                time.sleep(1)
-
-        try:
-            overlay_xml = get_result(request_id,
-                                     page_name)
-        except Exception as e:
-            content = {'message': "PERO-OCR couldn't download result",
-                       'error': e,
-                       }
-            return Response(content, status=status.HTTP_418_IM_A_TEAPOT)
-
-        overlay = Overlay.objects.create(page=page)
-
-        with io.BytesIO(overlay_xml) as f:
-            f.name = 'io_bytes_xml'
-            overlay.update_xml(f)
-
-        content = {'message': "Successful",
-                   }
-        return Response(content, status=status.HTTP_200_OK)

@@ -1,4 +1,6 @@
 import os
+import warnings
+
 import requests
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
@@ -90,3 +92,23 @@ def get_result(request_id,
                          'content': response_download_results.content})
 
     return response_download_results.content
+
+
+def get_engines():
+    warnings.warn('Has no use yet', PendingDeprecationWarning)
+
+    response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
+                                    headers={'api-key': API_KEY_PERO_OCR})
+
+    if not response_engines.ok:
+        content = {'message': 'PERO-OCR engines not found.',
+                   'status code': response_engines.status_code,
+                   'content': response_engines.content,
+                   }
+        raise ConnectionError(content)
+
+    model_czech = response_engines.json()['engines']['czech_old_printed']
+    model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
+    model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
+
+    return response_engines.json()
