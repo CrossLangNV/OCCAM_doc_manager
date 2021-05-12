@@ -4,7 +4,6 @@ import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
-import _ from 'lodash'
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -16,12 +15,13 @@ const PageLeaflet = (props) => {
     const [language, setLanguage] = useState("");
 
     React.useEffect(() => {
-        if (!_.isEmpty(page.page_overlay.length)) {
+        if (page.page_overlay.length > 0) {
             const overlay = page.page_overlay[page.page_overlay.length - 1]
             const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
             setOverlay(overlay)
             setGeojson(geojson)
+
             if (geojson) {
                 setLanguage(geojson.lang)
             }
@@ -52,10 +52,30 @@ const PageLeaflet = (props) => {
         return null
     }
 
+    // TODO Fix me
+    const setPageLanguage = (value) => {
+        setLanguage(value)
+
+        let geojsons = overlay.overlay_geojson
+        geojsons = geojsons.filter(geojson =>
+            geojson.lang === value
+        )
+        console.log(geojsons)
+
+        setOverlay(overlay)
+        setGeojson(geojsons)
+    }
+
     return (
         <>
             <Col>
-                <Dropdown md={7} value={language} options={languageSelectItems} onChange={(e) => setLanguage(e.value)} placeholder="Select a language"/>
+                <Dropdown
+                    md={7}
+                    value={language}
+                    options={languageSelectItems}
+                    onChange={(e) => setPageLanguage(e.value)}
+                    placeholder="Select a language"
+                />
             </Col>
 
             <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
