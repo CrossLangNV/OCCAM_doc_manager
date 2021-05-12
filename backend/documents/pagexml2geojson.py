@@ -142,7 +142,8 @@ def _get_text_trans_from_text_region_lxml(element, xmlns, target):
 def _get_unique_lxml_child(element, path):
     a = list(element.iterfind(path))
 
-    assert len(a) == 1, f'Should only find one {path} element: {a}'
+    if len(a) != 1:
+        raise AssertionError(f'Should only find one {path} element: {a}')
 
     b = a[0]
 
@@ -157,7 +158,7 @@ def main(filename,
     target: (Optional) language code of translated language (for multilingual page xml).
     """
     if target is not None:
-        lxml_text_region_iterator_trans(filename, target=target)
+        l = lxml_text_region_iterator_trans(filename, target=target)
     else:
         l = lxml_text_region_iterator(filename)
 

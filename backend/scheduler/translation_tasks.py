@@ -3,7 +3,7 @@ import logging
 import os
 
 from celery import shared_task
-from documents.models import Overlay, Geojson
+from documents.models import Overlay
 from documents.translation_connector import CEFeTranslationConnector
 
 logger = logging.getLogger(__name__)
@@ -38,19 +38,7 @@ def translate_overlay(overlay_id,
         name = basename + f'_{source}_{target}' + ext
         f.name = name
 
-        overlay.update_transl_xml(f)
-
-    geojson = Geojson.objects.create(overlay=overlay,
-                                     original=False,
-                                     lang=target,
-                                     source_lang=source,  # Optional
-                                     )
-
-    # Can't combine since the previous update will close the file.
-    with io.BytesIO(xml_trans) as f:
-        basename, ext = os.path.splitext(overlay.get_file().name)
-        name = basename + f'_{source}_{target}' + ext
-        f.name = name
-        geojson.update_file(f)
+        overlay.update_transl_xml(f,
+                                  target=target)
 
     return True

@@ -95,7 +95,8 @@ class GetAllOverlaysTest(TestCase):
             # files= {'xml': f}
             response = self.client_object.post(URL_OVERLAYS,
                                                data={'page': page.id,
-                                                     'xml': f
+                                                     'xml': f,
+                                                     'source_lang': 'NL'
                                                      },
                                                # files=files
                                                )
