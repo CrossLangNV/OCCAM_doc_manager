@@ -16,6 +16,7 @@ class LanguageCodes(models.TextChoices):
     EN = 'EN', gettext_lazy('English')
     FR = 'FR', gettext_lazy('Français')
     DE = 'DE', gettext_lazy('Deutsch')
+    CS = 'CS', gettext_lazy('Čeština')
 
 
 class LangField(models.CharField):
