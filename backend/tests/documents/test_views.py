@@ -12,6 +12,12 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 
 B_DEBUG = True  # TODO Change to False in production
 
+URL_DOCUMENTS = '/documents/api/documents/'
+URL_PAGES = '/documents/api/pages/'
+URL_OVERLAYS = '/documents/api/overlays/'
+URL_TRANSLATION = '/documents/api/overlay/translation/'
+URL_TRANSCRIPTION = '/documents/api/page/transcription/'
+
 
 class GetAllDocumentsTest(TestCase):
     """ Test module for GET all documents API """
@@ -32,14 +38,13 @@ class GetAllDocumentsTest(TestCase):
 
     def test_get_all_documents(self):
         # get API response
-        url = '/documents/api/documents/'
-        response = self.client_object.get(url)
+        response = self.client_object.get(URL_DOCUMENTS)
 
         documents = Document.objects.all()
         serializer = DocumentSerializer(documents, many=True)
 
-        self.assertEqual(response.data.get('results'), serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('results'), serializer.data)
 
 
 class GetAllPagesTest(TestCase):
@@ -53,8 +58,8 @@ class GetAllPagesTest(TestCase):
 
     def test_get_all_images(self):
         # get API response
-        url = '/documents/api/pages'  # Without the '/'!
-        response = self.client_object.get(url)
+
+        response = self.client_object.get(URL_PAGES)
 
         images = Page.objects.all()
         serializer = PageSerializer(images, many=True)
@@ -66,8 +71,6 @@ class GetAllPagesTest(TestCase):
 class GetAllOverlaysTest(TestCase):
     """ Test module for GET all overlays API """
 
-    url = '/documents/api/overlays/'
-
     def setUp(self):
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
@@ -76,8 +79,7 @@ class GetAllOverlaysTest(TestCase):
 
     def test_get_all_overlays(self):
         # get API response
-
-        response = self.client_object.get(self.url)
+        response = self.client_object.get(URL_OVERLAYS)
 
         overlays = Overlay.objects.all()
         serializer = OverlaySerializer(overlays, many=True)
@@ -92,7 +94,7 @@ class GetAllOverlaysTest(TestCase):
 
         with open(filename_xml, 'r') as f:
             # files= {'xml': f}
-            response = self.client_object.post(self.url,
+            response = self.client_object.post(URL_OVERLAYS,
                                                data={'page': page.id,
                                                      'xml': f
                                                      },
@@ -113,8 +115,6 @@ class GetAllOverlaysTest(TestCase):
 class OverlayTranslationViewTest(TestCase):
     """ Test module for GET all overlays API """
 
-    url = '/documents/api/overlay/translation'
-
     def setUp(self):
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
@@ -127,7 +127,7 @@ class OverlayTranslationViewTest(TestCase):
         overlay = Overlay.objects.exclude(file='')[0]
 
         if 1:
-            response = self.client_object.post(self.url,
+            response = self.client_object.post(URL_TRANSLATION,
                                                data={'id': overlay.id,
                                                      'source': 'nl',
                                                      'target': 'en'
@@ -146,8 +146,6 @@ class OverlayTranslationViewTest(TestCase):
 
 
 class PageTranscriptionViewTest(TestCase):
-    url = '/documents/api/page/transcription/'
-
     def setUp(self):
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
@@ -164,7 +162,7 @@ class PageTranscriptionViewTest(TestCase):
                 }
 
         if 1:
-            response = self.client_object.post(self.url,
+            response = self.client_object.post(URL_TRANSCRIPTION,
                                                data=data)
         else:
             v = PageTranscriptionView()

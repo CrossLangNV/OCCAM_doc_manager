@@ -1,6 +1,7 @@
 import os
 
-from django.test import TestCase
+from django.db.utils import IntegrityError
+from django.test import TransactionTestCase
 
 # The following import gives an error:
 # from backend.documents.models import Document
@@ -11,7 +12,7 @@ FILENAME_IMAGE = os.path.join(ROOT, 'backend/tests/examples_data/19154766-page0.
 FILENAME_XML = os.path.join(ROOT, 'backend/tests/examples_data/KB_JB840_1919-04-01_01_0.xml')
 
 
-class DocumentTest(TestCase):
+class DocumentTest(TransactionTestCase):
     """
     Test module for Document model
     """
@@ -39,7 +40,7 @@ class DocumentTest(TestCase):
         self.assertEqual(str(doc_independence), self.name)
 
 
-class ImageTest(TestCase):
+class ImageTest(TransactionTestCase):
     """
     Test module for Image model
     """
@@ -80,7 +81,7 @@ class ImageTest(TestCase):
         self.assertIn(basename, str(image_test))
 
 
-class OverlayTest(TestCase):
+class OverlayTest(TransactionTestCase):
     """
     Test module for Overlay model
     """
@@ -140,7 +141,7 @@ class OverlayTest(TestCase):
         self.assertEqual(s_xml, s_overlay, 'Should have identical content.')
 
 
-class GeojsonTest(TestCase):
+class GeojsonTest(TransactionTestCase):
     """
     Test module for Geojson model
     """
@@ -174,6 +175,68 @@ class GeojsonTest(TestCase):
                                          )
         self.assertTrue(geojson)
 
+    def test_create_obligatory(self):
+        """
+        There are some necessary parameters
+        """
+
+        overlay = self.overlay
+        original = True
+        lang = 'en'
+
+        with self.subTest('SANITY CHECK. SHOULD PASS'):
+            # Sanity check: The necessary parameters
+            geojson = Geojson.objects.create(overlay=overlay,
+                                             original=original,
+                                             lang=lang
+                                             )
+            self.assertTrue(geojson)
+
+        with self.subTest('No parameters'):
+            try:
+                geojson = Geojson.objects.create()
+            except IntegrityError as e:
+                # Expected behaviour
+                pass
+            else:
+                self.fail('Should have failed.')
+
+        with self.subTest('No overlay'):
+            try:
+                geojson = Geojson.objects.create(
+                    original=original,
+                    lang=lang
+                )
+            except IntegrityError as e:
+                # Expected behaviour
+                pass
+            else:
+                self.fail('Should have failed.')
+
+        with self.subTest('No original'):
+            try:
+                geojson = Geojson.objects.create(
+                    overlay=overlay,
+                    lang=lang
+                )
+            except IntegrityError as e:
+                # Expected behaviour
+                pass
+            else:
+                self.fail('Should have failed.')
+
+        with self.subTest('No lang'):
+            try:
+                geojson = Geojson.objects.create(
+                    overlay=overlay,
+                    original=original,
+                )
+            except IntegrityError as e:
+                # Expected behaviour
+                pass
+            else:
+                self.fail('Should have failed.')
+
     def test_load_file(self):
         geojson = Geojson.objects.create(overlay=self.overlay,
                                          original=True,
@@ -182,10 +245,11 @@ class GeojsonTest(TestCase):
 
         self.assertFalse(geojson.file, 'Sanity check, start with no file.')
 
-        # TODO change to geojson object!
+        # TODO change to geojson filename!
         with open(FILENAME_XML, 'rb') as f:
             geojson.update_file(f)
 
         self.assertTrue(geojson.file, 'geojson should contain a file.')
 
         self.assertTrue(geojson.file.size, 'Should be non-empty')
+

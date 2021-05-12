@@ -2,10 +2,8 @@ import io
 import logging
 import os
 
-from django.core.files import File
-
 from celery import shared_task
-from documents.models import Overlay
+from documents.models import Overlay, Geojson
 from documents.translation_connector import CEFeTranslationConnector
 
 logger = logging.getLogger(__name__)
@@ -28,23 +26,31 @@ def translate_overlay(overlay_id,
 
     conn = CEFeTranslationConnector()
 
-    # POST to XML Translation /translate/xml
-    # Send a translation request and get the ID to poll to
+    # Blocking translation request
     with overlay.get_file().open('rb') as f:
         xml_trans = conn.translate_xml(f,
                                        source,
                                        target)
 
-    # GET to XML Translation /translate/xml/{xml_id}
-    # Keep polling until it's finished.
-
     # Save to translation in overlay object
     with io.BytesIO(xml_trans) as f:
         basename, ext = os.path.splitext(overlay.get_file().name)
+        name = basename + f'_{source}_{target}' + ext
+        f.name = name
 
-        with File(f) as django_file:
-            overlay.translation_file.save(name=basename + f'_{source}_{target}' + ext,
-                                          content=django_file)
-            overlay.save()
+        overlay.update_transl_xml(f)
+
+    geojson = Geojson.objects.create(overlay=overlay,
+                                     original=False,
+                                     lang=target,
+                                     source_lang=source,  # Optional
+                                     )
+
+    # Can't combine since the previous update will close the file.
+    with io.BytesIO(xml_trans) as f:
+        basename, ext = os.path.splitext(overlay.get_file().name)
+        name = basename + f'_{source}_{target}' + ext
+        f.name = name
+        geojson.update_file(f)
 
     return True
