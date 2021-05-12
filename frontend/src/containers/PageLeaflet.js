@@ -25,7 +25,7 @@ const PageLeaflet = (props) => {
             setGeojson(geojson)
 
             if (geojson) {
-                setLanguage(geojson.lang)
+                setLanguage(overlay.source_lang)
                 getLeafletMarkers(geojson)
             }
         }
@@ -35,7 +35,6 @@ const PageLeaflet = (props) => {
     const getLeafletMarkers = (geojson) => {
         const leafletMarkersArr = []
 
-        console.log(geojson.file)
         const features = fetchGeojson(geojson.file).then((res) => {
             for (const c of res.data.features) {
                 const bounds = c.geometry.coordinates.map(hw);
@@ -48,14 +47,9 @@ const PageLeaflet = (props) => {
 
         console.log(features)
 
-
     }
 
     const fetchGeojson = async (file) => {
-        // const res = await axios.get(file).then((response) => {
-        //     console.log(response)
-        //     return response
-        // })
         return axios.get(file)
     }
 
@@ -88,6 +82,7 @@ const PageLeaflet = (props) => {
         setLanguage(value)
 
         let geojsons = overlay.overlay_geojson
+
         geojsons = geojsons.filter(geojson =>
             geojson.lang.toLowerCase() === value.toLowerCase()
         )
@@ -104,14 +99,14 @@ const PageLeaflet = (props) => {
             <Col>
                 <Dropdown
                     md={7}
-                    value={language}
+                    value={language.toUpperCase()}
                     options={languageSelectItems}
                     onChange={(e) => setPageLanguage(e.value)}
                     placeholder="Select a language"
                 />
             </Col>
 
-            <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
+            <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
 
                 <ImageOverlay
                     ref={mapRef}
