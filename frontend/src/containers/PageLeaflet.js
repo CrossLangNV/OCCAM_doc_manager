@@ -24,15 +24,6 @@ const PageLeaflet = (props) => {
         return null
     }
 
-
-    function OnClickBoundsView(bounds) {
-        const map = useMap()
-        map.fitBounds(bounds)
-
-        return null
-    }
-
-
     return (
         <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
 
@@ -50,12 +41,10 @@ const PageLeaflet = (props) => {
                 return <Polygon
                     key={id}
                     positions={marker.bounds}
-                    eventHandlers={OnClickBoundsView(marker.bounds)}
                 >
                     <Tooltip sticky>{marker.popupMessage}</Tooltip>
                 </Polygon>
             })}
-
         </MapContainer>
     )
 };
