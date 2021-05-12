@@ -19,15 +19,16 @@ const PageLeaflet = (props) => {
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
             const overlay = page.page_overlay[page.page_overlay.length - 1]
-            const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
+            // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
             setOverlay(overlay)
-            setGeojson(geojson)
+            // setGeojson(geojson)
 
-            if (geojson) {
-                setLanguage(overlay.source_lang)
-                getLeafletMarkers(geojson)
-            }
+            // if (geojson) {
+            setPageLanguage(overlay, overlay.source_lang)
+            // setLanguage(overlay.source_lang)
+            // getLeafletMarkers(geojson)
+            // }
         }
     }, [])
 
@@ -66,7 +67,7 @@ const PageLeaflet = (props) => {
         {label: 'Dutch', value: 'NL'},
         {label: 'French', value: 'FR'},
         {label: 'German', value: 'DE'},
-        {label: 'Czech', value: 'CZ'},
+        {label: 'Czech', value: 'CS'},
     ];
 
 
@@ -78,15 +79,15 @@ const PageLeaflet = (props) => {
     }
 
     // TODO Fix me
-    const setPageLanguage = (value) => {
-        setLanguage(value)
+    const setPageLanguage = (overlay, language) => {
+        setLanguage(language)
 
         let geojsons = overlay.overlay_geojson
 
+
         geojsons = geojsons.filter(geojson =>
-            geojson.lang.toLowerCase() === value.toLowerCase()
+            geojson.lang.toUpperCase() === language.toUpperCase()
         )
-        console.log(geojsons)
 
         setOverlay(overlay)
         setGeojson(geojsons)
@@ -101,7 +102,7 @@ const PageLeaflet = (props) => {
                     md={7}
                     value={language.toUpperCase()}
                     options={languageSelectItems}
-                    onChange={(e) => setPageLanguage(e.value)}
+                    onChange={(e) => setPageLanguage(overlay, e.value)}
                     placeholder="Select a language"
                 />
             </Col>
