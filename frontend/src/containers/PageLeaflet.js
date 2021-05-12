@@ -4,15 +4,17 @@ import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
+import axios from "axios";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
-    const leafletMarkers = props.leafletMarkers
+    // const leafletMarkers = props.leafletMarkers
 
     const [overlay, setOverlay] = useState("");
     const [geojson, setGeojson] = useState("");
     const [language, setLanguage] = useState("");
+    const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
@@ -24,9 +26,38 @@ const PageLeaflet = (props) => {
 
             if (geojson) {
                 setLanguage(geojson.lang)
+                getLeafletMarkers(geojson)
             }
         }
     }, [])
+
+
+    const getLeafletMarkers = (geojson) => {
+        const leafletMarkersArr = []
+
+        console.log(geojson.file)
+        const features = fetchGeojson(geojson.file).then((res) => {
+            for (const c of res.data.features) {
+                const bounds = c.geometry.coordinates.map(hw);
+                const popupMessage = c.properties.name
+
+                leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
+            }
+            setLeafletMarkers(leafletMarkersArr)
+        })
+
+        console.log(features)
+
+
+    }
+
+    const fetchGeojson = async (file) => {
+        // const res = await axios.get(file).then((response) => {
+        //     console.log(response)
+        //     return response
+        // })
+        return axios.get(file)
+    }
 
 
     // Calculate center and image bounds
@@ -58,12 +89,14 @@ const PageLeaflet = (props) => {
 
         let geojsons = overlay.overlay_geojson
         geojsons = geojsons.filter(geojson =>
-            geojson.lang === value
+            geojson.lang.toLowerCase() === value.toLowerCase()
         )
         console.log(geojsons)
 
         setOverlay(overlay)
         setGeojson(geojsons)
+
+        getLeafletMarkers(geojsons[geojsons.length - 1])
     }
 
     return (

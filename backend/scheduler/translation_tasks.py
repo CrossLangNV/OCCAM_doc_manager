@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 @shared_task
 def translate_overlay(overlay_id,
-                      source,
                       target):
     """
     overlay_id : id from Overlay model object
@@ -20,6 +19,7 @@ def translate_overlay(overlay_id,
     """
     overlay = Overlay.objects.get(pk=overlay_id)
 
+    source = overlay.source_lang
     logger.info("Translating page: %s", overlay)
     logger.info("Source language: %s", source)
     logger.info("Target language: %s", target)

@@ -11,8 +11,6 @@ import _ from 'lodash'
 import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
 import {ModifySelectedPage} from "../actions/uiActions";
-import axios from "axios";
-import {hw} from "../constants/leafletFunctions";
 
 
 const PageList = (props) => {
@@ -50,22 +48,10 @@ const PageList = (props) => {
     const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
 
-        const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
+        // const overlay = page.page_overlay[page.page_overlay.length - 1]
+        // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
-        // Get Geojson (if present) TODO: Probably best to move this to a separate service
-        if (geojson) {
-            const leafletMarkersArr = []
-            const res = await axios.get(geojson.file).then((res) => {
-                for (const c of res.data.features) {
-                    const bounds = c.geometry.coordinates.map(hw);
-                    const popupMessage = c.properties.name
 
-                    leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
-                }
-                setLeafletMarkers(leafletMarkersArr)
-            })
-        }
     }
 
     return (
@@ -164,7 +150,7 @@ const PageList = (props) => {
                 <PageLeaflet
                     key={uiStates.selectedPage.id}
                     selectedPage={uiStates.selectedPage}
-                    leafletMarkers={leafletMarkers}
+                    // leafletMarkers={leafletMarkers}
                 />
             )}
         </>
