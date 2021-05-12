@@ -4,25 +4,19 @@ import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
-import {GetPageList} from "../actions/pageActions";
-import {ModifySelectedPage} from "../actions/uiActions";
-import {useDispatch, useSelector} from "react-redux";
-import {GetDocument} from "../actions/documentActions";
+import _ from 'lodash'
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
     const leafletMarkers = props.leafletMarkers
 
-    // const overlay = page.page_overlay[page.page_overlay.length - 1]
-    // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
-
     const [overlay, setOverlay] = useState("");
     const [geojson, setGeojson] = useState("");
     const [language, setLanguage] = useState("");
 
     React.useEffect(() => {
-        if (page.page_overlay.length > 0) {
+        if (!_.isEmpty(page.page_overlay.length)) {
             const overlay = page.page_overlay[page.page_overlay.length - 1]
             const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
@@ -49,7 +43,6 @@ const PageLeaflet = (props) => {
         {label: 'German', value: 'DE'},
         {label: 'Czech', value: 'CZ'},
     ];
-
 
 
     // Resize the map to fit with the image

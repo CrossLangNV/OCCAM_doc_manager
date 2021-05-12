@@ -6,7 +6,6 @@ import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 import {Button} from "primereact/button";
-import { Tag } from 'primereact/tag';
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";

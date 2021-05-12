@@ -58,10 +58,7 @@ const PageList = (props) => {
             const leafletMarkersArr = []
             const res = await axios.get(geojson.file).then((res) => {
                 for (const c of res.data.features) {
-                    let marker;
-
                     const bounds = c.geometry.coordinates.map(hw);
-
                     const popupMessage = c.properties.name
 
                     leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
@@ -69,7 +66,6 @@ const PageList = (props) => {
                 setLeafletMarkers(leafletMarkersArr)
             })
         }
-
     }
 
     return (
