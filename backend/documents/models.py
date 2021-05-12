@@ -11,6 +11,25 @@ from django.utils.translation import gettext_lazy
 from documents import pagexml2geojson
 
 
+class LanguageCodes(models.TextChoices):
+    NL = 'NL', gettext_lazy('Nederlands')
+    EN = 'EN', gettext_lazy('English')
+    FR = 'FR', gettext_lazy('Français')
+    DE = 'DE', gettext_lazy('Deutsch')
+
+
+class LangField(models.CharField):
+    def __init__(self,
+                 *args,
+                 choices=LanguageCodes.choices,
+                 max_length=2,
+                 **kwargs):
+        super(LangField, self).__init__(*args,
+                                        choices=choices,
+                                        max_length=max_length,
+                                        **kwargs)
+
+
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(default="", max_length=1000)
@@ -74,7 +93,9 @@ class Page(models.Model):
         """
 
         with File(file) as django_file:
-            self.file.save(file.name, django_file)
+            name = os.path.split(file.name)[-1]
+
+            self.file.save(name, django_file)
             self.save()
 
     def __str__(self):
@@ -102,9 +123,7 @@ class Overlay(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # TODO
-    # source_lang = # TODO Single language? Use choice and a abbreviation to full name conversion
-    # target_lang = # TODO List (again based on choice/list)
+    source_lang = LangField()
 
     class Meta:
         ordering = ['-created_at']
@@ -120,10 +139,15 @@ class Overlay(models.Model):
 
         """
         with File(file) as django_file:
-            self.file.save(file.name, django_file)
+            name = os.path.split(file.name)[-1]
+
+            self.file.save(name, django_file)
             self.save()
 
-    def update_transl_xml(self, file):
+        self.create_geojson()
+
+    def update_transl_xml(self, file,
+                          target: str):
         """ Save a file to the translation overlay.
 
         Example:
@@ -133,25 +157,46 @@ class Overlay(models.Model):
             >>    overlay.update_xml(f)
 
         """
+
         with File(file) as django_file:
-            self.translation_file.save(file.name, django_file)
+            name = os.path.split(file.name)[-1]
+
+            self.translation_file.save(name, django_file)
+
             self.save()
 
-        self.create_geojson()
+        self.create_geojson(target=target)
 
-    def create_geojson(self):
+    def create_geojson(self,
+                       target: str = None):
         """
         Creates
-        """
-        assert self.file, 'Only make sense if overlay xml exists'
 
-        # Create Geojson overlay and save to the object
-        with self.file.open() as f:
-            geojson = pagexml2geojson.main(f)
-            # logger.info(geojson)
+        source: language code of original document
+        target: (Optional) language code of targeted language
+        """
+
+        if target is None:
+
+            assert self.file, 'Only make sense if overlay xml exists'
+
+            # Create Geojson overlay and save to the object
+            with self.file.open() as f:
+                geojson = pagexml2geojson.main(f)
+                # logger.info(geojson)
+
+        else:
+            assert self.translation_file, 'Only make sense if overlay xml exists'
+
+            # Create Geojson overlay and save to the object
+            with self.translation_file.open() as f:
+                geojson = pagexml2geojson.main(f,
+                                               target=target)
+                # logger.info(geojson)
 
         geojson_object = Geojson.objects.create(overlay=self,
-                                                original=True,
+                                                original=(target is None),
+                                                lang=self.source_lang if (target is None) else target
                                                 )
 
         basename, _ = os.path.splitext(self.file.name)
@@ -167,25 +212,6 @@ class Overlay(models.Model):
 
     def __str__(self):
         return f"Overlay of '{self.page.file.name}'" + ' ' + '*source lang*' + ' ' + '*target lang*'
-
-
-class LanguageCodes(models.TextChoices):
-    NL = 'NL', gettext_lazy('Nederlands')
-    EN = 'EN', gettext_lazy('English')
-    FR = 'FR', gettext_lazy('Français')
-    DE = 'DE', gettext_lazy('Deutsch')
-
-
-class LangField(models.CharField):
-    def __init__(self,
-                 *args,
-                 choices=LanguageCodes.choices,
-                 max_length=2,
-                 **kwargs):
-        super(LangField, self).__init__(*args,
-                                        choices=choices,
-                                        max_length=max_length,
-                                        **kwargs)
 
 
 class Geojson(models.Model):
@@ -207,8 +233,6 @@ class Geojson(models.Model):
                             blank=True,
                             upload_to='overlays/geojson')
 
-    # Language of original document
-    source_lang = LangField()
     # Information about the translation engine (if applicable)
     trans_engine = models.CharField(blank=True, max_length=50)
 
@@ -225,5 +249,7 @@ class Geojson(models.Model):
 
         """
         with File(file) as django_file:
-            self.file.save(file.name, django_file)
+            name = os.path.split(file.name)[-1]
+
+            self.file.save(name, django_file)
             self.save()

@@ -51,7 +51,8 @@ def create(client=None):
         page.update_image(f)
 
     o1 = Overlay.objects.create(
-        page=page
+        page=page,
+        source_lang='NL'
     )
     with open(FILENAME_XML, 'rb') as f:
         o1.update_xml(f)

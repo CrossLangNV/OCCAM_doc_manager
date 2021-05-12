@@ -25,33 +25,35 @@ class TranslateOverlayTest(TestCase):
         with open(FILENAME_XML, 'rb') as f:
             overlay.update_xml(f)
 
-        r = translate_overlay(overlay.id,
-                              'nl',
-                              'en')
-
-        self.assertTrue(r)
+        translate_overlay(overlay.id,
+                          'nl',
+                          'en')
 
     def test_create_geojson(self):
-        source = 'nl'
-        target = 'en'
+        source = 'NL'
+        target = 'EN'
 
         overlay = next(filter(lambda x: 'xml' in x.file.name.lower(), Overlay.objects.all()))
 
         geojson_0 = list(Geojson.objects.all())
         n_geojson_0 = len(geojson_0)
 
-        r = translate_overlay(overlay.id,
-                              source,
-                              target)
+        translate_overlay(overlay.id,
+                          source,
+                          target)
 
         n_geojson_1 = len(Geojson.objects.all())
-
-        self.assertEqual(n_geojson_0 + 1, n_geojson_1, 'Should be increased by one.')
-
         # Get the newest Geojson object.
         s_geojson_new = set(Geojson.objects.all()) - set(geojson_0)
-        self.assertGreaterEqual(len(s_geojson_new), 1, 'Sanity check')
+
+        with self.subTest('Number of new geojsons'):
+            self.assertEqual(n_geojson_0 + 1, n_geojson_1, 'Should be increased by one.')
+            self.assertGreaterEqual(len(s_geojson_new), 1, 'Sanity check')
+
         geojson = list(s_geojson_new)[0]
 
-        self.assertEqual(geojson.source_lang, source)
-        self.assertEqual(geojson.lang, target)
+        with self.subTest('source lang'):
+            self.assertEqual(geojson.overlay.source_lang, source)
+
+        with self.subTest('target lang'):
+            self.assertEqual(geojson.lang, target)
