@@ -1,8 +1,7 @@
 import logging as logger
 import os
-import warnings
 
-from rest_framework import permissions, views, status
+from rest_framework import permissions, status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
@@ -108,13 +107,15 @@ class TranslatePageAPIView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None, *args, **kwargs):
-        page = request.data["page"]
+        overlay = request.data["overlay"]
         source = request.data["source"]
         target = request.data["target"]
 
         logger.info("Starting celery task for translation")
 
-        translate_overlay.delay(page, source, target)
+        translate_overlay.delay(overlay, source, target)
+
+        return Response("Translation task launched", status=status.HTTP_201_CREATED)
 
 
 class PageLaunchOCRAPIView(APIView):
@@ -129,5 +130,4 @@ class PageLaunchOCRAPIView(APIView):
 
         logger.info("Starting celery task for translation")
 
-        return Response("Task launched", status=status.HTTP_201_CREATED)
-
+        return Response("OCR Task launched", status=status.HTTP_201_CREATED)

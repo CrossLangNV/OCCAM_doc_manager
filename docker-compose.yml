@@ -14,6 +14,7 @@ services:
     depends_on:
       - occ_postgres
       - occ_minio
+      - celery
 
   react:
     build: ./frontend
@@ -63,7 +64,7 @@ services:
     restart:
       always
     depends_on:
-      - django
+      #      - django
       - rabbitmq
 
   rabbitmq:

@@ -59,8 +59,6 @@ class ImageTest(TransactionTestCase):
         self.height = 20
 
         Page.objects.create(
-            width=self.width,
-            height=self.height,
             document=self.doc
         )
 
@@ -99,8 +97,6 @@ class OverlayTest(TransactionTestCase):
         self.page = Page.objects.create(
             # filename='image.jpg',
             # path='images/image.jpg',
-            width=10,
-            height=20,
             document=self.doc
         )
         with open(FILENAME_IMAGE, 'rb') as f:
@@ -157,8 +153,6 @@ class GeojsonTest(TransactionTestCase):
         )
 
         self.page = Page.objects.create(
-            width=10,
-            height=20,
             document=self.doc
         )
         with open(FILENAME_IMAGE, 'rb') as f:

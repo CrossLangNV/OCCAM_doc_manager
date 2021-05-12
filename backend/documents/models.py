@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy
 
 from documents import pagexml2geojson
 
+
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(default="", max_length=1000)
@@ -191,9 +192,7 @@ class Geojson(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # Language of text (can be after translation) (abbreviation)
 
-    lang = LangField(
-        null=True,  # to make this required.
-    )
+    lang = LangField()
     overlay = models.ForeignKey(
         Overlay,
         related_name="overlay_geojson",

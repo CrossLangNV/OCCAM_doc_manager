@@ -6,7 +6,6 @@ from rest_framework import status
 from backend.tests.documents.create_database_mock import create, login
 from documents.models import Document, Page, Overlay
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
-from documents.views import OverlayTranslationView, PageTranscriptionView
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
 
@@ -15,8 +14,8 @@ B_DEBUG = True  # TODO Change to False in production
 URL_DOCUMENTS = '/documents/api/documents/'
 URL_PAGES = '/documents/api/pages/'
 URL_OVERLAYS = '/documents/api/overlays/'
-URL_TRANSLATION = '/documents/api/overlay/translation/'
-URL_TRANSCRIPTION = '/documents/api/page/transcription/'
+URL_TRANSLATION = '/documents/api/pages/translate'
+URL_TRANSCRIPTION = '/documents/api/pages/launch_ocr'
 
 
 class GetAllDocumentsTest(TestCase):
@@ -126,15 +125,11 @@ class OverlayTranslationViewTest(TestCase):
 
         overlay = Overlay.objects.exclude(file='')[0]
 
-        if 1:
-            response = self.client_object.post(URL_TRANSLATION,
-                                               data={'id': overlay.id,
-                                                     'source': 'nl',
-                                                     'target': 'en'
-                                                     })
-        else:
-            v = OverlayTranslationView()
-            response = v.post(None)
+        response = self.client_object.post(URL_TRANSLATION,
+                                           data={'overlay': overlay.id,
+                                                 'source': 'nl',
+                                                 'target': 'en'
+                                                 })
 
         # Get it again, to make sure it's updated.
         overlay_after = Overlay.objects.get(id=overlay.id)
@@ -158,19 +153,10 @@ class PageTranscriptionViewTest(TestCase):
         page = next(filter(lambda x: 'jpg' in x.file.name, Page.objects.all())
                     )
 
-        data = {'id': page.id,
+        data = {'page': page.id,
                 }
 
-        if 1:
-            response = self.client_object.post(URL_TRANSCRIPTION,
-                                               data=data)
-        else:
-            v = PageTranscriptionView()
-
-            class RequestMock:
-                def __init__(self):
-                    self.data = data
-
-            response = v.post(RequestMock())
+        response = self.client_object.post(URL_TRANSCRIPTION,
+                                           data=data)
 
         self.assertLess(response.status_code, 300)

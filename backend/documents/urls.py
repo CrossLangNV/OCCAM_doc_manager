@@ -1,9 +1,8 @@
 from django.urls import path
 
-from .views import OverlayTranslationView, PageListAPIView, PageDetailAPIView, TranslatePageAPIView, OverlayListAPIView, \
+from .views import PageListAPIView, PageDetailAPIView, TranslatePageAPIView, OverlayListAPIView, \
     DocumentListAPIView, \
     DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView
-from .views import PageTranscriptionView
 
 urlpatterns = [
     path("api/documents/", DocumentListAPIView.as_view(), name="document_list_api"),
@@ -16,16 +15,4 @@ urlpatterns = [
 
     path('api/overlays/', OverlayListAPIView.as_view(), name='overlay_list_api'),
     path("api/overlay/<str:pk>", OverlayDetailAPIView.as_view(), name="overlay_api_detail"),
-    # Translate a single overlay.
-    path(
-        'api/overlay/translation/',
-        OverlayTranslationView.as_view(),
-        name='overlay_translation',
-    ),
-    # OCR a single page.
-    path(
-        'api/page/transcription/',
-        PageTranscriptionView.as_view(),
-        name='page_transcription',
-    ),
 ]

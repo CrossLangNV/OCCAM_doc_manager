@@ -41,14 +41,10 @@ def create(client=None):
     )
     name = 'a test image'
     path = 'a/b/c.def'
-    width = 10
-    height = 20
 
     page = Page.objects.create(
         # filename=name,
         # path=path,
-        width=width,
-        height=height,
         document=doc
     )
     with open(FILENAME_IMAGE, 'rb') as f:
