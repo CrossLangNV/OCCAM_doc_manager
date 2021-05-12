@@ -1,12 +1,39 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../constants/leafletFunctions";
+import {Dropdown} from "primereact/dropdown";
+import {Col} from "react-bootstrap";
+import {GetPageList} from "../actions/pageActions";
+import {ModifySelectedPage} from "../actions/uiActions";
+import {useDispatch, useSelector} from "react-redux";
+import {GetDocument} from "../actions/documentActions";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
     const leafletMarkers = props.leafletMarkers
+
+    // const overlay = page.page_overlay[page.page_overlay.length - 1]
+    // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
+
+    const [overlay, setOverlay] = useState("");
+    const [geojson, setGeojson] = useState("");
+    const [language, setLanguage] = useState("");
+
+    React.useEffect(() => {
+        if (page.page_overlay.length > 0) {
+            const overlay = page.page_overlay[page.page_overlay.length - 1]
+            const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
+
+            setOverlay(overlay)
+            setGeojson(geojson)
+            if (geojson) {
+                setLanguage(geojson.lang)
+            }
+        }
+    }, [])
+
 
     // Calculate center and image bounds
     const mapRef = useRef(null);
@@ -15,38 +42,52 @@ const PageLeaflet = (props) => {
     const height = page.image_height;
     const imageBounds = [center, hw(height, width)];
 
+    const languageSelectItems = [
+        {label: 'English', value: 'EN'},
+        {label: 'Dutch', value: 'NL'},
+        {label: 'French', value: 'FR'},
+        {label: 'German', value: 'DE'},
+        {label: 'Czech', value: 'CZ'},
+    ];
+
+
 
     // Resize the map to fit with the image
     function ResizeComponent() {
         const map = useMap()
         map.fitBounds(imageBounds)
-
         return null
     }
 
     return (
-        <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
+        <>
+            <Col>
+                <Dropdown md={7} value={language} options={languageSelectItems} onChange={(e) => setLanguage(e.value)} placeholder="Select a language"/>
+            </Col>
 
-            <ImageOverlay
-                ref={mapRef}
-                url={file}
-                bounds={imageBounds}
-                opacity={1}
-                zIndex={10}
-            />
+            <MapContainer center={[0, 0]} zoom={3} scrollWheelZoom={true} crs={CRS.Simple}>
 
-            <ResizeComponent/>
+                <ImageOverlay
+                    ref={mapRef}
+                    url={file}
+                    bounds={imageBounds}
+                    opacity={1}
+                    zIndex={10}
+                />
 
-            {leafletMarkers.map((marker, id) => {
-                return <Polygon
-                    key={id}
-                    positions={marker.bounds}
-                >
-                    <Tooltip sticky>{marker.popupMessage}</Tooltip>
-                </Polygon>
-            })}
-        </MapContainer>
+                <ResizeComponent/>
+
+                {leafletMarkers.map((marker, id) => {
+                    return <Polygon
+                        key={id}
+                        positions={marker.bounds}
+                    >
+                        <Tooltip sticky>{marker.popupMessage}</Tooltip>
+                    </Polygon>
+                })}
+            </MapContainer>
+        </>
     )
-};
+}
 
 export default PageLeaflet;

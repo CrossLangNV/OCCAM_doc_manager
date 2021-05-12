@@ -51,22 +51,25 @@ const PageList = (props) => {
         dispatch(ModifySelectedPage(page))
 
         const overlay = page.page_overlay[page.page_overlay.length - 1]
-        const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1].file
+        const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
-        const leafletMarkersArr = []
-        const res = await axios.get(geojson).then((res) => {
+        // Get Geojson (if present) TODO: Probably best to move this to a separate service
+        if (geojson) {
+            const leafletMarkersArr = []
+            const res = await axios.get(geojson.file).then((res) => {
+                for (const c of res.data.features) {
+                    let marker;
 
-            for (const c of res.data.features) {
-                let marker;
+                    const bounds = c.geometry.coordinates.map(hw);
 
-                const bounds = c.geometry.coordinates.map(hw);
+                    const popupMessage = c.properties.name
 
-                const popupMessage = c.properties.name
+                    leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
+                }
+                setLeafletMarkers(leafletMarkersArr)
+            })
+        }
 
-                leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
-            }
-            setLeafletMarkers(leafletMarkersArr)
-        })
     }
 
     return (
@@ -161,15 +164,13 @@ const PageList = (props) => {
 
             <div className='space' />
 
-            <Row>
-                {uiStates.selectedPage !== "" && (
-                    <PageLeaflet
-                        key={uiStates.selectedPage.id}
-                        selectedPage={uiStates.selectedPage}
-                        leafletMarkers={leafletMarkers}
-                    />
-                )}
-            </Row>
+            {uiStates.selectedPage !== "" && (
+                <PageLeaflet
+                    key={uiStates.selectedPage.id}
+                    selectedPage={uiStates.selectedPage}
+                    leafletMarkers={leafletMarkers}
+                />
+            )}
         </>
 
 

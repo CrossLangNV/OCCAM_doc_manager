@@ -10,17 +10,21 @@ import Moment from "react-moment";
 import PageAdd from "./PageAdd";
 import PageList from "./PageList";
 import DocumentState from "./DocumentState";
+import {ModifySelectedPage} from "../actions/uiActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
 
     const dispatch = useDispatch()
     const documentState = useSelector(state => state.document)
+    const uiStates = useSelector(state => state.uiStates);
+
 
     let history = useHistory();
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId))
+        dispatch(ModifySelectedPage(""))
     }, [])
 
     const confirmDeleteDoc = (event) => {
