@@ -57,7 +57,9 @@ def ocr_page(page_id):
 
     # Create Overlay object in Djang
     # TODO should we update if already exists?
-    overlay = Overlay.objects.create(page=page)
+    # TODO GEt language from classifier
+    source_lang = "EN"
+    overlay = Overlay.objects.create(page=page, source_lang=source_lang)
     logger.info("OCR overlay: %s", overlay)
 
     # Save overlay XML to the object

@@ -23,6 +23,8 @@ const PageLeaflet = (props) => {
             setOverlay(overlay)
 
             setPageLanguage(overlay, "ORIGINAL")
+
+            getProcessedLanguages()
         }
     }, [])
 
@@ -41,6 +43,21 @@ const PageLeaflet = (props) => {
         })
 
         console.log(features)
+
+    }
+
+    // TODO CONTINUE THIS TOMORROW
+
+    const getProcessedLanguages = () => {
+        // let geojsons = overlay.overlay_geojson
+        //
+        // let availableLanguages = new Set()
+        //
+        // geojsons.forEach(geo => {
+        //     availableLanguages.add(geo.lang)
+        // })
+        //
+        // console.log(availableLanguages)
 
     }
 
