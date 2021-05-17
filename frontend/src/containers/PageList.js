@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, OcrPage} from "../actions/pageActions";
+import {DeletePage, GetPageList, OcrPage, TranslatePage} from "../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -11,6 +11,9 @@ import _ from 'lodash'
 import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
 import {ModifySelectedPage} from "../actions/uiActions";
+import {OverlayPanel} from "primereact/overlaypanel";
+import {languageSelectItems} from "../constants/language-selections";
+import {Dropdown} from "primereact/dropdown";
 
 
 const PageList = (props) => {
@@ -21,12 +24,17 @@ const PageList = (props) => {
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
 
+    const [targetLanguage, setTargetLanguage] = useState("");
+    const [translationOverlayId, setTranslationOverlayId] = useState("");
+
 
     const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
     }, [])
+
+    const translationSelectionOverlay = useRef(null);
 
     const confirmDeletePage = (event) => {
         confirmPopup({
@@ -43,6 +51,17 @@ const PageList = (props) => {
     const startOcrForPage = (pageId) => {
         dispatch(OcrPage(pageId))
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
+    }
+
+    const startTranslationForPage = () => {
+        dispatch(TranslatePage(translationOverlayId, targetLanguage))
+        toast.current.show({severity: 'success', summary: 'Success', detail: 'Translation task has been started for the selected page'});
+    }
+
+    const toggleTranslationMenu = (e, page) => {
+        const overlay = page.page_overlay[page.page_overlay.length - 1].id
+        setTranslationOverlayId(overlay)
+        translationSelectionOverlay.current.toggle(e)
     }
 
     const selectPage = async (page) => {
@@ -134,15 +153,52 @@ const PageList = (props) => {
                                     tooltip="Run OCR"
                                     tooltipOptions={{position: 'bottom'}}
                                 />
-                                <Button
-                                    onClick={() => startOcrForPage(page.id)}
-                                    label=""
-                                    icon="pi pi-globe"
-                                    className="p-button-primary margin-left"
-                                    tooltip="Translate page"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
+                                {(!_.isEmpty(page.page_overlay) &&
+                                    <Button
+                                        onClick={(e) => toggleTranslationMenu(e, page)}
+                                        label=""
+                                        icon="pi pi-globe"
+                                        className="p-button-primary margin-left"
+                                        tooltip="Translate page"
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
+                                )}
+
+
                             </Col>
+                            <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
+                                <h6>Translate page</h6>
+                                <Row>
+                                    <Col md={2}>
+                                        To
+                                    </Col>
+                                    <Col>
+                                        <Dropdown
+                                            md={7}
+                                            value={targetLanguage}
+                                            options={languageSelectItems}
+                                            onChange={(e) => setTargetLanguage(e.value)}
+                                            placeholder="Select a language"
+                                        />
+                                    </Col>
+
+                                </Row>
+                                <br/>
+
+                                <Row>
+                                    <Col>
+                                        <Button onClick={() => startTranslationForPage()}
+                                                label="Translate"
+                                                icon="pi pi-check"
+                                                style={{marginRight: '.25em'}}
+                                                disabled={(targetLanguage.length === 0)}
+                                        />
+                                    </Col>
+
+                                </Row>
+
+
+                            </OverlayPanel>
                         </Row>
                     </Card>
                 })}

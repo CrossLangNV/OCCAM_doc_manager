@@ -100,3 +100,21 @@ export const OcrPage = (id) => async dispatch => {
             })
         })
 }
+
+export const TranslatePage = (id, target) => async dispatch => {
+    dispatch({
+        type: PageActionTypes.PAGE_TRANSLATION_LOADING
+    });
+
+    const res = await axios.post(`http://localhost:8000/documents/api/pages/translate`,
+        {
+            overlay: id,
+            target: target.toUpperCase()
+        })
+        .then((res) => {
+            dispatch({
+                type: PageActionTypes.PAGE_TRANSLATION_SUCCESS,
+                payload: {id}
+            })
+        })
+}
