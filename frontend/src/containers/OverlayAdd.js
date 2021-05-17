@@ -4,12 +4,14 @@ import {useDispatch} from "react-redux";
 import {AddPage} from "../actions/pageActions";
 import {Toast} from "primereact/toast";
 import {AddOverlay} from "../actions/overlayActions";
+import {Button} from "primereact/button";
 
 const OverlayAdd = (props) => {
     const dispatch = useDispatch();
     const ACCEPTED_FILE_TYPES = "application/xml"
     const pageId = props.pageId
     const toast = useRef(null);
+    const label = props.label
 
     const overlayUploader = async (event) => {
         const files = event.files
@@ -30,7 +32,7 @@ const OverlayAdd = (props) => {
                 customUpload
                 uploadHandler={overlayUploader}
                 mode="basic"
-                chooseLabel="Upload overlay"
+                chooseLabel={label}
             />
             <Toast ref={toast} />
         </>

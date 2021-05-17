@@ -51,7 +51,6 @@ const PageList = (props) => {
         // const overlay = page.page_overlay[page.page_overlay.length - 1]
         // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
 
-
     }
 
     return (
@@ -103,29 +102,29 @@ const PageList = (props) => {
                             <Col md={7}>
                                 <OverlayAdd
                                     pageId={page.id}
+                                    label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
                                 />
                             </Col>
 
 
                             {(!_.isEmpty(page.page_overlay) &&
-                                <>
-                                    <Col>
-                                        <Button
-                                            className="margin-left"
-                                            label=""
-                                            icon="pi pi-eye"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                            }}
-                                            tooltip="View overlay"
-                                            tooltipOptions={{position: 'bottom'}}
-                                        />
-
-                                    </Col>
-                                </>
+                                    <Button
+                                        className="margin-left"
+                                        label=""
+                                        icon="pi pi-eye"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+                                        }}
+                                        tooltip="View overlay"
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
                             )}
 
+                        </Row>
+                        <br/>
+
+                        <Row>
                             <Col>
                                 <Button
                                     onClick={() => startOcrForPage(page.id)}
@@ -133,6 +132,14 @@ const PageList = (props) => {
                                     icon="pi pi-play"
                                     className="p-button-primary"
                                     tooltip="Run OCR"
+                                    tooltipOptions={{position: 'bottom'}}
+                                />
+                                <Button
+                                    onClick={() => startOcrForPage(page.id)}
+                                    label=""
+                                    icon="pi pi-globe"
+                                    className="p-button-primary margin-left"
+                                    tooltip="Translate page"
                                     tooltipOptions={{position: 'bottom'}}
                                 />
                             </Col>

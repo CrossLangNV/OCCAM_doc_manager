@@ -12,6 +12,8 @@ export const GetPageList = (rows, page, doc_id) => async dispatch => {
         const res = await axios.get(`http://localhost:8000/documents/api/pages?rows=${rows}&offset=${offset}`,
             {params: {document: doc_id}})
 
+
+
         dispatch({
             type: PageActionTypes.PAGE_LIST_SUCCESS,
             payload: res.data,
@@ -31,7 +33,7 @@ export const GetPage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_MULTIPLE_LOADING
         });
 
-        const res = await axios.get(`http://localhost:8000/documents/api/pages/${id}`)
+        const res = await axios.get(`http://localhost:8000/documents/api/page/${id}`)
 
         dispatch({
             type: PageActionTypes.PAGE_MULTIPLE_SUCCESS,
