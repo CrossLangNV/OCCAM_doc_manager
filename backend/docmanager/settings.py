@@ -167,3 +167,5 @@ CACHES = {
         "OPTIONS": {"MAX_ENTRIES": 1000},
     }
 }
+
+APPEND_SLASH = False

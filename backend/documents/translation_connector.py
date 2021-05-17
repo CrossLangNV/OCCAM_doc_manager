@@ -3,8 +3,11 @@ Connects to the XML translation API
 """
 
 import abc
+import os
 
 import requests
+
+URL_BASE = os.environ['CEF_ETRANSLATION_URL']
 
 
 class TranslationConnector(abc.ABC):
@@ -24,7 +27,6 @@ class TranslationConnector(abc.ABC):
 
 
 class CEFeTranslationConnector(TranslationConnector):
-    URL_BASE = 'http://192.168.105.41:9050'
     URL_TRANSLATE_BLOCKING = URL_BASE + '/translate/xml/blocking'
     URL_TRANSLATE_POST = URL_BASE + '/translate/xml'
     URL_TRANSLATE_GET = URL_BASE + '/translate/xml/{xml_id}'
