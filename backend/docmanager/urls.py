@@ -3,13 +3,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views import generic
-from docmanager import settings
 from rest_framework import serializers
 from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+from docmanager import settings
 
 
 class MessageSerializer(serializers.Serializer):
@@ -18,7 +19,7 @@ class MessageSerializer(serializers.Serializer):
 
 urlpatterns = [
     url(r'^$', generic.RedirectView.as_view(
-         url='/api/', permanent=False)),
+        url='/api/', permanent=False)),
     url(r'^api/$', get_schema_view()),
     url(r'^api/auth/', include(
         'rest_framework.urls', namespace='rest_framework')),
@@ -27,6 +28,7 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('documents/', include(('documents.urls', 'documents'), namespace='documents')),
+    path('activitylogs/', include(('activitylogs.urls', 'activitylogs'), namespace='activitylogs')),
 ]
 
 if settings.DEBUG:

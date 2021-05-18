@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'minio_storage',
+    'activitylogs',
 ]
 
 # Rest Framework
