@@ -1,6 +1,5 @@
 from django.contrib import admin
 
-from activitylogs.models import OcrRequest, TranslationRequest
+from activitylogs.models import ActivityLog
 
-admin.site.register(OcrRequest)
-admin.site.register(TranslationRequest)
+admin.site.register(ActivityLog)

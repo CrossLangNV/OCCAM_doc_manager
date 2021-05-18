@@ -4,7 +4,7 @@ from django.utils import timezone
 from documents.models import Page
 
 
-class RequestState(models.TextChoices):
+class ActivityLogState(models.TextChoices):
     CREATED = "Created"
     WAITING = "Waiting"
     STARTED = "Started"
@@ -13,41 +13,27 @@ class RequestState(models.TextChoices):
     SUCCESS = "Success"
 
 
-class OcrRequest(models.Model):
+class ActivityLogType(models.TextChoices):
+    OCR = "OCR"
+    TRANSLATION = "Translation"
+
+
+class ActivityLog(models.Model):
     page = models.ForeignKey(
         Page,
-        related_name="ocr_request_page",
+        related_name="activity_log_page",
         on_delete=models.CASCADE,
     )
 
-    endpoint = models.TextField(null=True, blank=True)
+    type = models.CharField(
+        max_length=50,
+        choices=ActivityLogType.choices,
+    )
 
     state = models.CharField(
         max_length=50,
-        choices=RequestState.choices,
-        default=RequestState.CREATED,
-    )
-
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-
-
-class TranslationRequest(models.Model):
-    page = models.ForeignKey(
-        Page,
-        related_name="translation_request_page",
-        on_delete=models.CASCADE,
-    )
-
-    endpoint = models.TextField(null=True, blank=True)
-
-    state = models.CharField(
-        max_length=50,
-        choices=RequestState.choices,
-        default=RequestState.CREATED,
+        choices=ActivityLogState.choices,
+        default=ActivityLogState.CREATED,
     )
 
     created_at = models.DateTimeField(default=timezone.now)
