@@ -1,14 +1,14 @@
 from django.db import models
 from django.utils import timezone
 
-from documents.models import Page
+from documents.models import Page, Overlay
 
 
 class ActivityLogState(models.TextChoices):
     CREATED = "Created"
     WAITING = "Waiting"
     STARTED = "Started"
-    IN_PROGRESS = "In Progress"
+    PROCESSING = "Processing"
     FAILED = "Failed"
     SUCCESS = "Success"
 
@@ -23,6 +23,14 @@ class ActivityLog(models.Model):
         Page,
         related_name="activity_log_page",
         on_delete=models.CASCADE,
+        null=True
+    )
+
+    overlay = models.ForeignKey(
+        Overlay,
+        related_name="activity_log_overlay",
+        on_delete=models.CASCADE,
+        null=True
     )
 
     type = models.CharField(

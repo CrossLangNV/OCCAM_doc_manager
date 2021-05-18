@@ -1,13 +1,13 @@
 import io
 import logging
-import time
-from django.core.files import File
 import os
-from documents.models import Page, Overlay, Geojson
+import time
+
 from celery import shared_task
 
+from activitylogs.models import ActivityLog, ActivityLogType
+from documents.models import Page, Overlay
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
-import json
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +40,14 @@ def ocr_page(page_id):
     # Checks the processing state of the request
     # Check if finished!
 
+    activity_log = ActivityLog.objects.create(page=page,
+                                              type=ActivityLogType.OCR)
+    logger.info("Created activity log")
+
     logger.info("Waiting for document to be processed....")
     while True:
         if check_state(request_id,
-                       page_id):
+                       page_id, activity_log):
             break
         else:  # 'PROCESSED'
             time.sleep(1)

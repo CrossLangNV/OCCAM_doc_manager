@@ -3,6 +3,8 @@ import warnings
 
 import requests
 
+from activitylogs.models import ActivityLogState
+
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 
@@ -56,7 +58,7 @@ def upload_file(file,
                          'content': response_upload_image.content})
 
 
-def check_state(request_id: str, page_id: str) -> bool:
+def check_state(request_id: str, page_id: str, activity_log) -> bool:
     """
     Check state of OCR request.
 
@@ -69,6 +71,12 @@ def check_state(request_id: str, page_id: str) -> bool:
     )
 
     state = response_status.json()['request_status'][page_id]['state']
+
+    if state == "PROCESSED":
+        activity_log.state = ActivityLogState.SUCCESS
+    else:
+        activity_log.state = ActivityLogState.PROCESSING
+    activity_log.save()
 
     return not (state in ('WAITING', 'PROCESSING'))
 
