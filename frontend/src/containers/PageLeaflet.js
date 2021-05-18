@@ -18,11 +18,11 @@ const PageLeaflet = (props) => {
 
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
-            const overlay = page.page_overlay[page.page_overlay.length - 1]
+            const latestOverlay = page.page_overlay[page.page_overlay.length - 1]
 
-            setOverlay(overlay)
+            setOverlay(latestOverlay)
 
-            setPageLanguage(overlay, "ORIGINAL")
+            setPageLanguage(latestOverlay, "ORIGINAL")
 
             getProcessedLanguages()
         }
@@ -61,8 +61,8 @@ const PageLeaflet = (props) => {
 
     }
 
-    const fetchGeojson = async (file) => {
-        return axios.get(file)
+    const fetchGeojson = async (f) => {
+        return axios.get(f)
     }
 
 
