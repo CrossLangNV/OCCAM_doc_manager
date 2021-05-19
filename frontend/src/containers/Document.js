@@ -11,6 +11,7 @@ import PageAdd from "./PageAdd";
 import PageList from "./PageList";
 import DocumentState from "./DocumentState";
 import {ModifySelectedPage} from "../actions/uiActions";
+import {OcrPage} from "../actions/pageActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
@@ -45,7 +46,15 @@ const Document = (props) => {
             message: 'Do you want to start the OCR process for all the pages of this document?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                console.log("Not implemented yet!")
+                if (!_.isEmpty(documentState.data[documentId])) {
+                    const documentData = documentState.data[documentId]
+                    if (!_.isEmpty(documentData.document_page)) {
+                        documentData.document_page.forEach(page => {
+                            console.log("OCR all pages: ", page.id)
+                            dispatch(OcrPage(page.id))
+                        })
+                    }
+                }
             },
         });
     }
