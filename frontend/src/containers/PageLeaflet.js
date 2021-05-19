@@ -6,6 +6,7 @@ import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
 import axios from "axios";
 import {languageSelectItems} from "../constants/language-selections"
+import _ from 'lodash';
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -14,6 +15,7 @@ const PageLeaflet = (props) => {
 
     const [overlay, setOverlay] = useState("");
     const [language, setLanguage] = useState("ORIGINAL");
+    const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
@@ -23,8 +25,6 @@ const PageLeaflet = (props) => {
             setOverlay(latestOverlay)
 
             setPageLanguage(latestOverlay, "ORIGINAL")
-
-            getProcessedLanguages()
         }
     }, [])
 
@@ -43,19 +43,27 @@ const PageLeaflet = (props) => {
         })
     }
 
-    // TODO CONTINUE THIS TOMORROW
+    const getProcessedLanguages = (geojsons) => {
+        // Create a Set to make sure duplicate translations of a language are in the list
+        let availableLanguagesSet = new Set()
 
-    const getProcessedLanguages = () => {
-        // let geojsons = overlay.overlay_geojson
-        //
-        // let availableLanguages = new Set()
-        //
-        // geojsons.forEach(geo => {
-        //     availableLanguages.add(geo.lang)
-        // })
-        //
-        // console.log(availableLanguages)
+        if (!_.isEmpty(geojsons)) {
+            geojsons.forEach(geo => {
+                availableLanguagesSet.add(geo.lang.toUpperCase())
+            })
+        }
 
+        // Make a list from the Set, works easier
+        let availableLanguages = [...availableLanguagesSet]
+
+        // Take all the possible languages and filter out the items that are not present
+        let result = languageSelectItems.filter(item => availableLanguages.includes(item.value))
+
+        // Make sure the first selection in the UI is "Original"
+        result = [{label: 'Original', value: 'ORIGINAL'}, ...result]
+
+        // Store the object for the UI
+        setSelectableLanguages(result)
     }
 
     const fetchGeojson = async (f) => {
@@ -78,11 +86,13 @@ const PageLeaflet = (props) => {
         return null
     }
 
-    // TODO Fix me
     const setPageLanguage = (overlay, language) => {
         setLanguage(language)
 
         let geojsons = overlay.overlay_geojson
+
+        // Get processed languages
+        getProcessedLanguages(geojsons)
 
         if (language === "ORIGINAL") {
             geojsons = geojsons.filter(geojson =>
@@ -97,6 +107,9 @@ const PageLeaflet = (props) => {
         setOverlay(overlay)
 
         getLeafletMarkers(geojsons[geojsons.length - 1])
+
+
+
     }
 
     return (
@@ -106,7 +119,7 @@ const PageLeaflet = (props) => {
                 <Dropdown
                     md={7}
                     value={language.toUpperCase()}
-                    options={languageSelectItems}
+                    options={selectableLanguages}
                     onChange={(e) => setPageLanguage(overlay, e.value)}
                     placeholder="Select a language"
                 />
