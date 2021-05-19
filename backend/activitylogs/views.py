@@ -22,9 +22,13 @@ class ActivityLogsAPIView(ListCreateAPIView):
     def get_queryset(self):
         q = ActivityLog.objects.all()
         page_id = self.request.GET.get("page", "")
+        overlay_id = self.request.GET.get("overlay", "")
 
         if page_id:
             q = q.filter(page__id=str(page_id))
+
+        if overlay_id:
+            q = q.filter(overlay_id=str(overlay_id))
 
         return q
 

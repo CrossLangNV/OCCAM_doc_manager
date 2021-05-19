@@ -33,18 +33,23 @@ def translate_overlay(overlay_id, target):
     conn = CEFeTranslationConnector()
 
     # Blocking translation request
-    with overlay.get_file().open("rb") as f:
-        xml_trans = conn.translate_xml(f, source, target)
+    try:
+        with overlay.get_file().open("rb") as f:
+            xml_trans = conn.translate_xml(f, source, target)
 
-    # Save to translation in overlay object
-    with io.BytesIO(xml_trans) as f:
-        basename, ext = os.path.splitext(overlay.get_file().name)
-        name = basename + f"_{source}_{target}" + ext
-        f.name = name
+            # Save to translation in overlay object
+            with io.BytesIO(xml_trans) as f:
+                basename, ext = os.path.splitext(overlay.get_file().name)
+                name = basename + f"_{source}_{target}" + ext
+                f.name = name
 
-        overlay.update_transl_xml(f, target=target)
+                overlay.update_transl_xml(f, target=target)
 
-    activity_log[0].state = ActivityLogState.SUCCESS
-    activity_log[0].save()
+            activity_log[0].state = ActivityLogState.SUCCESS
+            activity_log[0].save()
 
-    return True
+            return True
+    except Exception as e:
+        print(e)
+        activity_log[0].state = ActivityLogState.FAILED
+        activity_log[0].save()

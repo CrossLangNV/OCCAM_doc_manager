@@ -27,8 +27,7 @@ const PageList = (props) => {
     const [targetLanguage, setTargetLanguage] = useState("");
     const [translationOverlayId, setTranslationOverlayId] = useState("");
 
-
-    const [leafletMarkers, setLeafletMarkers] = useState([])
+    const [time, setTime] = useState(Date.now());
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
@@ -42,34 +41,40 @@ const PageList = (props) => {
             message: 'Are you sure you want to delete this page?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                dispatch(DeletePage(event))
+                dispatch(DeletePage(event));
                 toast.current.show({severity: 'success', summary: 'Success', detail: 'Page has been deleted'});
             },
         });
     }
 
     const startOcrForPage = (pageId) => {
-        dispatch(OcrPage(pageId))
+        dispatch(OcrPage(pageId));
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
     }
 
-    const startTranslationForPage = () => {
-        dispatch(TranslatePage(translationOverlayId, targetLanguage))
-        toast.current.show({severity: 'success', summary: 'Success', detail: 'Translation task has been started for the selected page'});
+    const startTranslationForPage = (e) => {
+        dispatch(TranslatePage(translationOverlayId, targetLanguage));
+        toast.current.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Translation task has been started for the selected page'
+        });
+
+        translationSelectionOverlay.current.hide(e);
     }
 
     const toggleTranslationMenu = (e, page) => {
         const overlay = page.page_overlay[page.page_overlay.length - 1].id
-        setTranslationOverlayId(overlay)
-        translationSelectionOverlay.current.toggle(e)
+
+        // Set states so the UI knows which overlay is selected, and which page is selecting for the loading animation
+        setTranslationOverlayId(overlay);
+
+        // Toggle the menu
+        translationSelectionOverlay.current.toggle(e);
     }
 
     const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
-
-        // const overlay = page.page_overlay[page.page_overlay.length - 1]
-        // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
-
     }
 
     return (
@@ -115,33 +120,27 @@ const PageList = (props) => {
                                     tooltipOptions={{position: 'bottom'}}
                                 />
                             </Col>
-                        </Row>
-                        <hr/>
-                        <Row>
                             <Col md={7}>
                                 <OverlayAdd
                                     pageId={page.id}
                                     label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
                                 />
                             </Col>
-
-
                             {(!_.isEmpty(page.page_overlay) &&
-                                    <Button
-                                        className="margin-left"
-                                        label=""
-                                        icon="pi pi-eye"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                        }}
-                                        tooltip="View overlay"
-                                        tooltipOptions={{position: 'bottom'}}
-                                    />
+                                <Button
+                                    className="margin-right"
+                                    label=""
+                                    icon="pi pi-eye"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+                                    }}
+                                    tooltip="View overlay"
+                                    tooltipOptions={{position: 'bottom'}}
+                                />
                             )}
-
                         </Row>
-                        <br/>
+                        <hr/>
 
                         <Row>
                             <Col>
@@ -164,7 +163,40 @@ const PageList = (props) => {
                                     />
                                 )}
 
+                                <Row>
+                                    <Col>
+                                        <br/>
 
+                                        {/* Translation state - Translations are done on the Overlay object*/}
+                                        {(!_.isEmpty(page.latest_overlay_state) &&
+                                            <>
+                                                Latest translation state: {page.latest_overlay_state[0].state}
+
+                                                {((page.latest_overlay_state[0].state === "Processing") &&
+                                                    <span className='margin-left'>
+                                                        <i className="pi pi-spin pi-spinner"
+                                                           style={{'fontSize': '2em'}}/>
+                                                    </span>
+                                                )}
+                                            </>
+                                        )}
+
+                                        {/* OCR state - OCR task is done on the Page object*/}
+                                        {(!_.isEmpty(page.latest_page_state) &&
+                                            <>
+                                                <br/>
+                                                Latest OCR state: {page.latest_page_state[0].state}
+
+                                                {((page.latest_page_state[0].state === "Processing") &&
+                                                    <span className='margin-left'>
+                                                        <i className="pi pi-spin pi-spinner"
+                                                           style={{'fontSize': '2em'}}/>
+                                                    </span>
+                                                )}
+                                            </>
+                                        )}
+                                    </Col>
+                                </Row>
                             </Col>
                             <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
                                 <h6>Translate page</h6>
@@ -187,7 +219,7 @@ const PageList = (props) => {
 
                                 <Row>
                                     <Col>
-                                        <Button onClick={() => startTranslationForPage()}
+                                        <Button onClick={(e) => startTranslationForPage(e)}
                                                 label="Translate"
                                                 icon="pi pi-check"
                                                 style={{marginRight: '.25em'}}

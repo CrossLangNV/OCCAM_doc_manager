@@ -41,9 +41,6 @@ const PageLeaflet = (props) => {
             }
             setLeafletMarkers(leafletMarkersArr)
         })
-
-        console.log(features)
-
     }
 
     // TODO CONTINUE THIS TOMORROW
@@ -87,9 +84,6 @@ const PageLeaflet = (props) => {
 
         let geojsons = overlay.overlay_geojson
 
-        console.log("1: ", geojsons)
-
-
         if (language === "ORIGINAL") {
             geojsons = geojsons.filter(geojson =>
                 geojson.original === true
@@ -100,12 +94,8 @@ const PageLeaflet = (props) => {
             )
         }
 
-
-        console.log("2: ", geojsons)
-
         setOverlay(overlay)
 
-        console.log("3: ", geojsons[geojsons.length - 1])
         getLeafletMarkers(geojsons[geojsons.length - 1])
     }
 
