@@ -8,6 +8,7 @@ import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
 import {Button} from "primereact/button";
+import ActivityLogs from "./containers/ActivityLogs";
 
 function App() {
     let history = useHistory();
@@ -28,6 +29,7 @@ function App() {
                         <Route path={"/"} exact component={DocumentList}/>
                         <Route path={"/document/:documentId"} exact component={Document}/>
                         <Route path={"/document-add"} exact component={DocumentAdd}/>
+                        <Route path={"/activity"} exact component={ActivityLogs}/>
                     </Switch>
                 </div>
             </div>

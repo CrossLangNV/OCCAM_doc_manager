@@ -22,7 +22,7 @@ const Header = () => {
                 <Navbar.Brand as={Link} to="/">OCCAM</Navbar.Brand>
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to="/">Documents</Nav.Link>
-                    <Nav.Link as={Link} to="/history">Job history</Nav.Link>
+                    <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
                     <Nav.Link as={Link} to="/help">Help</Nav.Link>
                 </Nav>
 

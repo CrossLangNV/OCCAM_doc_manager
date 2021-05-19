@@ -3,13 +3,14 @@ import DocumentListReducer from "./DocumentListReducer";
 import DocumentMultipleReducer from "./DocumentMultipleReducer";
 import PageListReducer from "./PageListReducer";
 import UiReducer from "./uiReducer";
+import ActivityListReducer from "./ActivityLogsListReducer";
 
 const RootReducer = combineReducers({
     documentList: DocumentListReducer,
     document: DocumentMultipleReducer,
     pageList: PageListReducer,
     uiStates: UiReducer,
-    // overlayList: OverlayListReducer,
+    activityLogsList: ActivityListReducer,
 });
 
 export default RootReducer
