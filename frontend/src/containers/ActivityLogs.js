@@ -2,12 +2,13 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {GetActivityList} from "../actions/acitvityActions";
 import _ from "lodash";
-import {Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import DocumentState from "./DocumentState";
 import Moment from "react-moment";
 import {Button} from "primereact/button";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate";
+import LoadingSpinner from "./LoadingSpinner";
 
 const ActivityLogs = () => {
     const dispatch = useDispatch();
@@ -38,10 +39,7 @@ const ActivityLogs = () => {
                                 <DocumentState state={item.state} />
 
                                 {((item.state === "Processing" || item.state === "Waiting") &&
-                                    <span className='margin-left'>
-                                                        <i className="pi pi-spin pi-spinner"
-                                                           style={{'fontSize': '2em'}}/>
-                                                    </span>
+                                    <LoadingSpinner/>
                                 )}
                             </td>
                             <td>
@@ -84,6 +82,14 @@ const ActivityLogs = () => {
 
     return (
         <div>
+            <Button
+                onClick={() => fetchActivityLogs(5, 1)}
+                label=""
+                icon="pi pi-refresh"
+                className="p-button-primary margin-left"
+                tooltip="Refresh"
+                tooltipOptions={{position: 'bottom'}}
+            />
             <Table striped borderless hover>
                 <thead>
                 <tr>

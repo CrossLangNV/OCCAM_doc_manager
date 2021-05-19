@@ -25,9 +25,12 @@ def translate_overlay(overlay_id, target):
     logger.info("Source language: %s", source)
     logger.info("Target language: %s", target)
 
-    activity_log = ActivityLog.objects.update_or_create(
-        overlay=overlay, defaults={"type": ActivityLogType.TRANSLATION, "state": ActivityLogState.PROCESSING}
+    activity_log = ActivityLog.objects.create(
+        overlay=overlay,
+        type=ActivityLogType.TRANSLATION,
+        state=ActivityLogState.PROCESSING
     )
+
     logger.info("Created activity log")
 
     conn = CEFeTranslationConnector()
@@ -51,5 +54,5 @@ def translate_overlay(overlay_id, target):
             return True
     except Exception as e:
         print(e)
-        activity_log[0].state = ActivityLogState.FAILED
-        activity_log[0].save()
+        activity_log.state = ActivityLogState.FAILED
+        activity_log.save()

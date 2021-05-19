@@ -8,12 +8,12 @@ import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
 import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
-import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
 import {ModifySelectedPage} from "../actions/uiActions";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {languageSelectItems} from "../constants/language-selections";
 import {Dropdown} from "primereact/dropdown";
+import LoadingSpinner from "./LoadingSpinner";
 
 
 const PageList = (props) => {
@@ -49,6 +49,7 @@ const PageList = (props) => {
 
     const startOcrForPage = (pageId) => {
         dispatch(OcrPage(pageId));
+        dispatch(GetPageList(100, 1, documentId))
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
     }
 
@@ -59,7 +60,7 @@ const PageList = (props) => {
             summary: 'Success',
             detail: 'Translation task has been started for the selected page'
         });
-
+        dispatch(GetPageList(100, 1, documentId))
         translationSelectionOverlay.current.hide(e);
     }
 
@@ -80,11 +81,6 @@ const PageList = (props) => {
     return (
         <>
             <Row className='scroll-horizontally'>
-                {pageList.loading && (
-                    <Col>
-                        <Skeleton width={'100%'} height={'380px'}></Skeleton>
-                    </Col>
-                )}
 
                 {pageList.data.map(page => {
                     return <Card key={page.id} className='page-card'>
@@ -173,10 +169,7 @@ const PageList = (props) => {
                                                 Latest translation state: {page.latest_overlay_state[0].state}
 
                                                 {((page.latest_overlay_state[0].state === "Processing") &&
-                                                    <span className='margin-left'>
-                                                        <i className="pi pi-spin pi-spinner"
-                                                           style={{'fontSize': '2em'}}/>
-                                                    </span>
+                                                    <LoadingSpinner/>
                                                 )}
                                             </>
                                         )}
@@ -188,10 +181,7 @@ const PageList = (props) => {
                                                 Latest OCR state: {page.latest_page_state[0].state}
 
                                                 {((page.latest_page_state[0].state === "Processing") &&
-                                                    <span className='margin-left'>
-                                                        <i className="pi pi-spin pi-spinner"
-                                                           style={{'fontSize': '2em'}}/>
-                                                    </span>
+                                                    <LoadingSpinner/>
                                                 )}
                                             </>
                                         )}

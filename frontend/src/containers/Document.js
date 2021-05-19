@@ -11,15 +11,13 @@ import PageAdd from "./PageAdd";
 import PageList from "./PageList";
 import DocumentState from "./DocumentState";
 import {ModifySelectedPage} from "../actions/uiActions";
-import {OcrPage} from "../actions/pageActions";
+import {GetPageList, OcrPage} from "../actions/pageActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
 
     const dispatch = useDispatch()
     const documentState = useSelector(state => state.document)
-    const uiStates = useSelector(state => state.uiStates);
-
 
     let history = useHistory();
 
@@ -71,10 +69,18 @@ const Document = (props) => {
                         </Col>
                         <Col>
                             <Button
+                                onClick={() => dispatch(GetPageList(100, 1, documentId))}
+                                label=""
+                                icon="pi pi-refresh"
+                                className="p-button-primary margin-left"
+                                tooltip="Refresh"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                            <Button
                                 onClick={() => confirmStartOcr(documentId)}
                                 label=""
                                 icon="pi pi-play"
-                                className="p-button-primary"
+                                className="p-button-primary margin-left"
                                 tooltip="Run OCR"
                                 tooltipOptions={{position: 'bottom'}}
                             />
