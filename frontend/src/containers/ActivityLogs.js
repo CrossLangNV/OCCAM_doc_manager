@@ -2,7 +2,7 @@ import React from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {GetActivityList} from "../actions/acitvityActions";
 import _ from "lodash";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import DocumentState from "./DocumentState";
 import Moment from "react-moment";
 import {Button} from "primereact/button";
@@ -11,6 +11,7 @@ import ReactPagiate from "react-paginate";
 
 const ActivityLogs = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const activityList = useSelector(state => state.activityLogsList);
 
     React.useEffect(() => {
@@ -34,13 +35,28 @@ const ActivityLogs = () => {
                                 {item.type}
                             </td>
                             <td>
-                                {item.state}
+                                <DocumentState state={item.state} />
+
+                                {((item.state === "Processing" || item.state === "Waiting") &&
+                                    <span className='margin-left'>
+                                                        <i className="pi pi-spin pi-spinner"
+                                                           style={{'fontSize': '2em'}}/>
+                                                    </span>
+                                )}
                             </td>
                             <td>
-                                {item.page}
+                                {(!_.isEmpty(item.page) &&
+                                    <>
+                                        {item.page.file.split('pages/')[1]}
+                                    </>
+                                )}
                             </td>
                             <td>
-                                {item.overlay}
+                                {(!_.isEmpty(item.overlay) &&
+                                    <>
+                                        {item.overlay.file.split('pages/')[1]}
+                                    </>
+                                )}
                             </td>
                             <td className='w-10'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at}/>
@@ -49,7 +65,14 @@ const ActivityLogs = () => {
                                 <Moment format="DD/MM/YYYY H:mm" date={item.updated_at}/>
                             </td>
                             <td className='w-10'>
+                                <Button
+                                    label=""
+                                    tooltip="View document"
+                                    tooltipOptions={{position: 'bottom'}}
+                                    icon="pi pi-search"
+                                    onClick={() => history.push(`/document/${!_.isEmpty(item.page) ? item.page.document.id : item.overlay.page.document}`)}
 
+                                    className="p-button-secondary"/>
                             </td>
                         </tr>
                     })}

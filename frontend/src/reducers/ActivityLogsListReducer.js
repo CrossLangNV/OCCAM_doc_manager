@@ -2,7 +2,7 @@ import {ActivityLogsActionTypes} from "../constants/activity-logs-action-types";
 
 const DefaultState = {
     loading: false,
-    data: [],
+    data: {},
     errorMsg: "",
     count: 0,
     rows: 0,
