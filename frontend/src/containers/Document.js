@@ -48,9 +48,9 @@ const Document = (props) => {
                     const documentData = documentState.data[documentId]
                     if (!_.isEmpty(documentData.document_page)) {
                         documentData.document_page.forEach(page => {
-                            console.log("OCR all pages: ", page.id)
                             dispatch(OcrPage(page.id))
                         })
+                        dispatch(GetPageList(100, 1, documentId))
                     }
                 }
             },

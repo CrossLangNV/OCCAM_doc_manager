@@ -48,8 +48,8 @@ def translate_overlay(overlay_id, target):
 
                 overlay.update_transl_xml(f, target=target)
 
-            activity_log[0].state = ActivityLogState.SUCCESS
-            activity_log[0].save()
+            activity_log.state = ActivityLogState.SUCCESS
+            activity_log.save()
 
             return True
     except Exception as e:

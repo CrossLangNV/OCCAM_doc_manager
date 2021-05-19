@@ -254,3 +254,6 @@ class Geojson(models.Model):
 
             self.file.save(name, django_file)
             self.save()
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
