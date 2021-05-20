@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {DeleteDocument, GetDocument} from "../actions/documentActions";
+import {DeleteDocument, GetDocument, GetDocumentList} from "../actions/documentActions";
 import React from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
@@ -33,8 +33,9 @@ const Document = (props) => {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 dispatch(DeleteDocument(event))
+                dispatch(GetDocumentList(5, 1, ""))
                 history.push("/")
-            },
+            }
         });
     }
 

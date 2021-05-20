@@ -1,4 +1,4 @@
-import {Switch, Route, Redirect, NavLink, Link, useHistory, useLocation} from 'react-router-dom'
+import {Switch, Route, useHistory, useLocation} from 'react-router-dom'
 import DocumentList from "./containers/DocumentList";
 import Document from "./containers/Document";
 import Header from "./containers/Header";

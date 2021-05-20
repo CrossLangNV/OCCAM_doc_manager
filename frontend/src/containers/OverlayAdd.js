@@ -1,10 +1,8 @@
 import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch} from "react-redux";
-import {AddPage} from "../actions/pageActions";
 import {Toast} from "primereact/toast";
 import {AddOverlay} from "../actions/overlayActions";
-import {Button} from "primereact/button";
 
 const OverlayAdd = (props) => {
     const dispatch = useDispatch();

@@ -11,7 +11,6 @@ import _ from 'lodash';
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
-    // const leafletMarkers = props.leafletMarkers
 
     const [overlay, setOverlay] = useState("");
     const [language, setLanguage] = useState("ORIGINAL");
@@ -32,7 +31,7 @@ const PageLeaflet = (props) => {
     const getLeafletMarkers = (geojson) => {
         const leafletMarkersArr = []
 
-        const features = fetchGeojson(geojson.file).then((res) => {
+        fetchGeojson(geojson.file).then((res) => {
             for (const c of res.data.features) {
                 const bounds = c.geometry.coordinates.map(hw);
                 const popupMessage = c.properties.name
