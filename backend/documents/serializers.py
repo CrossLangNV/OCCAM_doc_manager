@@ -47,14 +47,10 @@ class PageSerializer(serializers.ModelSerializer):
 
     def get_latest_overlay_state(self, page):
         latest_overlay = Overlay.objects.filter(page=page)
-        print("latest_overlay (1): %s", latest_overlay)
         if latest_overlay:
             latest_overlay = latest_overlay.latest('created_at')
 
-            print("latest_overlay (2): %s", latest_overlay)
-
             q = ActivityLog.objects.filter(overlay=latest_overlay)
-            print("q: %s", q)
             serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
             return serializer.data
 

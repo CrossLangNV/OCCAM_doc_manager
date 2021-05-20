@@ -12,8 +12,9 @@ export const AddOverlay = (pageId, files) => async dispatch => {
             const formData = new FormData();
             formData.append("page", pageId)
             formData.append("file", file)
+            formData.append("source_lang", "EN")
 
-            axios.post(`http://localhost:8000/documents/api/overlays`, formData, {
+            const res = axios.post(`http://localhost:8000/documents/api/overlays`, formData, {
                 headers: {
                     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
                 }
