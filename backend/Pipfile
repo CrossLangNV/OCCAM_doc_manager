@@ -20,7 +20,7 @@ minio = "==6.0.0"
 celery = "==4.4.7"
 lxml = "*"
 Pillow = "*"
-
+django-rest-framework-social-oauth2 = "*"
 
 [requires]
 python_version = "3.9"
