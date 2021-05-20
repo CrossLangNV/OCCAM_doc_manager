@@ -27,8 +27,6 @@ const PageList = (props) => {
     const [targetLanguage, setTargetLanguage] = useState("");
     const [translationOverlayId, setTranslationOverlayId] = useState("");
 
-    const [time, setTime] = useState(Date.now());
-
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
     }, [])
@@ -49,8 +47,8 @@ const PageList = (props) => {
 
     const startOcrForPage = (pageId) => {
         dispatch(OcrPage(pageId));
-        dispatch(GetPageList(100, 1, documentId))
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
+        dispatch(GetPageList(100, 1, documentId))
     }
 
     const startTranslationForPage = (e) => {
@@ -60,8 +58,8 @@ const PageList = (props) => {
             summary: 'Success',
             detail: 'Translation task has been started for the selected page'
         });
-        dispatch(GetPageList(100, 1, documentId))
         translationSelectionOverlay.current.hide(e);
+        dispatch(GetPageList(100, 1, documentId))
     }
 
     const toggleTranslationMenu = (e, page) => {
