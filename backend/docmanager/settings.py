@@ -65,17 +65,17 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # TODO For Google authentication
-# OAUTH2_PROVIDER = {"ACCESS_TOKEN_EXPIRE_SECONDS": 7 * 24 * 60 * 60}
+OAUTH2_PROVIDER = {"ACCESS_TOKEN_EXPIRE_SECONDS": 7 * 24 * 60 * 60}
 #
 # SOCIAL_AUTH_URL_NAMESPACE = "social-view"
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_KEY"]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ["SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET"]
 #
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-#     "https://www.googleapis.com/auth/userinfo.email",
-#     "https://www.googleapis.com/auth/userinfo.profile",
-#     "openid",
-# ]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "openid",
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

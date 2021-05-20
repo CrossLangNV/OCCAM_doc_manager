@@ -4,6 +4,7 @@ import DocumentMultipleReducer from "./DocumentMultipleReducer";
 import PageListReducer from "./PageListReducer";
 import UiReducer from "./uiReducer";
 import ActivityListReducer from "./ActivityLogsListReducer";
+import AuthReducer from "./AuthReducer";
 
 const RootReducer = combineReducers({
     documentList: DocumentListReducer,
@@ -11,6 +12,7 @@ const RootReducer = combineReducers({
     pageList: PageListReducer,
     uiStates: UiReducer,
     activityLogsList: ActivityListReducer,
+    auth: AuthReducer,
 });
 
 export default RootReducer

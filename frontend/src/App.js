@@ -1,4 +1,4 @@
-import {Switch, Route, useHistory, useLocation} from 'react-router-dom'
+import {Route, Switch, useHistory, useLocation} from 'react-router-dom'
 import DocumentList from "./containers/DocumentList";
 import Document from "./containers/Document";
 import Header from "./containers/Header";
@@ -9,6 +9,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
 import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
+import GoogleLoginPage from "./containers/GoogleLoginPage";
 
 function App() {
     let history = useHistory();
@@ -30,6 +31,7 @@ function App() {
                         <Route path={"/document/:documentId"} exact component={Document}/>
                         <Route path={"/document-add"} exact component={DocumentAdd}/>
                         <Route path={"/activity"} exact component={ActivityLogs}/>
+                        <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>
             </div>
