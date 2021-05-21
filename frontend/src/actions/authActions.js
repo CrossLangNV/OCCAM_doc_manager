@@ -34,3 +34,9 @@ export const Logout = () => async dispatch => {
         type: AuthActionTypes.LOGOUT
     });
 }
+
+export const CheckAuthenticated = () => async dispatch => {
+    if (localStorage.getItem('access')) {
+
+    }
+}

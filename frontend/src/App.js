@@ -10,14 +10,11 @@ import 'primeicons/primeicons.css'
 import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
 import GoogleLoginPage from "./containers/GoogleLoginPage";
-import {useSelector} from "react-redux";
 import PrivateRoute from "./containers/PrivateRoute";
 
 function App() {
     const location = useLocation();
     let history = useHistory();
-    const auth = useSelector(state => state.auth);
-
 
     return (
         <div className="App">

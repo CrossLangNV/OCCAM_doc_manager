@@ -7,7 +7,18 @@ import {Provider} from "react-redux";
 import Store from "./Store";
 import {BrowserRouter} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from "axios";
 
+
+// Add a request interceptor
+axios.interceptors.request.use(function (config) {
+    const token = localStorage.getItem("access");
+    config.headers.Authorization =  token ? `Bearer ${token}` : '';
+    return config;
+});
+
+
+// axios.defaults.headers.common['Authorization'] = localStorage.getItem("access");
 
 ReactDOM.render(
     <React.StrictMode>
