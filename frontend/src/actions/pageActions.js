@@ -1,5 +1,5 @@
-import axios from 'axios'
 import {PageActionTypes} from "../constants/page-action-types";
+import {axiosApi} from "../constants/axiosConf";
 
 export const GetPageList = (rows, page, doc_id) => async dispatch => {
     try {
@@ -9,7 +9,7 @@ export const GetPageList = (rows, page, doc_id) => async dispatch => {
         });
 
         const offset = (page * rows) - rows;
-        const res = await axios.get(`http://localhost:8000/documents/api/pages?rows=${rows}&offset=${offset}`,
+        const res = await axiosApi.get(`/documents/api/pages?rows=${rows}&offset=${offset}`,
             {params: {document: doc_id}})
 
         dispatch({
@@ -31,7 +31,7 @@ export const GetPage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_MULTIPLE_LOADING
         });
 
-        const res = await axios.get(`http://localhost:8000/documents/api/page/${id}`)
+        const res = await axiosApi.get(`/documents/api/page/${id}`)
 
         dispatch({
             type: PageActionTypes.PAGE_MULTIPLE_SUCCESS,
@@ -51,7 +51,7 @@ export const DeletePage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_DELETE_LOADING
         });
 
-        await axios.delete(`http://localhost:8000/documents/api/page/${id}`)
+        await axiosApi.delete(`/api/page/${id}`)
             .then((res) => {
                 dispatch({
                     type: PageActionTypes.PAGE_DELETE_SUCCESS,
@@ -76,7 +76,7 @@ export const AddPage = (documentId, files) => async dispatch => {
             formData.append("document", documentId)
             formData.append("file", file)
 
-            axios.post(`http://localhost:8000/documents/api/pages`, formData, {
+            axiosApi.post(`/documents/api/pages`, formData, {
                 headers: {
                     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
                 }
@@ -100,7 +100,7 @@ export const OcrPage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_OCR_LOADING
         });
 
-        await axios.post(`http://localhost:8000/documents/api/pages/launch_ocr`,
+        await axiosApi.post(`/documents/api/pages/launch_ocr`,
             {
                 page: id
             })
@@ -123,7 +123,7 @@ export const TranslatePage = (id, target) => async dispatch => {
             type: PageActionTypes.PAGE_TRANSLATION_LOADING
         });
 
-        await axios.post(`http://localhost:8000/documents/api/pages/translate`,
+        await axiosApi.post(`/documents/api/pages/translate`,
             {
                 overlay: id,
                 target: target.toUpperCase()

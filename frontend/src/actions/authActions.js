@@ -1,5 +1,5 @@
-import axios from 'axios'
 import {AuthActionTypes} from "../constants/auth-action-types";
+import {axiosApi} from "../constants/axiosConf";
 
 export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
     try {
@@ -7,7 +7,7 @@ export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
             type: AuthActionTypes.GOOGLE_AUTH_LOADING
         });
 
-        await axios.post(`http://localhost:8000/auth/convert-token`,
+        await axiosApi.post(`/auth/convert-token`,
             {
                 grant_type: "convert_token",
                 client_id: "kw1n5yIOASh5JUAMk1Vb4SIfDpUsO0QcvMZTqIJl", // REACT_DJANGO_CLIENT_ID

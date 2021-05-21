@@ -1,5 +1,5 @@
-import axios from 'axios'
 import {DocumentActionTypes} from "../constants/document-action-types";
+import {axiosApi} from "../constants/axiosConf";
 
 export const GetDocumentList = (rows, page, query) => async dispatch => {
     try {
@@ -10,8 +10,8 @@ export const GetDocumentList = (rows, page, query) => async dispatch => {
         });
 
         const offset = (page * rows) - rows;
-        let url = `http://localhost:8000/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`
-        const res = await axios
+        let url = `/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`
+        const res = await axiosApi
             .get(url)
 
         dispatch({
@@ -34,7 +34,7 @@ export const GetDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_MULTIPLE_LOADING
         });
 
-        const res = await axios.get(`http://localhost:8000/documents/api/document/${id}`)
+        const res = await axiosApi.get(`/documents/api/document/${id}`)
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_MULTIPLE_SUCCESS,
@@ -54,7 +54,7 @@ export const DeleteDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
         });
 
-        await axios.delete(`http://localhost:8000/documents/api/document/${id}`)
+        await axiosApi.delete(`/documents/api/document/${id}`)
             .then((res) => {
                 dispatch({
                     type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
@@ -75,7 +75,7 @@ export const ProcessOcrDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_OCR_LOADING
         });
 
-        await axios.delete(`http://localhost:8000/documents/api/documents/${id}/ocr`)
+        await axiosApi.delete(`documents/api/documents/${id}/ocr`)
             .then((res) => {
                 dispatch({
                     type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,

@@ -11,11 +11,11 @@ import axios from "axios";
 
 
 // Add a request interceptor
-axios.interceptors.request.use(function (config) {
-    const token = localStorage.getItem("access");
-    config.headers.Authorization =  token ? `Bearer ${token}` : '';
-    return config;
-});
+// axios.interceptors.request.use(function (config) {
+//     const token = localStorage.getItem("access");
+//     config.headers.Authorization =  token ? `Bearer ${token}` : '';
+//     return config;
+// });
 
 
 // axios.defaults.headers.common['Authorization'] = localStorage.getItem("access");

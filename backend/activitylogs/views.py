@@ -1,4 +1,3 @@
-from rest_framework import permissions
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -16,8 +15,6 @@ class ActivityLogsAPIView(ListCreateAPIView):
     queryset = ActivityLog.objects.all()
     pagination_class = SmallResultsSetPagination
     serializer_class = ActivityLogSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         q = ActivityLog.objects.all()
@@ -36,5 +33,3 @@ class ActivityLogsAPIView(ListCreateAPIView):
 class ActivityLogsDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = ActivityLog.objects.all()
     serializer_class = ActivityLogSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]

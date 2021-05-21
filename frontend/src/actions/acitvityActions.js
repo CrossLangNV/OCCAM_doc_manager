@@ -1,8 +1,7 @@
-import axios from 'axios'
 import {ActivityLogsActionTypes} from "../constants/activity-logs-action-types";
+import {axiosApi} from "../constants/axiosConf";
 
 // page is the page from the pagination - pageId from the Page object
-
 export const GetActivityList = (rows, page, pageId, overlayId) => async dispatch => {
     try {
 
@@ -11,7 +10,7 @@ export const GetActivityList = (rows, page, pageId, overlayId) => async dispatch
         });
 
         const offset = (page * rows) - rows;
-        const res = await axios.get(`http://localhost:8000/activitylogs/api/activitylogs?rows=${rows}&offset=${offset}&pageId=${pageId}&overlayId=${overlayId}`)
+        const res = await axiosApi.get(`/activitylogs/api/activitylogs?rows=${rows}&offset=${offset}&pageId=${pageId}&overlayId=${overlayId}`)
 
         dispatch({
             type: ActivityLogsActionTypes.ACTIVITY_LOGS_LIST_SUCCESS,

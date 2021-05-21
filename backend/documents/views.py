@@ -31,8 +31,6 @@ class DocumentListAPIView(ListCreateAPIView):
     queryset = Document.objects.all()
     pagination_class = SmallResultsSetPagination
     serializer_class = DocumentSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         q = Document.objects.all()
@@ -47,16 +45,12 @@ class DocumentListAPIView(ListCreateAPIView):
 class DocumentDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
 
 class PageListAPIView(ListCreateAPIView):
     queryset = Page.objects.all()
     pagination_class = BigResultsSetPagination
     serializer_class = PageSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         q = Page.objects.all()
@@ -72,8 +66,6 @@ class OverlayListAPIView(ListCreateAPIView):
     queryset = Overlay.objects.all()
     pagination_class = BigResultsSetPagination
     serializer_class = OverlaySerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         q = Overlay.objects.all()
@@ -88,21 +80,15 @@ class OverlayListAPIView(ListCreateAPIView):
 class OverlayDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Overlay.objects.all()
     serializer_class = OverlaySerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
 
 class PageDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
 
 class TranslatePageAPIView(APIView):
     queryset = Page.objects.none()
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None, *args, **kwargs):
         overlay = request.data["overlay"]
@@ -117,8 +103,6 @@ class TranslatePageAPIView(APIView):
 
 class PageLaunchOCRAPIView(APIView):
     queryset = Page.objects.none()
-    # TODO: Remove AllowAny
-    permission_classes = [permissions.AllowAny]
 
     def post(self, request, format=None, *args, **kwargs):
         page_id = request.data["page"]

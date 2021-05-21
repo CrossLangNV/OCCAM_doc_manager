@@ -1,5 +1,5 @@
-import axios from "axios";
 import {OverlayActionTypes} from "../constants/overlay-action-types";
+import {axiosApi} from "../constants/axiosConf";
 
 export const AddOverlay = (pageId, files) => async dispatch => {
     try {
@@ -14,7 +14,7 @@ export const AddOverlay = (pageId, files) => async dispatch => {
             formData.append("file", file)
             formData.append("source_lang", "EN")
 
-            const res = axios.post(`http://localhost:8000/documents/api/overlays`, formData, {
+            axiosApi.post(`/documents/api/overlays`, formData, {
                 headers: {
                     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
                 }
