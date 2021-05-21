@@ -1,8 +1,15 @@
 import {DocumentActionTypes} from "../constants/document-action-types";
-import {axiosApi} from "../constants/axiosConf";
+import {axiosApi, baseUrl} from "../constants/axiosConf";
+import axios from "axios";
 
 export const GetDocumentList = (rows, page, query) => async dispatch => {
     try {
+
+        const config = {
+            headers: {
+                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_LIST_LOADING,
@@ -10,9 +17,7 @@ export const GetDocumentList = (rows, page, query) => async dispatch => {
         });
 
         const offset = (page * rows) - rows;
-        let url = `/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`
-        const res = await axiosApi
-            .get(url)
+        const res = await axios.get(`${baseUrl}/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`, config)
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_LIST_SUCCESS,
@@ -34,7 +39,13 @@ export const GetDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_MULTIPLE_LOADING
         });
 
-        const res = await axiosApi.get(`/documents/api/document/${id}`)
+        const config = {
+            headers: {
+                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/document/${id}`, config)
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_MULTIPLE_SUCCESS,
@@ -54,7 +65,13 @@ export const DeleteDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
         });
 
-        await axiosApi.delete(`/documents/api/document/${id}`)
+        const config = {
+            headers: {
+                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        await axios.delete(`${baseUrl}/documents/api/document/${id}`, config)
             .then((res) => {
                 dispatch({
                     type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
@@ -75,7 +92,13 @@ export const ProcessOcrDocument = (id) => async dispatch => {
             type: DocumentActionTypes.DOCUMENT_OCR_LOADING
         });
 
-        await axiosApi.delete(`documents/api/documents/${id}/ocr`)
+        const config = {
+            headers: {
+                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        await axios.delete(`${baseUrl}documents/api/documents/${id}/ocr`, config)
             .then((res) => {
                 dispatch({
                     type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,

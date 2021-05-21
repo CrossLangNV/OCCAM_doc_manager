@@ -1,5 +1,6 @@
 import {AuthActionTypes} from "../constants/auth-action-types";
-import {axiosApi} from "../constants/axiosConf";
+import axios from "axios";
+import {baseUrl} from "../constants/axiosConf";
 
 export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
     try {
@@ -7,7 +8,7 @@ export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
             type: AuthActionTypes.GOOGLE_AUTH_LOADING
         });
 
-        await axiosApi.post(`/auth/convert-token`,
+        await axios.post(`${baseUrl}/auth/convert-token`,
             {
                 grant_type: "convert_token",
                 client_id: "kw1n5yIOASh5JUAMk1Vb4SIfDpUsO0QcvMZTqIJl", // REACT_DJANGO_CLIENT_ID
@@ -20,7 +21,9 @@ export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
                     type: AuthActionTypes.GOOGLE_AUTH_SUCCESS,
                     payload: res.data,
                     user: user
-                })
+                });
+                // localStorage.setItem("access", res.data.access_token);
+                // localStorage.setItem("refresh", res.data.refresh_token);
             })
     } catch (e) {
         dispatch({

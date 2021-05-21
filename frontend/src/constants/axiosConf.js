@@ -1,16 +1,11 @@
 import axios from "axios";
 
-const token = localStorage.getItem("access");
-let axiosConfig = {baseURL: 'http://localhost:8000',
-    timeout: 1000,
-    headers: {
-        'Authorization' : token ? `Bearer ${token}` : ''
-    }
-};
+let baseUrl = "http://localhost:8000"
 
-let axiosApi = axios.create(axiosConfig);
+if (process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    const baseUrl = process.env.REACT_BASE_URL
+}
 
 export {
-    axiosConfig,
-    axiosApi
+    baseUrl
 };
