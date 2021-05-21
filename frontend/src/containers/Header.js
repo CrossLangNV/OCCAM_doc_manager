@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {ModifyDocumentQuery} from "../actions/uiActions";
 import {GetDocumentList} from "../actions/documentActions";
 import {ProgressSpinner} from "primereact/progressspinner";
+import {Logout} from "../actions/authActions";
 
 const Header = () => {
     const location = useLocation()
@@ -44,26 +45,34 @@ const Header = () => {
 
 
             {location.pathname === "/" &&
-                    <Form inline>
-                        <FormControl
-                            type="text"
-                            placeholder="Search document"
-                            className="mr-sm-2"
-                            value={uiStates.documentQuery}
-                            onChange={(e) => {
+                <Form inline>
+                    <FormControl
+                        type="text"
+                        placeholder="Search document"
+                        className="mr-sm-2"
+                        value={uiStates.documentQuery}
+                        onChange={(e) => {
+                            searchDocuments(e.target.value)
+                        }}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault()
                                 searchDocuments(e.target.value)
-                            }}
-                            onKeyPress={(e) => {
-                                if (e.key === "Enter") {
-                                    e.preventDefault()
-                                    searchDocuments(e.target.value)
-                                }
-                            }}
-                        />
-                        <Button variant="outline-info">Search</Button>
-                    </Form>
-                }
-            </Navbar>
+                            }
+                        }}
+                    />
+                    <Button variant="outline-info">Search</Button>
+                </Form>
+            }
+
+            {location.pathname !== "/login" &&
+                <Nav>
+                    <Nav.Link as={Link} to="/login" onClick={() => dispatch(Logout())}>Logout</Nav.Link>
+                </Nav>
+            }
+        </Navbar>
+
+
     );
 };
 

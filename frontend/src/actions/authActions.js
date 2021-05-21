@@ -29,33 +29,8 @@ export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
     }
 };
 
-// export const GetUser = () => async dispatch => {
-//     if (localStorage.getItem('access')) {
-//         const config = {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Authorization': `Bearer ${localStorage.getItem('access')}`,
-//                 'Accept': 'application/json'
-//             }
-//         };
-//
-//         try {
-//             dispatch({
-//                 type: AuthActionTypes.GET_USER_LOADING
-//             });
-//
-//             const res = await axios.get(`http://localhost:8000/auth/token`, config);
-//
-//             dispatch({
-//                 type: AuthActionTypes.GET_USER_SUCCESS,
-//                 payload: res.data
-//             });
-//
-//         } catch (e) {
-//             dispatch({
-//                 type: AuthActionTypes.GET_USER_FAIL
-//             })
-//         }
-//
-//     }
-// }
+export const Logout = () => async dispatch => {
+    dispatch({
+        type: AuthActionTypes.LOGOUT
+    });
+}

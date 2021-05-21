@@ -10,27 +10,31 @@ import 'primeicons/primeicons.css'
 import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
 import GoogleLoginPage from "./containers/GoogleLoginPage";
+import {useSelector} from "react-redux";
+import PrivateRoute from "./containers/PrivateRoute";
 
 function App() {
+    const location = useLocation();
     let history = useHistory();
-    const location = useLocation()
+    const auth = useSelector(state => state.auth);
+
 
     return (
         <div className="App">
             <Header />
             <div className="space">
                 <div className="container-fluid">
-                    {(location.pathname !== "/" &&
+                    {(location.pathname !== "/" || location.pathname !== "/login" &&
                             <>
                                 <Button onClick={() => history.goBack()} className='margin-bottom'>Back</Button>
                             </>
 
                     )}
                     <Switch>
-                        <Route path={"/"} exact component={DocumentList}/>
-                        <Route path={"/document/:documentId"} exact component={Document}/>
-                        <Route path={"/document-add"} exact component={DocumentAdd}/>
-                        <Route path={"/activity"} exact component={ActivityLogs}/>
+                        <PrivateRoute path={"/"} exact component={DocumentList}/>
+                        <PrivateRoute path={"/document/:documentId"} exact component={Document}/>
+                        <PrivateRoute path={"/document-add"} exact component={DocumentAdd}/>
+                        <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>
