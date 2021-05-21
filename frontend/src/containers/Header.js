@@ -18,6 +18,7 @@ const Header = () => {
     const pageList = useSelector(state => state.pageList);
     const documentList = useSelector(state => state.documentList);
     const activityList = useSelector(state => state.activityLogsList);
+    const auth = useSelector(state => state.auth);
 
     const searchDocuments = async (query) => {
         dispatch(ModifyDocumentQuery(query))
@@ -66,9 +67,13 @@ const Header = () => {
             }
 
             {location.pathname !== "/login" &&
-                <Nav>
-                    <Nav.Link as={Link} to="/login" onClick={() => dispatch(Logout())}>Logout</Nav.Link>
-                </Nav>
+            <Nav>
+                {(auth.isAuthenticated) && (
+                    <Nav.Link>{auth.user}</Nav.Link>
+                )}
+
+                <Nav.Link as={Link} to="/login" onClick={() => dispatch(Logout())}>Logout</Nav.Link>
+            </Nav>
             }
         </Navbar>
 

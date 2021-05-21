@@ -16,16 +16,17 @@ function App() {
     const location = useLocation();
     let history = useHistory();
 
+    const NO_BACK_BUTTON = ["/", "/login"]
+
     return (
         <div className="App">
-            <Header />
+            <Header/>
             <div className="space">
                 <div className="container-fluid">
-                    {(location.pathname !== "/" || location.pathname !== "/login" &&
-                            <>
-                                <Button onClick={() => history.goBack()} className='margin-bottom'>Back</Button>
-                            </>
-
+                    {(!NO_BACK_BUTTON.includes(location.pathname) &&
+                        <>
+                            <Button onClick={() => history.goBack()} className='margin-bottom'>Back</Button>
+                        </>
                     )}
                     <Switch>
                         <PrivateRoute path={"/"} exact component={DocumentList}/>
@@ -36,9 +37,6 @@ function App() {
                     </Switch>
                 </div>
             </div>
-
-            <div className="space"></div>
-
         </div>
     );
 }
