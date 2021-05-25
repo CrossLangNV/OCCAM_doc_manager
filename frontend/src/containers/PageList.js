@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
@@ -14,6 +14,8 @@ import {OverlayPanel} from "primereact/overlaypanel";
 import {languageSelectItems} from "../constants/language-selections";
 import {Dropdown} from "primereact/dropdown";
 import LoadingSpinner from "./LoadingSpinner";
+import {Dialog} from "primereact/dialog";
+import PageHistory from "./PageHistory";
 
 
 const PageList = (props) => {
@@ -21,15 +23,29 @@ const PageList = (props) => {
     const dispatch = useDispatch()
     const toast = useRef(null);
 
+    // Redux states
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
 
+    // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
     const [translationOverlayId, setTranslationOverlayId] = useState("");
+    const [displayPageHistory, setDisplayPageHistory] = useState(false);
+    const [pageHistoryId, setPageHistoryId] = useState("");
 
-    React.useEffect(() => {
+    // Load pages initially
+    useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
     }, [])
+
+    // Refresh the pages every 5 seconds
+    useEffect(() => {
+        const timer = setTimeout(
+            () => dispatch(GetPageList(100, 1, documentId)),
+            5000
+        );
+        return () => clearTimeout(timer);
+    })
 
     const translationSelectionOverlay = useRef(null);
 
@@ -70,6 +86,12 @@ const PageList = (props) => {
 
         // Toggle the menu
         translationSelectionOverlay.current.toggle(e);
+    }
+
+    const toggleHistoryMenu = (e, page) => {
+        setPageHistoryId(page.id)
+        // Toggle the menu
+        setDisplayPageHistory(true)
     }
 
     const selectPage = async (page) => {
@@ -156,6 +178,14 @@ const PageList = (props) => {
                                         tooltipOptions={{position: 'bottom'}}
                                     />
                                 )}
+                                <Button
+                                    onClick={(e) => toggleHistoryMenu(e, page)}
+                                    label=""
+                                    icon="pi pi-info-circle"
+                                    className="p-button-primary margin-left"
+                                    tooltip="Show history"
+                                    tooltipOptions={{position: 'bottom'}}
+                                />
 
                                 <Row>
                                     <Col>
@@ -219,6 +249,12 @@ const PageList = (props) => {
 
 
                             </OverlayPanel>
+
+                            <Dialog header="Page history" visible={displayPageHistory} style={{width: '50vw'}}
+                                    onHide={() => setDisplayPageHistory(false)}>
+                                <PageHistory pageId={pageHistoryId}/>
+                            </Dialog>
+
                         </Row>
                     </Card>
                 })}

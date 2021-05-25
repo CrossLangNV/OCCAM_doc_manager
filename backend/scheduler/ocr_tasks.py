@@ -66,6 +66,10 @@ def ocr_page(page_id):
     overlay = Overlay.objects.create(page=page, source_lang=source_lang)
     logger.info("OCR overlay: %s", overlay)
 
+    activity_log.overlay = overlay
+    activity_log.save()
+    logger.info("Created activity log")
+
     # Save overlay XML to the object
     with io.BytesIO(overlay_xml) as f:
         f.name = basename + '.xml'

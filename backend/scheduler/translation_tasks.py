@@ -27,6 +27,7 @@ def translate_overlay(overlay_id, target):
 
     activity_log = ActivityLog.objects.create(
         overlay=overlay,
+        page=overlay.page,
         type=ActivityLogType.TRANSLATION,
         state=ActivityLogState.PROCESSING
     )

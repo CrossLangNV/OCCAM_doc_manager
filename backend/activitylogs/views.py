@@ -3,6 +3,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from activitylogs.models import ActivityLog
 from activitylogs.serializers import ActivityLogSerializer
+from documents.models import Overlay
 
 
 class SmallResultsSetPagination(LimitOffsetPagination):
@@ -21,8 +22,15 @@ class ActivityLogsAPIView(ListCreateAPIView):
         page_id = self.request.GET.get("page", "")
         overlay_id = self.request.GET.get("overlay", "")
 
+        # if 1, also show history of overlays linked to a page
+        linked_overlays = self.request.GET.get("linked_overlays", "")
+
         if page_id:
             q = q.filter(page__id=str(page_id))
+            if linked_overlays:
+                overlays = Overlay.objects.filter(page__id=page_id)
+
+                q = q.filter(overlay__in=list(overlays))
 
         if overlay_id:
             q = q.filter(overlay_id=str(overlay_id))
