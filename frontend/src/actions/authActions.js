@@ -2,7 +2,39 @@ import {AuthActionTypes} from "../constants/auth-action-types";
 import axios from "axios";
 import {baseUrl} from "../constants/axiosConf";
 
-export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
+export const load_user = () => async dispatch => {
+    if (localStorage.getItem('access')) {
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        dispatch({
+            type: AuthActionTypes.GET_USER_LOADING
+        });
+
+        try {
+            const res = await axios.get(`${baseUrl}/auth/me`,
+                config)
+
+            dispatch({
+                type: AuthActionTypes.GET_USER_SUCCESS,
+                payload: res.data
+            });
+        } catch (err) {
+            dispatch({
+                type: AuthActionTypes.GET_USER_FAIL
+            });
+        }
+    } else {
+        dispatch({
+            type: AuthActionTypes.GET_USER_FAIL
+        });
+    }
+}
+
+export const GoogleAuthenticate = (accessToken) => async dispatch => {
     try {
         dispatch({
             type: AuthActionTypes.GOOGLE_AUTH_LOADING
@@ -20,10 +52,9 @@ export const GoogleAuthenticate = (accessToken, user) => async dispatch => {
                 dispatch({
                     type: AuthActionTypes.GOOGLE_AUTH_SUCCESS,
                     payload: res.data,
-                    user: user
                 });
-                // localStorage.setItem("access", res.data.access_token);
-                // localStorage.setItem("refresh", res.data.refresh_token);
+
+                dispatch(load_user())
             })
     } catch (e) {
         dispatch({

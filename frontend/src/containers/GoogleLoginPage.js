@@ -1,7 +1,7 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import GoogleLogin from "react-google-login";
-import {useDispatch} from "react-redux";
-import {GoogleAuthenticate} from "../actions/authActions";
+import {useDispatch, useSelector} from "react-redux";
+import {GoogleAuthenticate, load_user} from "../actions/authActions";
 import {useHistory} from "react-router-dom";
 
 const GoogleLoginPage = () => {
@@ -9,10 +9,17 @@ const GoogleLoginPage = () => {
     const history = useHistory();
     const toast = useRef(null);
 
+    const auth = useSelector(state => state.auth)
+
+    useEffect(() => {
+        if (auth.isAuthenticated) {
+            history.push("/")
+        }
+    })
 
     const responseGoogle = async (response) => {
         try {
-            await dispatch(GoogleAuthenticate(response.accessToken, response.profileObj.email))
+            await dispatch(GoogleAuthenticate(response.accessToken))
             history.push("/")
         } catch (e) {
             console.log(e.message)

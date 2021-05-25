@@ -4,12 +4,14 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 
 from docmanager import settings
+from docmanager.views import CurrentUserAPIView
 
 urlpatterns = [
     path("", RedirectView.as_view(url="admin/", permanent=True)),
 
     path('social-auth/', include('social_django.urls', namespace='social-view')),
     path('auth/', include('rest_framework_social_oauth2.urls')),
+    path('auth/me', CurrentUserAPIView.as_view(), name="current_user_api_view"),
 
     path('admin/', admin.site.urls),
     path('documents/', include(('documents.urls', 'documents'), namespace='documents')),

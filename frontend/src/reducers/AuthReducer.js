@@ -33,11 +33,23 @@ const AuthReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 loading: false,
-                isAuthenticated: true,
                 access: accessToken,
                 refresh: refreshToken,
+                isAuthenticated: true,
                 errorMsg: "",
-                user: action.user
+            }
+
+        case AuthActionTypes.GET_USER_SUCCESS:
+            return {
+                ...state,
+                user: action.payload.email,
+                isAuthenticated: true
+            }
+
+        case AuthActionTypes.GET_USER_FAIL:
+            return {
+                ...state,
+                user: null
             }
         case AuthActionTypes.LOGOUT:
             localStorage.removeItem('access');

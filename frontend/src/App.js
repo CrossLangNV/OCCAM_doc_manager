@@ -11,10 +11,18 @@ import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
 import GoogleLoginPage from "./containers/GoogleLoginPage";
 import PrivateRoute from "./containers/PrivateRoute";
+import {useEffect} from "react";
+import {load_user} from "./actions/authActions";
+import {useDispatch} from "react-redux";
 
 function App() {
     const location = useLocation();
     let history = useHistory();
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(load_user())
+    })
 
     const NO_BACK_BUTTON = ["/", "/login"]
 
