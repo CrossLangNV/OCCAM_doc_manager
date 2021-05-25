@@ -4,7 +4,7 @@ const DefaultState = {
     loading: false,
     access: localStorage.getItem("access"),
     refresh: localStorage.getItem("refresh"),
-    isAuthenticated: false,
+    isAuthenticated: localStorage.getItem("isAuthenticated"),
     user: "",
     errorMsg: "",
 };
@@ -29,6 +29,7 @@ const AuthReducer = (state = DefaultState, action) => {
 
             localStorage.setItem("access", accessToken);
             localStorage.setItem("refresh", refreshToken);
+            localStorage.setItem("isAuthenticated", "true");
 
             return {
                 ...state,
@@ -54,6 +55,7 @@ const AuthReducer = (state = DefaultState, action) => {
         case AuthActionTypes.LOGOUT:
             localStorage.removeItem('access');
             localStorage.removeItem('refresh');
+            localStorage.removeItem('isAuthenticated');
             return {
                 ...state,
                 access: null,
