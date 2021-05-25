@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../actions/documentActions";
-import React, {useState} from "react";
+import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
@@ -33,11 +33,6 @@ const DocumentList = () => {
             accept: () => dispatch(DeleteDocument(event)),
         });
     }
-
-    // const deleteDocument = async (id) => {
-    //     DeleteDocument(id)
-    //     console.log('called deletedoc')
-    // }
 
     const loadTableRows = () => {
         if (!_.isEmpty(documentList.data)) {

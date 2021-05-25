@@ -4,11 +4,17 @@ import {Tag} from "primereact/tag";
 const DocumentState = (props) => {
 
     const getStateIcon = (state) => {
-        switch (state) {
-            case "OCR completed.":
-                return <Tag value={state} icon="pi pi-check" severity="success"/>
-            default:
-                return <Tag value={state} />
+
+        const successStates = ["OCR completed.", "Success"]
+        const failStates = ["Failed"]
+
+        if (successStates.includes(state)) {
+            return <Tag value={state} icon="pi pi-check" severity="success"/>
+        } else if (failStates.includes(state)) {
+            return <Tag value={state} icon="pi pi-times" severity="danger"/>
+        }
+        else {
+            return <Tag value={state} />
         }
     }
 

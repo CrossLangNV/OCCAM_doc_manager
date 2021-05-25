@@ -36,7 +36,7 @@ class Document(models.Model):
     name = models.CharField(default="", max_length=1000)
     content = models.TextField(default="", blank=True)
 
-    class DocumentState(models.Choices):
+    class DocumentState(models.TextChoices):
         NEW = "New"
         WAITING_LAYOUT_ANALYSIS = "Waiting on start of layout analysis."
         RUNNING_LAYOUT_ANALYSIS = "Running layout analysis."
@@ -254,3 +254,6 @@ class Geojson(models.Model):
 
             self.file.save(name, django_file)
             self.save()
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)

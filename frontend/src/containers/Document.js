@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {DeleteDocument, GetDocument} from "../actions/documentActions";
+import {DeleteDocument, GetDocument, GetDocumentList} from "../actions/documentActions";
 import React from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
@@ -11,14 +11,13 @@ import PageAdd from "./PageAdd";
 import PageList from "./PageList";
 import DocumentState from "./DocumentState";
 import {ModifySelectedPage} from "../actions/uiActions";
+import {GetPageList, OcrPage} from "../actions/pageActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
 
     const dispatch = useDispatch()
     const documentState = useSelector(state => state.document)
-    const uiStates = useSelector(state => state.uiStates);
-
 
     let history = useHistory();
 
@@ -34,8 +33,9 @@ const Document = (props) => {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 dispatch(DeleteDocument(event))
+                dispatch(GetDocumentList(5, 1, ""))
                 history.push("/")
-            },
+            }
         });
     }
 
@@ -45,7 +45,15 @@ const Document = (props) => {
             message: 'Do you want to start the OCR process for all the pages of this document?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                console.log("Not implemented yet!")
+                if (!_.isEmpty(documentState.data[documentId])) {
+                    const documentData = documentState.data[documentId]
+                    if (!_.isEmpty(documentData.document_page)) {
+                        documentData.document_page.forEach(page => {
+                            dispatch(OcrPage(page.id))
+                        })
+                        dispatch(GetPageList(100, 1, documentId))
+                    }
+                }
             },
         });
     }
@@ -62,10 +70,18 @@ const Document = (props) => {
                         </Col>
                         <Col>
                             <Button
+                                onClick={() => dispatch(GetPageList(100, 1, documentId))}
+                                label=""
+                                icon="pi pi-refresh"
+                                className="p-button-primary margin-left"
+                                tooltip="Refresh"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                            <Button
                                 onClick={() => confirmStartOcr(documentId)}
                                 label=""
                                 icon="pi pi-play"
-                                className="p-button-primary"
+                                className="p-button-primary margin-left"
                                 tooltip="Run OCR"
                                 tooltipOptions={{position: 'bottom'}}
                             />

@@ -61,6 +61,10 @@
   margin-right: 5px !important;
 }
 
+.margin-bottom {
+  margin-bottom: 2rem !important;
+}
+
 .page-container {
   min-height: 408px;
 }

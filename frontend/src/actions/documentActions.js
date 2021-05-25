@@ -49,30 +49,43 @@ export const GetDocument = (id) => async dispatch => {
 }
 
 export const DeleteDocument = (id) => async dispatch => {
-    dispatch({
-        type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
-    });
+    try {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_DELETE_LOADING
+        });
 
-    const res = await axios.delete(`http://localhost:8000/documents/api/document/${id}`)
-        .then((res) => {
-            dispatch({
-                type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
-                payload: {id}
+        await axios.delete(`http://localhost:8000/documents/api/document/${id}`)
+            .then((res) => {
+                dispatch({
+                    type: DocumentActionTypes.DOCUMENT_DELETE_SUCCESS,
+                    payload: {id}
+                })
             })
-        })
+    } catch (e) {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_DELETE_FAIL
+        });
+    }
+
 }
 
 export const ProcessOcrDocument = (id) => async dispatch => {
-    dispatch({
-        type: DocumentActionTypes.DOCUMENT_OCR_LOADING
-    });
+    try {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_OCR_LOADING
+        });
 
-    const res = await axios.delete(`http://localhost:8000/documents/api/documents/${id}/ocr`)
-        .then((res) => {
-            dispatch({
-                type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,
-                payload: {id}
+        await axios.delete(`http://localhost:8000/documents/api/documents/${id}/ocr`)
+            .then((res) => {
+                dispatch({
+                    type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,
+                    payload: {id}
+                })
             })
-        })
+    } catch (e) {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_OCR_FAIL
+        });
+    }
 }
 

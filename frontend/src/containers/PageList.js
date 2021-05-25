@@ -2,15 +2,18 @@ import React, {useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, OcrPage} from "../actions/pageActions";
+import {DeletePage, GetPageList, OcrPage, TranslatePage} from "../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
 import OverlayAdd from "./OverlayAdd";
 import _ from 'lodash'
-import {Skeleton} from "primereact/skeleton";
 import PageLeaflet from "./PageLeaflet";
 import {ModifySelectedPage} from "../actions/uiActions";
+import {OverlayPanel} from "primereact/overlaypanel";
+import {languageSelectItems} from "../constants/language-selections";
+import {Dropdown} from "primereact/dropdown";
+import LoadingSpinner from "./LoadingSpinner";
 
 
 const PageList = (props) => {
@@ -21,12 +24,14 @@ const PageList = (props) => {
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
 
-
-    const [leafletMarkers, setLeafletMarkers] = useState([])
+    const [targetLanguage, setTargetLanguage] = useState("");
+    const [translationOverlayId, setTranslationOverlayId] = useState("");
 
     React.useEffect(() => {
         dispatch(GetPageList(100, 1, documentId))
     }, [])
+
+    const translationSelectionOverlay = useRef(null);
 
     const confirmDeletePage = (event) => {
         confirmPopup({
@@ -34,33 +39,46 @@ const PageList = (props) => {
             message: 'Are you sure you want to delete this page?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                dispatch(DeletePage(event))
+                dispatch(DeletePage(event));
                 toast.current.show({severity: 'success', summary: 'Success', detail: 'Page has been deleted'});
             },
         });
     }
 
     const startOcrForPage = (pageId) => {
-        dispatch(OcrPage(pageId))
+        dispatch(OcrPage(pageId));
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
+        dispatch(GetPageList(100, 1, documentId))
+    }
+
+    const startTranslationForPage = (e) => {
+        dispatch(TranslatePage(translationOverlayId, targetLanguage));
+        toast.current.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Translation task has been started for the selected page'
+        });
+        translationSelectionOverlay.current.hide(e);
+        dispatch(GetPageList(100, 1, documentId))
+    }
+
+    const toggleTranslationMenu = (e, page) => {
+        const overlay = page.page_overlay[page.page_overlay.length - 1].id
+
+        // Set states so the UI knows which overlay is selected, and which page is selecting for the loading animation
+        setTranslationOverlayId(overlay);
+
+        // Toggle the menu
+        translationSelectionOverlay.current.toggle(e);
     }
 
     const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
-
-        // const overlay = page.page_overlay[page.page_overlay.length - 1]
-        // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
-
     }
 
     return (
         <>
             <Row className='scroll-horizontally'>
-                {pageList.loading && (
-                    <Col>
-                        <Skeleton width={'100%'} height={'380px'}></Skeleton>
-                    </Col>
-                )}
 
                 {pageList.data.map(page => {
                     return <Card key={page.id} className='page-card'>
@@ -96,33 +114,27 @@ const PageList = (props) => {
                                     tooltipOptions={{position: 'bottom'}}
                                 />
                             </Col>
-                        </Row>
-                        <hr/>
-                        <Row>
                             <Col md={7}>
                                 <OverlayAdd
                                     pageId={page.id}
                                     label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
                                 />
                             </Col>
-
-
                             {(!_.isEmpty(page.page_overlay) &&
-                                    <Button
-                                        className="margin-left"
-                                        label=""
-                                        icon="pi pi-eye"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                        }}
-                                        tooltip="View overlay"
-                                        tooltipOptions={{position: 'bottom'}}
-                                    />
+                                <Button
+                                    className="margin-right"
+                                    label=""
+                                    icon="pi pi-eye"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+                                    }}
+                                    tooltip="View overlay"
+                                    tooltipOptions={{position: 'bottom'}}
+                                />
                             )}
-
                         </Row>
-                        <br/>
+                        <hr/>
 
                         <Row>
                             <Col>
@@ -134,15 +146,79 @@ const PageList = (props) => {
                                     tooltip="Run OCR"
                                     tooltipOptions={{position: 'bottom'}}
                                 />
-                                <Button
-                                    onClick={() => startOcrForPage(page.id)}
-                                    label=""
-                                    icon="pi pi-globe"
-                                    className="p-button-primary margin-left"
-                                    tooltip="Translate page"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
+                                {(!_.isEmpty(page.page_overlay) &&
+                                    <Button
+                                        onClick={(e) => toggleTranslationMenu(e, page)}
+                                        label=""
+                                        icon="pi pi-globe"
+                                        className="p-button-primary margin-left"
+                                        tooltip="Translate page"
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
+                                )}
+
+                                <Row>
+                                    <Col>
+                                        <br/>
+
+                                        {/* Translation state - Translations are done on the Overlay object*/}
+                                        {(!_.isEmpty(page.latest_overlay_state) &&
+                                            <>
+                                                Latest translation state: {page.latest_overlay_state[0].state}
+
+                                                {((page.latest_overlay_state[0].state === "Processing") &&
+                                                    <LoadingSpinner/>
+                                                )}
+                                            </>
+                                        )}
+
+                                        {/* OCR state - OCR task is done on the Page object*/}
+                                        {(!_.isEmpty(page.latest_page_state) &&
+                                            <>
+                                                <br/>
+                                                Latest OCR state: {page.latest_page_state[0].state}
+
+                                                {((page.latest_page_state[0].state === "Processing") &&
+                                                    <LoadingSpinner/>
+                                                )}
+                                            </>
+                                        )}
+                                    </Col>
+                                </Row>
                             </Col>
+                            <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
+                                <h6>Translate page</h6>
+                                <Row>
+                                    <Col md={2}>
+                                        To
+                                    </Col>
+                                    <Col>
+                                        <Dropdown
+                                            md={7}
+                                            value={targetLanguage}
+                                            options={languageSelectItems}
+                                            onChange={(e) => setTargetLanguage(e.value)}
+                                            placeholder="Select a language"
+                                        />
+                                    </Col>
+
+                                </Row>
+                                <br/>
+
+                                <Row>
+                                    <Col>
+                                        <Button onClick={(e) => startTranslationForPage(e)}
+                                                label="Translate"
+                                                icon="pi pi-check"
+                                                style={{marginRight: '.25em'}}
+                                                disabled={(targetLanguage.length === 0)}
+                                        />
+                                    </Col>
+
+                                </Row>
+
+
+                            </OverlayPanel>
                         </Row>
                     </Card>
                 })}

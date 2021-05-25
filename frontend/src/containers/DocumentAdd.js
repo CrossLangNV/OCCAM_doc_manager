@@ -5,7 +5,6 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
-import {FileUpload} from "primereact/fileupload";
 
 
 const DocumentAdd = (props) => {
@@ -18,7 +17,7 @@ const DocumentAdd = (props) => {
         evt.preventDefault();
 
         if (title !== "") {
-            const res = await axios.post(`http://localhost:8000/documents/api/documents`,
+            await axios.post(`http://localhost:8000/documents/api/documents`,
                 {
                     name: title,
                     content: content,
@@ -43,10 +42,6 @@ const DocumentAdd = (props) => {
                 onClick={() => history.push("/")}
                 className="p-button-secondary"/>
         </span>;
-
-    const pagesUploader = (event) => {
-        const files = event.files
-    }
 
     return (
         <>

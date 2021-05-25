@@ -40,8 +40,6 @@ class DocumentListAPIView(ListCreateAPIView):
 
         if query:
             q = q.filter(name__icontains=query)
-            print(query)
-            print(q)
 
         return q.order_by('-updated_at')
 

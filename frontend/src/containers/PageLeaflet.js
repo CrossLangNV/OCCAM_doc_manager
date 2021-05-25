@@ -5,30 +5,25 @@ import {hw} from "../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
 import axios from "axios";
+import {languageSelectItems} from "../constants/language-selections"
+import _ from 'lodash';
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
-    // const leafletMarkers = props.leafletMarkers
 
     const [overlay, setOverlay] = useState("");
-    const [geojson, setGeojson] = useState("");
-    const [language, setLanguage] = useState("");
+    const [language, setLanguage] = useState("ORIGINAL");
+    const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
 
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
-            const overlay = page.page_overlay[page.page_overlay.length - 1]
-            // const geojson = overlay.overlay_geojson[overlay.overlay_geojson.length -1]
+            const latestOverlay = page.page_overlay[page.page_overlay.length - 1]
 
-            setOverlay(overlay)
-            // setGeojson(geojson)
+            setOverlay(latestOverlay)
 
-            // if (geojson) {
-            setPageLanguage(overlay, overlay.source_lang)
-            // setLanguage(overlay.source_lang)
-            // getLeafletMarkers(geojson)
-            // }
+            setPageLanguage(latestOverlay, "ORIGINAL")
         }
     }, [])
 
@@ -36,7 +31,7 @@ const PageLeaflet = (props) => {
     const getLeafletMarkers = (geojson) => {
         const leafletMarkersArr = []
 
-        const features = fetchGeojson(geojson.file).then((res) => {
+        fetchGeojson(geojson.file).then((res) => {
             for (const c of res.data.features) {
                 const bounds = c.geometry.coordinates.map(hw);
                 const popupMessage = c.properties.name
@@ -45,13 +40,33 @@ const PageLeaflet = (props) => {
             }
             setLeafletMarkers(leafletMarkersArr)
         })
-
-        console.log(features)
-
     }
 
-    const fetchGeojson = async (file) => {
-        return axios.get(file)
+    const getProcessedLanguages = (geojsons) => {
+        // Create a Set to make sure duplicate translations of a language are in the list
+        let availableLanguagesSet = new Set()
+
+        if (!_.isEmpty(geojsons)) {
+            geojsons.forEach(geo => {
+                availableLanguagesSet.add(geo.lang.toUpperCase())
+            })
+        }
+
+        // Make a list from the Set, works easier
+        let availableLanguages = [...availableLanguagesSet]
+
+        // Take all the possible languages and filter out the items that are not present
+        let result = languageSelectItems.filter(item => availableLanguages.includes(item.value))
+
+        // Make sure the first selection in the UI is "Original"
+        result = [{label: 'Original', value: 'ORIGINAL'}, ...result]
+
+        // Store the object for the UI
+        setSelectableLanguages(result)
+    }
+
+    const fetchGeojson = async (f) => {
+        return axios.get(f)
     }
 
 
@@ -62,14 +77,6 @@ const PageLeaflet = (props) => {
     const height = page.image_height;
     const imageBounds = [center, hw(height, width)];
 
-    const languageSelectItems = [
-        {label: 'English', value: 'EN'},
-        {label: 'Dutch', value: 'NL'},
-        {label: 'French', value: 'FR'},
-        {label: 'German', value: 'DE'},
-        {label: 'Czech', value: 'CS'},
-    ];
-
 
     // Resize the map to fit with the image
     function ResizeComponent() {
@@ -78,30 +85,40 @@ const PageLeaflet = (props) => {
         return null
     }
 
-    // TODO Fix me
     const setPageLanguage = (overlay, language) => {
         setLanguage(language)
 
         let geojsons = overlay.overlay_geojson
 
+        // Get processed languages
+        getProcessedLanguages(geojsons)
 
-        geojsons = geojsons.filter(geojson =>
-            geojson.lang.toUpperCase() === language.toUpperCase()
-        )
+        if (language === "ORIGINAL") {
+            geojsons = geojsons.filter(geojson =>
+                geojson.original === true
+            )
+        } else {
+            geojsons = geojsons.filter(geojson =>
+                geojson.lang.toUpperCase() === language.toUpperCase()
+            )
+        }
 
         setOverlay(overlay)
-        setGeojson(geojsons)
 
         getLeafletMarkers(geojsons[geojsons.length - 1])
+
+
+
     }
 
     return (
         <>
             <Col>
+                View in language
                 <Dropdown
                     md={7}
                     value={language.toUpperCase()}
-                    options={languageSelectItems}
+                    options={selectableLanguages}
                     onChange={(e) => setPageLanguage(overlay, e.value)}
                     placeholder="Select a language"
                 />

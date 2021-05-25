@@ -1,0 +1,4 @@
+export const AuthActionTypes = {
+    GOOGLE_AUTH_SUCCESS: 'AUTH/GOOGLE_AUTH_SUCCESS',
+    GOOGLE_AUTH_FAIL: 'DOC/GOOGLE_AUTH_FAIL',
+}
