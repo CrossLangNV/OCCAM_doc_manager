@@ -1,10 +1,11 @@
-Shouldn't be needed:
-`
-cd backend/
-`
-
+To clear test database:
 `
 python manage.py test tests.documents.test_models
+`
+
+When it complains about the folder:
+`
+cd backend/
 `
 
 # To get into postgres
