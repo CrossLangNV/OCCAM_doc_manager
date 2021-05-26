@@ -39,13 +39,14 @@ const PageList = (props) => {
     }, [])
 
     // Refresh the pages every 5 seconds
-    useEffect(() => {
-        const timer = setTimeout(
-            () => dispatch(GetPageList(100, 1, documentId)),
-            5000
-        );
-        return () => clearTimeout(timer);
-    })
+    // TODO Fix Leaflet zoom is also being reset with this
+    // useEffect(() => {
+    //     const timer = setTimeout(
+    //         () => dispatch(GetPageList(100, 1, documentId)),
+    //         5000
+    //     );
+    //     return () => clearTimeout(timer);
+    // })
 
     const translationSelectionOverlay = useRef(null);
 

@@ -24,9 +24,6 @@ const PageHistory = (props) => {
         const res = await axios.get(`${baseUrl}/activitylogs/api/activitylogs?rows=100&offset=0&page=${pageId}&linked_overlays=true`,
             config)
 
-        console.log("DATA ---- ", res.data)
-
-
         const events = []
 
         res.data.results.forEach(log => {
