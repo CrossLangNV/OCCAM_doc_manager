@@ -1,0 +1,101 @@
+version: '3'
+services:
+  django:
+    image: docker.crosslang.com/occam_doc_manager/django:develop-latest
+    restart:
+      always
+    env_file:
+      - ./secrets/django-docker.env
+    command: ./start.sh
+    depends_on:
+      - occ_postgres
+      - occ_minio
+      - celery
+    networks:
+      - default
+
+  react:
+    image: docker.crosslang.com/occam_doc_manager/react:develop-latest
+    restart: always
+    env_file:
+      - ./secrets/django-docker.env
+    depends_on:
+      - django
+    networks:
+      - default
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    labels:
+      - traefik.http.routers.angular.rule=Host(`react.staging.occam.crosslang.com`)
+      - traefik.http.routers.angular.tls=true
+      - traefik.http.routers.angular.tls.certresolver=le
+      - traefik.http.routers.angular.entrypoints=websecure
+
+  django_nginx:
+    image: docker.crosslang.com/occam_doc_manager/django_nginx:develop-latest
+    restart: always
+    depends_on:
+      - django
+    networks:
+      - default
+    labels:
+      - traefik.http.routers.django.rule=Host(`django.staging.occam.crosslang.com`)
+      - traefik.http.routers.django.tls=true
+      - traefik.http.routers.django.tls.certresolver=le
+      - traefik.http.routers.django.entrypoints=websecure
+      - traefik.http.services.django.loadbalancer.server.port=8000
+
+  celery:
+    image: docker.crosslang.com/occam_doc_manager/django:develop-latest
+    command: celery -A scheduler worker -l info
+    restart:
+      always
+    env_file:
+      - ./secrets/django-docker.env
+    depends_on:
+      - rabbitmq
+    networks:
+      - default
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  rabbitmq:
+    image: rabbitmq
+    env_file:
+      - ./secrets/django-docker.env
+    networks:
+      - default
+
+  occ_postgres:
+    image: postgres:13
+    restart: always
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - /mnt/HC_Volume_123777/occam_doc_manager/postgres:/var/lib/postgresql/data
+    networks:
+      - default
+
+  occ_minio:
+    image: minio/minio
+    restart: always
+    command: server /data
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - /mnt/HC_Volume_123777/occam_doc_manager/minio:/data
+    networks:
+      - default
+    labels:
+      - traefik.http.routers.minio.rule=Host(`minio.staging.occam.crosslang.com`)
+      - traefik.http.routers.minio.tls=true
+      - traefik.http.routers.minio.tls.certresolver=le
+      - traefik.http.routers.minio.entrypoints=websecure
+
+networks:
+  default:
+    external:
+      name: gateway
