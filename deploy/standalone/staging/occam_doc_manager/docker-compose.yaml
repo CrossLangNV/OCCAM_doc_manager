@@ -33,6 +33,7 @@ services:
 
   django_nginx:
     image: docker.crosslang.com/occam_doc_manager/django_nginx:develop-latest
+    expose: [ 8000 ]
     restart: always
     depends_on:
       - django
