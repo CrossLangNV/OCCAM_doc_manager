@@ -42,7 +42,7 @@ export const GoogleAuthenticate = (accessToken) => async dispatch => {
 
         const baseUrl = window._env_.REACT_APP_API_URL
 
-        await axios.post(`${baseUrl}/auth/convert-token`,
+        await axios.post(`/auth/convert-token`,
             {
                 grant_type: "convert_token",
                 client_id: window._env_.REACT_DJANGO_CLIENT_ID, // REACT_DJANGO_CLIENT_ID
