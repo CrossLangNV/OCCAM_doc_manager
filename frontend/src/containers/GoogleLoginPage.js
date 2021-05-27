@@ -3,6 +3,7 @@ import GoogleLogin from "react-google-login";
 import {useDispatch, useSelector} from "react-redux";
 import {GoogleAuthenticate, load_user} from "../actions/authActions";
 import {useHistory} from "react-router-dom";
+import {Toast} from "primereact/toast";
 
 const GoogleLoginPage = () => {
     const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const GoogleLoginPage = () => {
                 onSuccess={responseGoogle}
                 onFailure={onFailureMessage}
             />
+            <Toast ref={toast} />
         </div>
     );
 };
