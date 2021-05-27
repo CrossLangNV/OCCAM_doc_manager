@@ -43,8 +43,8 @@ export const GoogleAuthenticate = (accessToken) => async dispatch => {
         await axios.post(`${baseUrl}/auth/convert-token`,
             {
                 grant_type: "convert_token",
-                client_id: "kw1n5yIOASh5JUAMk1Vb4SIfDpUsO0QcvMZTqIJl", // REACT_DJANGO_CLIENT_ID
-                client_secret: "Rt2fMrYufDxGFnGaIIQnJvdwa5P9WibwuwYUMaalfRR2pb2W4It4n3jMxuRzs4OpolLFmWUklUflwKIm1VTIJfoPcCUVQzBnREmBZG43NepHBfXoY9V3G2e7h2gAgNeI", // REACT_DJANGO_CLIENT_SECRET
+                client_id: window._env_.REACT_DJANGO_CLIENT_ID, // REACT_DJANGO_CLIENT_ID
+                client_secret: window._env_.REACT_DJANGO_CLIENT_SECRET, // REACT_DJANGO_CLIENT_SECRET
                 backend: "google-oauth2",
                 token: accessToken
             })
