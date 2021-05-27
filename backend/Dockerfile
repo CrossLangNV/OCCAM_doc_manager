@@ -21,6 +21,9 @@ ADD ./Pipfile .
 RUN pipenv lock --keep-outdated --requirements > requirements.txt
 RUN pip install -r requirements.txt
 
+# OCCAM Transcription
+RUN pip install git+https://github.com/CrossLangNV/OCCAM_transcription.git
+
 # Copy App
 COPY . .
 

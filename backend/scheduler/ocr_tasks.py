@@ -3,9 +3,11 @@ import logging
 import os
 import time
 
-from celery import shared_task
+from langdetect import detect
+from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType
+from celery import shared_task
 from documents.models import Page, Overlay
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 
@@ -61,8 +63,13 @@ def ocr_page(page_id):
 
     # Create Overlay object in Djang
     # TODO should we update if already exists?
-    # TODO GEt language from classifier
-    source_lang = "EN"
+    if 0:
+        source_lang = "EN"
+    else:
+        # TODO perhaps no need to first convert to file
+        with io.BytesIO(overlay_xml) as f:
+            source_lang = xml_lang_detect(f)
+
     overlay = Overlay.objects.create(page=page, source_lang=source_lang)
     logger.info("OCR overlay: %s", overlay)
 
@@ -75,3 +82,16 @@ def ocr_page(page_id):
         f.name = basename + '.xml'
         logger.info("f name: %s", f.name)
         overlay.update_xml(f)
+
+
+def xml_lang_detect(xml_file):
+    a = PageXML(xml_file)
+
+    l_reg = list(filter(lambda s: s, a.get_regions_text()))
+    s_all = ' '.join(l_reg)
+
+    lang = detect(s_all).upper()
+
+    # l = list(map(detect, l_reg))
+
+    return lang
