@@ -4,7 +4,7 @@ if (process.env.NODE_ENV === 'production') {
     baseUrl = window._env_.REACT_APP_API_URL
 }
 
-console.log(window._env_.NODE_ENV)
+console.log(process.env.NODE_ENV)
 console.log(baseUrl)
 
 console.log(window._env_.REACT_APP_API_URL)

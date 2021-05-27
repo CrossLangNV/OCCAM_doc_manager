@@ -40,6 +40,8 @@ export const GoogleAuthenticate = (accessToken) => async dispatch => {
             type: AuthActionTypes.GOOGLE_AUTH_LOADING
         });
 
+        const baseUrl = window._env_.REACT_APP_API_URL
+
         await axios.post(`${baseUrl}/auth/convert-token`,
             {
                 grant_type: "convert_token",
