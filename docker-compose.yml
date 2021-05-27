@@ -21,6 +21,7 @@ services:
     volumes:
       - ./frontend:/frontend
       - /frontend/node_modules
+      - ./secrets/.env:/frontend/.env
     ports:
       - 3001:3000
     environment:
