@@ -1,6 +1,7 @@
 import {DocumentActionTypes} from "../constants/document-action-types";
-import {axiosApi, baseUrl} from "../constants/axiosConf";
 import axios from "axios";
+
+const baseUrl = process.env.REACT_APP_API_URL
 
 export const GetDocumentList = (rows, page, query) => async dispatch => {
     try {

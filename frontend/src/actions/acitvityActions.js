@@ -1,6 +1,7 @@
 import {ActivityLogsActionTypes} from "../constants/activity-logs-action-types";
-import {baseUrl} from "../constants/axiosConf";
 import axios from "axios";
+
+const baseUrl = process.env.REACT_APP_API_URL
 
 // page is the page from the pagination - pageId from the Page object
 export const GetActivityList = (rows, page, pageId, overlayId) => async dispatch => {

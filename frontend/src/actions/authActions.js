@@ -2,7 +2,6 @@ import {AuthActionTypes} from "../constants/auth-action-types";
 import axios from "axios";
 
 const baseUrl = process.env.REACT_APP_API_URL
-console.log("authactions.js baseUrl= ", baseUrl)
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
@@ -41,9 +40,6 @@ export const GoogleAuthenticate = (accessToken) => async dispatch => {
         dispatch({
             type: AuthActionTypes.GOOGLE_AUTH_LOADING
         });
-
-        console.log(window._env_.REACT_DJANGO_CLIENT_ID)
-        console.log(window._env_.REACT_DJANGO_CLIENT_SECRET)
 
         await axios.post(`${baseUrl}/auth/convert-token`,
             {
