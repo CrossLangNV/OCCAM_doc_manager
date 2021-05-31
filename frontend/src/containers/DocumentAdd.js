@@ -16,13 +16,23 @@ const DocumentAdd = (props) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
 
+        const baseUrl = process.env.REACT_APP_API_URL
+
         if (title !== "") {
-            await axios.post(`http://localhost:8000/documents/api/documents`,
-                {
+            const config = {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("access")}`
+                },
+                data: {
                     name: title,
                     content: content,
                     state: 'New'
-                }).then((res) => {
+                }
+            }
+
+            await axios.post(`${baseUrl}/documents/api/documents`,
+                config
+            ).then((res) => {
                     history.push('/document/' + res.data.id + "/")
             });
         }
