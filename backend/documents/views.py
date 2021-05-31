@@ -33,7 +33,7 @@ class DocumentListAPIView(ListCreateAPIView):
     serializer_class = DocumentSerializer
 
     def get_queryset(self):
-        q = Document.objects.all()
+        q = Document.objects.filter(user=self.request.user)
         query = self.request.GET.get("query", "")
 
         if query:
