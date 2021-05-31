@@ -16,7 +16,7 @@ const DocumentAdd = (props) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
 
-        const baseUrl = process.env.REACT_APP_API_URL
+        const baseUrl = window._env_.REACT_APP_API_URL
 
         const data = {
             name: title,

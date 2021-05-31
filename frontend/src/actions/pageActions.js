@@ -1,7 +1,6 @@
 import {PageActionTypes} from "../constants/page-action-types";
 import axios from "axios";
-
-const baseUrl = process.env.REACT_APP_API_URL
+import {baseUrl} from "../constants/axiosConf";
 
 export const GetPageList = (rows, page, doc_id) => async dispatch => {
     try {

@@ -1,7 +1,6 @@
 import {OverlayActionTypes} from "../constants/overlay-action-types";
 import axios from "axios";
-
-const baseUrl = process.env.REACT_APP_API_URL
+import {baseUrl} from "../constants/axiosConf";
 
 export const AddOverlay = (pageId, files) => async dispatch => {
     try {
