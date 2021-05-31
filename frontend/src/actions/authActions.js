@@ -2,6 +2,7 @@ import {AuthActionTypes} from "../constants/auth-action-types";
 import axios from "axios";
 
 const baseUrl = process.env.REACT_APP_API_URL
+console.log("authactions.js baseUrl= ", baseUrl)
 
 export const load_user = () => async dispatch => {
     if (localStorage.getItem('access')) {
