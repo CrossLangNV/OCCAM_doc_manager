@@ -95,7 +95,7 @@ export const AddPage = (documentId, files) => async dispatch => {
     }
 }
 
-export const OcrPage = (id) => async dispatch => {
+export const OcrPage = (id, user) => async dispatch => {
     try {
         dispatch({
             type: PageActionTypes.PAGE_OCR_LOADING
@@ -103,7 +103,8 @@ export const OcrPage = (id) => async dispatch => {
 
         await axios.post(`${baseUrl}/documents/api/pages/launch_ocr`,
             {
-                page: id
+                page: id,
+                user: user
             })
             .then((res) => {
                 dispatch({
@@ -118,7 +119,7 @@ export const OcrPage = (id) => async dispatch => {
     }
 }
 
-export const TranslatePage = (id, target) => async dispatch => {
+export const TranslatePage = (id, target, user) => async dispatch => {
     try {
         dispatch({
             type: PageActionTypes.PAGE_TRANSLATION_LOADING
@@ -126,7 +127,7 @@ export const TranslatePage = (id, target) => async dispatch => {
 
         const config = {
             headers: {
-                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }
 
@@ -134,6 +135,7 @@ export const TranslatePage = (id, target) => async dispatch => {
             {
                 overlay: id,
                 target: target.toUpperCase(),
+                user: user
             }, config)
             .then((res) => {
                 dispatch({

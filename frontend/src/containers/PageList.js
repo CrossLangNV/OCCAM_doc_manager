@@ -20,12 +20,13 @@ import PageHistory from "./PageHistory";
 
 const PageList = (props) => {
     const documentId = props.documentId;
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const toast = useRef(null);
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
+    const auth = useSelector(state => state.auth);
 
     // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
@@ -35,7 +36,7 @@ const PageList = (props) => {
 
     // Load pages initially
     useEffect(() => {
-        dispatch(GetPageList(100, 1, documentId))
+        dispatch(GetPageList(100, 1, documentId));
     }, [])
 
     // Refresh the pages every 5 seconds
@@ -63,13 +64,13 @@ const PageList = (props) => {
     }
 
     const startOcrForPage = (pageId) => {
-        dispatch(OcrPage(pageId));
+        dispatch(OcrPage(pageId, auth.user));
         toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
         dispatch(GetPageList(100, 1, documentId))
     }
 
     const startTranslationForPage = (e) => {
-        dispatch(TranslatePage(translationOverlayId, targetLanguage));
+        dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
         toast.current.show({
             severity: 'success',
             summary: 'Success',

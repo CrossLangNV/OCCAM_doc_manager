@@ -3,11 +3,12 @@ import logging
 import os
 import time
 
+from celery import shared_task
+from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType
-from celery import shared_task
 from documents.models import Page, Overlay
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 
@@ -15,10 +16,11 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def ocr_page(page_id):
+def ocr_page(page_id, user=None):
     page = Page.objects.get(pk=page_id)
 
     logger.info("Started OCR for page: %s", page)
+    logger.info("user: %s", user)
 
     page_id = str(page.id)
     basename, _ = os.path.splitext(page.file.name)
@@ -44,6 +46,11 @@ def ocr_page(page_id):
 
     activity_log = ActivityLog.objects.create(page=page,
                                               type=ActivityLogType.OCR)
+
+    if user:
+        user_obj = User.objects.get(email=user)
+        activity_log.user = user_obj
+        activity_log.save()
     logger.info("Created activity log")
 
     logger.info("Waiting for document to be processed....")

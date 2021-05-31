@@ -3,6 +3,7 @@ import logging
 import os
 
 from celery import shared_task
+from django.contrib.auth.models import User
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
 from documents.models import Overlay
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def translate_overlay(overlay_id, target):
+def translate_overlay(overlay_id, target, user=None):
     """
     overlay_id : id from Overlay model object
     source: abbreviation of the language of the text
@@ -31,6 +32,11 @@ def translate_overlay(overlay_id, target):
         type=ActivityLogType.TRANSLATION,
         state=ActivityLogState.PROCESSING
     )
+
+    if user:
+        user_obj = User.objects.get(email=user)
+        activity_log.user = user_obj
+        activity_log.save()
 
     logger.info("Created activity log")
 

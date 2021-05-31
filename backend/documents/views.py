@@ -97,10 +97,11 @@ class TranslatePageAPIView(APIView):
     def post(self, request, format=None, *args, **kwargs):
         overlay = request.data["overlay"]
         target = request.data["target"]
+        user = request.data["user"]
 
         logger.info("Starting celery task for translation")
 
-        translate_overlay.delay(overlay, target)
+        translate_overlay.delay(overlay, target, user=user)
 
         return Response("Translation task launched", status=status.HTTP_201_CREATED)
 
@@ -110,8 +111,9 @@ class PageLaunchOCRAPIView(APIView):
 
     def post(self, request, format=None, *args, **kwargs):
         page_id = request.data["page"]
+        user = request.data["user"]
 
-        ocr_page.delay(page_id)
+        ocr_page.delay(page_id, user=user)
 
         logger.info("Starting celery task for translation")
 

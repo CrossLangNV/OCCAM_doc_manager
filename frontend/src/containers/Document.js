@@ -15,11 +15,12 @@ import {GetPageList, OcrPage} from "../actions/pageActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
-
     const dispatch = useDispatch()
-    const documentState = useSelector(state => state.document)
-
     let history = useHistory();
+
+    // Redux states
+    const documentState = useSelector(state => state.document)
+    const auth = useSelector(state => state.auth);
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId))
@@ -49,7 +50,7 @@ const Document = (props) => {
                     const documentData = documentState.data[documentId]
                     if (!_.isEmpty(documentData.document_page)) {
                         documentData.document_page.forEach(page => {
-                            dispatch(OcrPage(page.id))
+                            dispatch(OcrPage(page.id, auth.user))
                         })
                         dispatch(GetPageList(100, 1, documentId))
                     }

@@ -18,7 +18,7 @@ class ActivityLogsAPIView(ListCreateAPIView):
     serializer_class = ActivityLogSerializer
 
     def get_queryset(self):
-        q = ActivityLog.objects.all()
+        q = ActivityLog.objects.filter(user=self.request.user)
         page_id = self.request.GET.get("page", "")
         overlay_id = self.request.GET.get("overlay", "")
 
