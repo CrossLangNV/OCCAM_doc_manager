@@ -18,17 +18,21 @@ const DocumentAdd = (props) => {
 
         const baseUrl = process.env.REACT_APP_API_URL
 
+        const data = {
+            name: title,
+            content: content,
+            state: 'New'
+        }
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
         if (title !== "") {
-            await axios.post(`${baseUrl}/documents/api/documents`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem("access")}`
-                    },
-                    data: {
-                        name: title,
-                        content: content,
-                        state: 'New'
-                    }}
+            await axios.post(`${baseUrl}/documents/api/documents`, data, config
+
             ).then((res) => {
                     history.push('/document/' + res.data.id + "/")
             });
