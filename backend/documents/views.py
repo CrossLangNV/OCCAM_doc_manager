@@ -1,7 +1,7 @@
 import logging as logger
 import os
 
-from rest_framework import permissions, status
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
@@ -40,6 +40,10 @@ class DocumentListAPIView(ListCreateAPIView):
             q = q.filter(name__icontains=query)
 
         return q.order_by('-updated_at')
+
+    def post(self, request, *args, **kwargs):
+        request.data["user"] = request.user.id
+        return self.create(request, *args, **kwargs)
 
 
 class DocumentDetailAPIView(RetrieveUpdateDestroyAPIView):

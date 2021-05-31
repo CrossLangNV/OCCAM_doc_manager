@@ -51,6 +51,8 @@ class Document(models.Model):
         default=DocumentState.NEW,
     )
 
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
+
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 

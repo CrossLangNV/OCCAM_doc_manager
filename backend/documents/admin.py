@@ -5,7 +5,7 @@ from documents.models import Document, Page, Overlay, Geojson
 
 
 class DocumentAdmin(admin.ModelAdmin):
-    list_filter = ("created_at", "updated_at")
+    list_filter = ("created_at", "updated_at", "user")
 
 
 class PageAdmin(admin.ModelAdmin):

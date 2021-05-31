@@ -5,10 +5,13 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {baseUrl} from "../constants/axiosConf";
 
 
 const DocumentAdd = (props) => {
     let history = useHistory();
+    const auth = useSelector(state => state.auth);
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -16,12 +19,11 @@ const DocumentAdd = (props) => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
 
-        const baseUrl = window._env_.REACT_APP_API_URL
-
         const data = {
             name: title,
             content: content,
-            state: 'New'
+            state: 'New',
+            user: auth.user
         }
 
         const config = {
