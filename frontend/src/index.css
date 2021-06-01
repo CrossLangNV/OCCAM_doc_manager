@@ -1,5 +1,3 @@
-
-
 .space {
   padding: 20px;
 }
@@ -104,6 +102,8 @@
           inset 0px -11px 8px -10px #CCC;
 
   border: 1px solid darkgray;
+
+  background-color: white;
 }
 
 .occ-ui-empty-leaflet-container {
