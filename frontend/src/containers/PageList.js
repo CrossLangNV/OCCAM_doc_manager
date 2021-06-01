@@ -16,6 +16,7 @@ import {Dropdown} from "primereact/dropdown";
 import LoadingSpinner from "./LoadingSpinner";
 import {Dialog} from "primereact/dialog";
 import PageHistory from "./PageHistory";
+import {ScrollPanel} from "primereact/scrollpanel";
 
 
 const PageList = (props) => {
@@ -102,186 +103,200 @@ const PageList = (props) => {
 
     return (
         <>
-            <Row className='scroll-horizontally'>
-
-                {pageList.data.map(page => {
-                    return <Card key={page.id} className='page-card'>
-                        <Row>
-                            <Col className="page-container">
-                                <Image
-                                    onClick={() => selectPage(page)}
-                                    className={uiStates.selectedPage.id === page.id ?
-                                        'page-card-img selectedPage' : 'page-card-img'}
-                                    src={page.file}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button
-                                    onClick={() => confirmDeletePage(page.id)}
-                                    label=""
-                                    icon="pi pi-trash"
-                                    className="p-button-danger"
-                                    tooltip="Delete page"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
-                                <Button
-                                    className="margin-left"
-                                    label=""
-                                    icon="pi pi-search-plus"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        window.open(page.file, '_blank');
-                                    }}
-                                    tooltip="View full size page"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
-                            </Col>
-                        </Row>
-                        <br/>
-
-                        <Row className="justify-content-between">
-                            <Col md={7}>
-                                <OverlayAdd
-                                    pageId={page.id}
-                                    label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
-                                />
-                            </Col>
-                            <Col md="auto">
-                                {(!_.isEmpty(page.page_overlay) &&
-                                    <Button
-                                        className="margin-right"
-                                        label=""
-                                        icon="pi pi-eye"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                        }}
-                                        tooltip="View overlay"
-                                        tooltipOptions={{position: 'bottom'}}
-                                    />
-                                )}
-                            </Col>
-                        </Row>
-                        <hr/>
-
-                        <Row>
-                            <Col>
-                                <Button
-                                    onClick={() => startOcrForPage(page.id)}
-                                    label=""
-                                    icon="pi pi-play"
-                                    className="p-button-primary"
-                                    tooltip="Run OCR"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
-                                {(!_.isEmpty(page.page_overlay) &&
-                                    <Button
-                                        onClick={(e) => toggleTranslationMenu(e, page)}
-                                        label=""
-                                        icon="pi pi-globe"
-                                        className="p-button-primary margin-left"
-                                        tooltip="Translate page"
-                                        tooltipOptions={{position: 'bottom'}}
-                                    />
-                                )}
-                                <Button
-                                    onClick={(e) => toggleHistoryMenu(e, page)}
-                                    label=""
-                                    icon="pi pi-info-circle"
-                                    className="p-button-primary margin-left"
-                                    tooltip="Show history"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
-
+            <Row>
+                <Col md={3}>
+                    <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable">
+                        {pageList.data.map(page => {
+                            return <Card key={page.id} className='page-card'>
                                 <Row>
-                                    <Col>
-                                        <br/>
-
-                                        {/* Translation state - Translations are done on the Overlay object*/}
-                                        {(!_.isEmpty(page.latest_overlay_state) &&
-                                            <>
-                                                Latest translation state: {page.latest_overlay_state[0].state}
-
-                                                {((page.latest_overlay_state[0].state === "Processing") &&
-                                                    <LoadingSpinner/>
-                                                )}
-                                            </>
-                                        )}
-
-                                        {/* OCR state - OCR task is done on the Page object*/}
-                                        {(!_.isEmpty(page.latest_page_state) &&
-                                            <>
-                                                <br/>
-                                                Latest OCR state: {page.latest_page_state[0].state}
-
-                                                {((page.latest_page_state[0].state === "Processing") &&
-                                                    <LoadingSpinner/>
-                                                )}
-                                            </>
-                                        )}
-                                    </Col>
-                                </Row>
-                            </Col>
-                            <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
-                                <h6>Translate page</h6>
-                                <Row>
-                                    <Col md={2}>
-                                        To
-                                    </Col>
-                                    <Col>
-                                        <Dropdown
-                                            md={7}
-                                            value={targetLanguage}
-                                            options={languageSelectItems}
-                                            onChange={(e) => setTargetLanguage(e.value)}
-                                            placeholder="Select a language"
+                                    <Col className="page-container">
+                                        <Image
+                                            onClick={() => selectPage(page)}
+                                            className={uiStates.selectedPage.id === page.id ?
+                                                'page-card-img selectedPage' : 'page-card-img'}
+                                            src={page.file}
                                         />
                                     </Col>
-
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Button
+                                            onClick={() => confirmDeletePage(page.id)}
+                                            label=""
+                                            icon="pi pi-trash"
+                                            className="p-button-danger"
+                                            tooltip="Delete page"
+                                            tooltipOptions={{position: 'bottom'}}
+                                        />
+                                        <Button
+                                            className="margin-left"
+                                            label=""
+                                            icon="pi pi-search-plus"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open(page.file, '_blank');
+                                            }}
+                                            tooltip="View full size page"
+                                            tooltipOptions={{position: 'bottom'}}
+                                        />
+                                    </Col>
                                 </Row>
                                 <br/>
 
-                                <Row>
-                                    <Col>
-                                        <Button onClick={(e) => startTranslationForPage(e)}
-                                                label="Translate"
-                                                icon="pi pi-check"
-                                                style={{marginRight: '.25em'}}
-                                                disabled={(targetLanguage.length === 0)}
+                                <Row className="justify-content-between">
+                                    <Col md={7}>
+                                        <OverlayAdd
+                                            pageId={page.id}
+                                            label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
                                         />
                                     </Col>
+                                    <Col md="auto">
+                                        {(!_.isEmpty(page.page_overlay) &&
+                                            <Button
+                                                className="margin-right"
+                                                label=""
+                                                icon="pi pi-eye"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+                                                }}
+                                                tooltip="View overlay"
+                                                tooltipOptions={{position: 'bottom'}}
+                                            />
+                                        )}
+                                    </Col>
+                                </Row>
+                                <hr/>
+
+                                <Row>
+                                    <Col>
+                                        <Button
+                                            onClick={() => startOcrForPage(page.id)}
+                                            label=""
+                                            icon="pi pi-play"
+                                            className="p-button-primary"
+                                            tooltip="Run OCR"
+                                            tooltipOptions={{position: 'bottom'}}
+                                        />
+                                        {(!_.isEmpty(page.page_overlay) &&
+                                            <Button
+                                                onClick={(e) => toggleTranslationMenu(e, page)}
+                                                label=""
+                                                icon="pi pi-globe"
+                                                className="p-button-primary margin-left"
+                                                tooltip="Translate page"
+                                                tooltipOptions={{position: 'bottom'}}
+                                            />
+                                        )}
+                                        <Button
+                                            onClick={(e) => toggleHistoryMenu(e, page)}
+                                            label=""
+                                            icon="pi pi-info-circle"
+                                            className="p-button-primary margin-left"
+                                            tooltip="Show history"
+                                            tooltipOptions={{position: 'bottom'}}
+                                        />
+
+                                        <Row>
+                                            <Col>
+                                                <br/>
+
+                                                {/* Translation state - Translations are done on the Overlay object*/}
+                                                {(!_.isEmpty(page.latest_overlay_state) &&
+                                                    <>
+                                                        Latest translation state: {page.latest_overlay_state[0].state}
+
+                                                        {((page.latest_overlay_state[0].state === "Processing") &&
+                                                            <LoadingSpinner/>
+                                                        )}
+                                                    </>
+                                                )}
+
+                                                {/* OCR state - OCR task is done on the Page object*/}
+                                                {(!_.isEmpty(page.latest_page_state) &&
+                                                    <>
+                                                        <br/>
+                                                        Latest OCR state: {page.latest_page_state[0].state}
+
+                                                        {((page.latest_page_state[0].state === "Processing") &&
+                                                            <LoadingSpinner/>
+                                                        )}
+                                                    </>
+                                                )}
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
+                                        <h6>Translate page</h6>
+                                        <Row>
+                                            <Col md={2}>
+                                                To
+                                            </Col>
+                                            <Col>
+                                                <Dropdown
+                                                    md={7}
+                                                    value={targetLanguage}
+                                                    options={languageSelectItems}
+                                                    onChange={(e) => setTargetLanguage(e.value)}
+                                                    placeholder="Select a language"
+                                                />
+                                            </Col>
+
+                                        </Row>
+                                        <br/>
+
+                                        <Row>
+                                            <Col>
+                                                <Button onClick={(e) => startTranslationForPage(e)}
+                                                        label="Translate"
+                                                        icon="pi pi-check"
+                                                        style={{marginRight: '.25em'}}
+                                                        disabled={(targetLanguage.length === 0)}
+                                                />
+                                            </Col>
+
+                                        </Row>
+
+
+                                    </OverlayPanel>
+
+                                    <Dialog header="Page history" visible={displayPageHistory} style={{width: '50vw'}}
+                                            onHide={() => setDisplayPageHistory(false)}>
+                                        <PageHistory pageId={pageHistoryId}/>
+                                    </Dialog>
 
                                 </Row>
+                            </Card>
+                        })}
+                        <Toast ref={toast} />
 
+                    </ScrollPanel>
+                </Col>
+                <Col>
+                    {uiStates.selectedPage !== "" && (
+                        <Card className="occ-ui-leaflet-container">
+                            <PageLeaflet
+                                key={uiStates.selectedPage.id}
+                                selectedPage={uiStates.selectedPage}
+                                // leafletMarkers={leafletMarkers}
+                            />
+                        </Card>
+                    )}
 
-                            </OverlayPanel>
-
-                            <Dialog header="Page history" visible={displayPageHistory} style={{width: '50vw'}}
-                                    onHide={() => setDisplayPageHistory(false)}>
-                                <PageHistory pageId={pageHistoryId}/>
-                            </Dialog>
-
-                        </Row>
-                    </Card>
-                })}
-                <Toast ref={toast} />
-
-
+                    {uiStates.selectedPage === "" && (
+                        <div>
+                            <Card className="occ-ui-empty-leaflet-container">
+                                <div className="p-d-flex p-ai-center p-dir-col">
+                                    <i className="pi pi-image p-mt-3 p-p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}}></i>
+                                    <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">No page selected</span>
+                                </div>
+                            </Card>
+                        </div>
+                    )}
+                </Col>
             </Row>
 
-            <div className='space' />
-
-            {uiStates.selectedPage !== "" && (
-                <PageLeaflet
-                    key={uiStates.selectedPage.id}
-                    selectedPage={uiStates.selectedPage}
-                    // leafletMarkers={leafletMarkers}
-                />
-            )}
         </>
-
 
     );
 };
