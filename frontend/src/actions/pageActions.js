@@ -52,7 +52,7 @@ export const DeletePage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_DELETE_LOADING
         });
 
-        await axios.delete(`${baseUrl}/api/page/${id}`)
+        await axios.delete(`${baseUrl}/documents/api/page/${id}`)
             .then((res) => {
                 dispatch({
                     type: PageActionTypes.PAGE_DELETE_SUCCESS,
