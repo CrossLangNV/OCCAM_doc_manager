@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {DeleteDocument, GetDocument, GetDocumentList} from "../actions/documentActions";
-import React from "react";
+import React, {useRef} from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
@@ -17,6 +17,8 @@ const Document = (props) => {
     const documentId = props.match.params.documentId
     const dispatch = useDispatch()
     let history = useHistory();
+    const uploadRef = useRef();
+
 
     // Redux states
     const documentState = useSelector(state => state.document)
@@ -66,7 +68,7 @@ const Document = (props) => {
             return (
                 <div>
                     <Row>
-                        <Col sm={11}>
+                        <Col sm={10}>
                             <h1>{documentData.name}</h1>
                         </Col>
                         <Col>
@@ -92,6 +94,21 @@ const Document = (props) => {
                                 icon="pi pi-trash"
                                 className="p-button-danger margin-left"
                                 tooltip="Delete document"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                            <Button
+                                onClick={() => {
+                                    uploadRef.current.scrollIntoView(
+                                        {
+                                            behavior: 'smooth',
+                                            block: 'end',
+                                            inline: 'nearest'
+                                        })
+                                }}
+                                label=""
+                                icon="pi pi-upload"
+                                className="p-button-default margin-left"
+                                tooltip="Upload document"
                                 tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
@@ -124,7 +141,9 @@ const Document = (props) => {
 
 
                     <h5>Upload pages</h5>
-                    <PageAdd documentId={documentId} />
+                    <div ref={uploadRef}>
+                        <PageAdd documentId={documentId} />
+                    </div>
 
                 </div>
             )
