@@ -108,7 +108,7 @@ const Document = (props) => {
                                 label=""
                                 icon="pi pi-upload"
                                 className="p-button-default margin-left"
-                                tooltip="Upload document"
+                                tooltip="Upload pages"
                                 tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
