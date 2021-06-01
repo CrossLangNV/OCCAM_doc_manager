@@ -67,11 +67,11 @@ const Document = (props) => {
             const documentData = documentState.data[documentId]
             return (
                 <div>
-                    <Row>
+                    <Row className="justify-content-between">
                         <Col md={10}>
                             <h1>{documentData.name}</h1>
                         </Col>
-                        <Col>
+                        <Col md="auto">
                             <Button
                                 onClick={() => dispatch(GetPageList(100, 1, documentId))}
                                 label=""
