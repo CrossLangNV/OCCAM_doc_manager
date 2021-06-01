@@ -141,7 +141,7 @@ const PageLeaflet = (props) => {
                         key={id}
                         positions={marker.bounds}
                     >
-                        <Tooltip sticky>{marker.popupMessage}</Tooltip>
+                        <Tooltip className="occ-leaflet-tooltip" sticky>{marker.popupMessage}</Tooltip>
                     </Polygon>
                 })}
             </MapContainer>

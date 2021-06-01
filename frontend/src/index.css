@@ -81,3 +81,8 @@
 .selectedPage {
   border: 1px solid #2196F3;
 }
+
+.occ-leaflet-tooltip {
+  /*background-color: #2196F3;*/
+  font-size: 1.2rem;
+}
