@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
+import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap, useMapEvent, useMapEvents} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
@@ -106,10 +106,35 @@ const PageLeaflet = (props) => {
         setOverlay(overlay)
 
         getLeafletMarkers(geojsons[geojsons.length - 1])
-
-
-
     }
+
+    function LeafletMarkers({ leafletMarkers }) {
+        const map = useMap();
+
+        return (
+            leafletMarkers.map((marker, id) => {
+                return <Polygon
+                    key={id}
+                    positions={marker.bounds}
+                    eventHandlers={{
+                        click: () => {
+                            map.setView(
+                                [
+                                    marker.bounds[0].lat,
+                                    marker.bounds[0].lng
+                                ],
+                                3
+                            );
+                        }
+                    }}
+                >
+
+                    <Tooltip className="occ-leaflet-tooltip" sticky>{marker.popupMessage}</Tooltip>
+                </Polygon>
+            })
+        )
+    }
+
 
     return (
         <>
@@ -136,14 +161,8 @@ const PageLeaflet = (props) => {
 
                 <ResizeComponent/>
 
-                {leafletMarkers.map((marker, id) => {
-                    return <Polygon
-                        key={id}
-                        positions={marker.bounds}
-                    >
-                        <Tooltip className="occ-leaflet-tooltip" sticky>{marker.popupMessage}</Tooltip>
-                    </Polygon>
-                })}
+                <LeafletMarkers leafletMarkers={leafletMarkers} />
+
             </MapContainer>
         </>
     )
