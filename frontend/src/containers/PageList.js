@@ -110,7 +110,7 @@ const PageList = (props) => {
                             <Col className="page-container">
                                 <Image
                                     onClick={() => selectPage(page)}
-                                    className={uiStates.selectedPage.id == page.id ?
+                                    className={uiStates.selectedPage.id === page.id ?
                                         'page-card-img selectedPage' : 'page-card-img'}
                                     src={page.file}
                                 />
@@ -138,25 +138,31 @@ const PageList = (props) => {
                                     tooltipOptions={{position: 'bottom'}}
                                 />
                             </Col>
+                        </Row>
+                        <br/>
+
+                        <Row className="justify-content-between">
                             <Col md={7}>
                                 <OverlayAdd
                                     pageId={page.id}
                                     label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
                                 />
                             </Col>
-                            {(!_.isEmpty(page.page_overlay) &&
-                                <Button
-                                    className="margin-right"
-                                    label=""
-                                    icon="pi pi-eye"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                    }}
-                                    tooltip="View overlay"
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
-                            )}
+                            <Col md="auto">
+                                {(!_.isEmpty(page.page_overlay) &&
+                                    <Button
+                                        className="margin-right"
+                                        label=""
+                                        icon="pi pi-eye"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+                                        }}
+                                        tooltip="View overlay"
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
+                                )}
+                            </Col>
                         </Row>
                         <hr/>
 
