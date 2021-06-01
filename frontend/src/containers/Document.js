@@ -68,7 +68,7 @@ const Document = (props) => {
             return (
                 <div>
                     <Row>
-                        <Col sm={10}>
+                        <Col md={10}>
                             <h1>{documentData.name}</h1>
                         </Col>
                         <Col>
@@ -89,14 +89,6 @@ const Document = (props) => {
                                 tooltipOptions={{position: 'bottom'}}
                             />
                             <Button
-                                onClick={() => confirmDeleteDoc(documentId)}
-                                label=""
-                                icon="pi pi-trash"
-                                className="p-button-danger margin-left"
-                                tooltip="Delete document"
-                                tooltipOptions={{position: 'bottom'}}
-                            />
-                            <Button
                                 onClick={() => {
                                     uploadRef.current.scrollIntoView(
                                         {
@@ -109,6 +101,14 @@ const Document = (props) => {
                                 icon="pi pi-upload"
                                 className="p-button-default margin-left"
                                 tooltip="Upload pages"
+                                tooltipOptions={{position: 'bottom'}}
+                            />
+                            <Button
+                                onClick={() => confirmDeleteDoc(documentId)}
+                                label=""
+                                icon="pi pi-trash"
+                                className="p-button-danger margin-left"
+                                tooltip="Delete document"
                                 tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
