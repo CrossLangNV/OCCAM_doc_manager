@@ -14,6 +14,7 @@ import PrivateRoute from "./containers/PrivateRoute";
 import {useEffect} from "react";
 import {load_user} from "./actions/authActions";
 import {useDispatch} from "react-redux";
+import {ScrollTop} from "primereact/scrolltop";
 
 function App() {
     const location = useLocation();
@@ -45,6 +46,7 @@ function App() {
                     </Switch>
                 </div>
             </div>
+            <ScrollTop />
         </div>
     );
 }
