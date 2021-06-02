@@ -62,6 +62,10 @@ a {
   margin-bottom: 2rem !important;
 }
 
+.margin-top {
+  margin-top: 2rem !important;
+}
+
 .page-container {
   min-height: 408px;
 }
@@ -156,4 +160,8 @@ a {
 .occ-login-card {
   padding-left: 50px;
   padding-right: 50px;
+}
+
+.white-space {
+  white-space: pre;
 }

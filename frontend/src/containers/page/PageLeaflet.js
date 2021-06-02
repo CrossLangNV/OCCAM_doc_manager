@@ -1,12 +1,13 @@
 import React, {useRef, useState} from 'react';
-import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap, useMapEvent, useMapEvents} from 'react-leaflet'
+import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
-import {Col} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {languageSelectItems} from "../../constants/language-selections"
 import _ from 'lodash';
+import {Card} from "primereact/card";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -16,6 +17,8 @@ const PageLeaflet = (props) => {
     const [language, setLanguage] = useState("ORIGINAL");
     const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
+
+    const [plainText, setPlainText] = useState("");
 
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
@@ -39,6 +42,22 @@ const PageLeaflet = (props) => {
                 leafletMarkersArr.push({popupMessage: popupMessage, bounds: bounds})
             }
             setLeafletMarkers(leafletMarkersArr)
+        })
+    }
+
+    const getPlainText = (geojson) => {
+        const textArr = []
+        fetchGeojson(geojson.file).then((res) => {
+            for (const c of res.data.features) {
+                textArr.push(c.properties.name)
+
+            }
+
+            const text = textArr.join("\r\n")
+            console.log(text)
+
+            setPlainText(text)
+
         })
     }
 
@@ -105,7 +124,11 @@ const PageLeaflet = (props) => {
 
         setOverlay(overlay)
 
+        // Get the leaflet popup markers
         getLeafletMarkers(geojsons[geojsons.length - 1])
+
+        // Get the plain text
+        getPlainText(geojsons[geojsons.length - 1])
     }
 
     function LeafletMarkers({ leafletMarkers }) {
@@ -138,8 +161,8 @@ const PageLeaflet = (props) => {
 
     return (
         <>
-            <Col>
-                View in language
+            <Col className="margin-bottom">
+                <span className="margin-right">Language: </span>
                 <Dropdown
                     md={7}
                     value={language.toUpperCase()}
@@ -164,6 +187,19 @@ const PageLeaflet = (props) => {
                 <LeafletMarkers leafletMarkers={leafletMarkers} />
 
             </MapContainer>
+
+            <Row className="margin-top">
+                <Col>
+                    <Card>
+                        <h5>Text view</h5>
+
+                        <div className="white-space">
+                            {plainText}
+                        </div>
+
+                    </Card>
+                </Col>
+            </Row>
         </>
     )
 }
