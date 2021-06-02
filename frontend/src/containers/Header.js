@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import {Button, Container, Form, FormControl, Nav, Navbar} from "react-bootstrap";
 
 import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,7 +9,7 @@ import {ProgressSpinner} from "primereact/progressspinner";
 import {Logout} from "../actions/authActions";
 
 const Header = () => {
-    const location = useLocation()
+    const location = useLocation();
     const dispatch = useDispatch();
 
     const uiStates = useSelector(state => state.uiStates);
@@ -31,7 +31,17 @@ const Header = () => {
 
     return (
         <Navbar bg="dark" variant="dark">
-            <Navbar.Brand as={Link} to="/">OCCAM</Navbar.Brand>
+
+            <Navbar.Brand as={Link} to="/">
+                <img
+                    alt="OCCAM"
+                    src="/occam-logo.png"
+                    width="30"
+                    height="30"
+                    className="d-inline-block align-top"
+                />{' '}
+                OCCAM
+            </Navbar.Brand>
             <Nav className="mr-auto">
                 <Nav.Link as={Link} to="/">Documents</Nav.Link>
                 <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
@@ -76,8 +86,6 @@ const Header = () => {
             </Nav>
             }
         </Navbar>
-
-
     );
 };
 

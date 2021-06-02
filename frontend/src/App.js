@@ -15,6 +15,7 @@ import {useEffect} from "react";
 import {load_user} from "./actions/authActions";
 import {useDispatch} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
+import Footer from "./containers/Footer";
 
 function App() {
     const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
                     </Switch>
                 </div>
             </div>
+            <Footer />
             <ScrollTop />
         </div>
     );
