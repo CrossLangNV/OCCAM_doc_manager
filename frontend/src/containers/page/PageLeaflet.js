@@ -193,7 +193,7 @@ const PageLeaflet = (props) => {
                     <Card>
                         <h5>Text view</h5>
 
-                        <div className="white-space">
+                        <div className="occ-plaintext white-space">
                             {plainText}
                         </div>
 

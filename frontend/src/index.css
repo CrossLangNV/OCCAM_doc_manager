@@ -165,3 +165,7 @@ a {
 .white-space {
   white-space: pre;
 }
+
+.occ-plaintext {
+  text-align: center;
+}
