@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GoogleAuthenticate, load_user} from "../actions/authActions";
 import {useHistory} from "react-router-dom";
 import {Toast} from "primereact/toast";
+import {Card} from "primereact/card";
 
 const GoogleLoginPage = () => {
     const dispatch = useDispatch();
@@ -32,13 +33,17 @@ const GoogleLoginPage = () => {
     }
 
     return (
-        <div>
-            <h5>Login with Google</h5>
-            <GoogleLogin
-                clientId="929639281599-8ufjqdo3t0plli2iql1710pkg27fth0l.apps.googleusercontent.com"
-                onSuccess={responseGoogle}
-                onFailure={onFailureMessage}
-            />
+        <div className="occ-login">
+            <Card className="occ-login-card">
+                <h5>Sign in with Google</h5>
+                <br/>
+                <GoogleLogin
+                    clientId="929639281599-8ufjqdo3t0plli2iql1710pkg27fth0l.apps.googleusercontent.com"
+                    onSuccess={responseGoogle}
+                    onFailure={onFailureMessage}
+                />
+            </Card>
+
             <Toast ref={toast} />
         </div>
     );

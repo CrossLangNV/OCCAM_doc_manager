@@ -138,3 +138,18 @@
   position: absolute;
   bottom: 0;
 }
+
+.occ-login {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin-top: 10%;
+}
+
+.occ-login-card {
+  padding-left: 50px;
+  padding-right: 50px;
+}
