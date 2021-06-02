@@ -130,9 +130,7 @@ const Document = (props) => {
 
                         <div>
                             <h5>Pages</h5>
-                            {_.isEmpty(documentData.document_page) && (
-                                <p>No pages are uploaded yet.</p>
-                            )}
+                            <br/>
 
                             <PageList documentId={documentId} />
 
