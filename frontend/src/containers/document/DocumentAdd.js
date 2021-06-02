@@ -6,7 +6,7 @@ import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {baseUrl} from "../constants/axiosConf";
+import {baseUrl} from "../../constants/axiosConf";
 
 
 const DocumentAdd = (props) => {

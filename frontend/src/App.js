@@ -1,8 +1,8 @@
 import {Route, Switch, useHistory, useLocation} from 'react-router-dom'
-import DocumentList from "./containers/DocumentList";
-import Document from "./containers/Document";
+import DocumentList from "./containers/document/DocumentList";
+import Document from "./containers/document/Document";
 import Header from "./containers/Header";
-import DocumentAdd from "./containers/DocumentAdd";
+import DocumentAdd from "./containers/document/DocumentAdd";
 import 'primeflex/primeflex.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';

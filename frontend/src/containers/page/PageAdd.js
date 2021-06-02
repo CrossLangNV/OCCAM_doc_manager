@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch} from "react-redux";
-import {AddPage} from "../actions/pageActions";
+import {AddPage} from "../../actions/pageActions";
 import {Toast} from "primereact/toast";
 
 const PageAdd = (props) => {

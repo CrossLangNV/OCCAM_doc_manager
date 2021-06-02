@@ -1,5 +1,5 @@
 import {useDispatch, useSelector} from "react-redux";
-import {DeleteDocument, GetDocument, GetDocumentList} from "../actions/documentActions";
+import {DeleteDocument, GetDocument, GetDocumentList} from "../../actions/documentActions";
 import React, {useRef} from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
@@ -7,11 +7,11 @@ import {confirmPopup} from "primereact/confirmpopup";
 import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import Moment from "react-moment";
-import PageAdd from "./PageAdd";
-import PageList from "./PageList";
+import PageAdd from "../page/PageAdd";
+import PageList from "../page/PageList";
 import DocumentState from "./DocumentState";
-import {ModifySelectedPage} from "../actions/uiActions";
-import {GetPageList, OcrPage} from "../actions/pageActions";
+import {ModifySelectedPage} from "../../actions/uiActions";
+import {GetPageList, OcrPage} from "../../actions/pageActions";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId

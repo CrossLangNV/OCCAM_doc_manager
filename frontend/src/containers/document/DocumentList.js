@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
-import {DeleteDocument, GetDocumentList} from "../actions/documentActions";
+import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
 import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Table} from "react-bootstrap";

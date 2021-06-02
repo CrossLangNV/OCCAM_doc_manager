@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {GetActivityList} from "../actions/acitvityActions";
 import _ from "lodash";
 import {useHistory} from "react-router-dom";
-import DocumentState from "./DocumentState";
+import DocumentState from "./document/DocumentState";
 import Moment from "react-moment";
 import {Button} from "primereact/button";
 import {Table} from "react-bootstrap";

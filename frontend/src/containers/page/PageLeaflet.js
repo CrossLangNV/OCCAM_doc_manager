@@ -1,11 +1,11 @@
 import React, {useRef, useState} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap, useMapEvent, useMapEvents} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
-import {hw} from "../constants/leafletFunctions";
+import {hw} from "../../constants/leafletFunctions";
 import {Dropdown} from "primereact/dropdown";
 import {Col} from "react-bootstrap";
 import axios from "axios";
-import {languageSelectItems} from "../constants/language-selections"
+import {languageSelectItems} from "../../constants/language-selections"
 import _ from 'lodash';
 
 const PageLeaflet = (props) => {
