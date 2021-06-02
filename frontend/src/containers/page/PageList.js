@@ -261,6 +261,7 @@ const PageList = (props) => {
 
                                         </OverlayPanel>
 
+                                        {/* Page history timeline view */}
                                         <Dialog header="Page history" visible={displayPageHistory} style={{width: '50vw'}}
                                                 onHide={() => setDisplayPageHistory(false)}>
                                             <PageHistory pageId={pageHistoryId}/>
@@ -273,6 +274,8 @@ const PageList = (props) => {
 
                         </ScrollPanel>
                     )}
+
+                    {/* No pages are uploaded message */}
                     {_.isEmpty(pageList.data) && (
                         <div>
                             <Card className="occ-ui-empty-leaflet-container">
@@ -287,6 +290,8 @@ const PageList = (props) => {
 
                 {!_.isEmpty(pageList.data) && (
                     <Col>
+
+                        {/* Leaflet.js View */}
                         {uiStates.selectedPage !== "" && (
                             <Card className="occ-ui-leaflet-container">
                                 <PageLeaflet
@@ -296,6 +301,7 @@ const PageList = (props) => {
                             </Card>
                         )}
 
+                        {/* No page selected message */}
                         {uiStates.selectedPage === "" && (
                             <div>
                                 <Card className="occ-ui-empty-leaflet-container">
@@ -309,7 +315,6 @@ const PageList = (props) => {
                     </Col>
                 )}
             </Row>
-
         </>
 
     );
