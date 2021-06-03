@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
-from activitylogs.models import ActivityLog, ActivityLogType
+from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
 from documents.models import Page, Overlay
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 
@@ -74,8 +74,12 @@ def ocr_page(page_id, user=None):
         source_lang = "EN"
     else:
         # TODO perhaps no need to first convert to file
-        with io.BytesIO(overlay_xml) as f:
-            source_lang = xml_lang_detect(f)
+        try:
+            with io.BytesIO(overlay_xml) as f:
+                source_lang = xml_lang_detect(f)
+        except Exception as e:
+            activity_log.state = ActivityLogState.FAILED
+            print("Langdetect failed for page id: ", page_id)
 
     overlay = Overlay.objects.create(page=page, source_lang=source_lang)
     logger.info("OCR overlay: %s", overlay)

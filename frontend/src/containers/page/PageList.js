@@ -17,6 +17,9 @@ import LoadingSpinner from "../LoadingSpinner";
 import {Dialog} from "primereact/dialog";
 import PageHistory from "./PageHistory";
 import {ScrollPanel} from "primereact/scrollpanel";
+import axios from "axios";
+import {baseUrl} from "../../constants/axiosConf";
+import DocumentState from "../document/DocumentState";
 
 
 const PageList = (props) => {
@@ -100,6 +103,25 @@ const PageList = (props) => {
     const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
     }
+
+    // const getPageState = async (pageId, type) => {
+    //     const config = {
+    //         headers: {
+    //             'Authorization': `Bearer ${localStorage.getItem("access")}`
+    //         }
+    //     }
+    //
+    //     const res = await axios.get(`${baseUrl}/activitylogs/api/activitylogs?rows=1&offset=0&page=${pageId}&type=${type}&onlyLatest=true`,
+    //         config).then(res => {
+    //             if (res.data.count > 0) {
+    //                 console.log(res.data)
+    //                 return <div>{res.data.results[0].state}</div>
+    //             }
+    //     })
+    //
+    //     return <div>No state</div>
+    //
+    // }
 
     return (
         <>
@@ -202,28 +224,41 @@ const PageList = (props) => {
                                                 <Col>
                                                     <br/>
 
-                                                    {/* Translation state - Translations are done on the Overlay object*/}
-                                                    {(!_.isEmpty(page.latest_overlay_state) &&
-                                                        <>
-                                                            Latest translation state: {page.latest_overlay_state[0].state}
-
-                                                            {((page.latest_overlay_state[0].state === "Processing") &&
-                                                                <LoadingSpinner/>
-                                                            )}
-                                                        </>
-                                                    )}
-
                                                     {/* OCR state - OCR task is done on the Page object*/}
-                                                    {(!_.isEmpty(page.latest_page_state) &&
-                                                        <>
-                                                            <br/>
-                                                            Latest OCR state: {page.latest_page_state[0].state}
+                                                    {(!_.isEmpty(page.latest_ocr_state) &&
+                                                        <Row>
+                                                            <Col md={5}>
+                                                                OCR:
+                                                            </Col>
 
-                                                            {((page.latest_page_state[0].state === "Processing") &&
-                                                                <LoadingSpinner/>
-                                                            )}
-                                                        </>
+                                                            <Col md="auto">
+                                                                <DocumentState state={page.latest_ocr_state[0].state} />
+
+                                                                {((page.latest_ocr_state[0].state === "Processing") &&
+                                                                    <LoadingSpinner/>
+                                                                )}
+                                                            </Col>
+
+                                                        </Row>
                                                     )}
+
+                                                    {/*Translation state - Translations are done on the Overlay object*/}
+                                                    {(!_.isEmpty(page.latest_translation_state) &&
+                                                        <Row className="margin-top-lesser">
+                                                            <Col md={5}>
+                                                                Latest translation:
+                                                            </Col>
+                                                            <Col md="auto">
+                                                                <DocumentState state={page.latest_translation_state[0].state} />
+
+                                                                {((page.latest_translation_state[0].state === "Processing") &&
+                                                                    <LoadingSpinner/>
+                                                                )}
+                                                            </Col>
+                                                        </Row>
+                                                    )}
+
+
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -320,6 +355,6 @@ const PageList = (props) => {
         </>
 
     );
-}
+};
 
 export default PageList;

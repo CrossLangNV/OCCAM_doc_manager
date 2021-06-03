@@ -66,6 +66,10 @@ a {
   margin-top: 2rem !important;
 }
 
+.margin-top-lesser {
+  margin-top: 1rem !important;
+}
+
 .page-container {
   min-height: 408px;
 }

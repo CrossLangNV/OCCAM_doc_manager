@@ -20,7 +20,7 @@ const ActivityLogs = () => {
     }, []);
 
     const fetchActivityLogs = (rows, page) => {
-        dispatch(GetActivityList(rows, page, "", ""))
+        dispatch(GetActivityList(rows, page, "", "", "", false))
     }
 
     const loadTableRows = () => {
