@@ -17,6 +17,9 @@ const Footer = () => {
             <a href="https://platformdh.uantwerpen.be/index.php/clariah-vl/" target="_blank">
                 <img src="/clariah-logo.png" className="occ-footer-logo"/>
             </a>
+            <a href="" target="_blank">
+                <img src="/europe-logo.png" className="occ-footer-logo"/>
+            </a>
         </div>
     );
 };
