@@ -21,6 +21,8 @@ class ActivityLogsAPIView(ListCreateAPIView):
         q = ActivityLog.objects.filter(user=self.request.user)
         page_id = self.request.GET.get("page", "")
         overlay_id = self.request.GET.get("overlay", "")
+        type = self.request.GET.get("type", "")
+        only_latest = self.request.GET.get("onlyLatest", "")
 
         # if 1, also show history of overlays linked to a page
         linked_overlays = self.request.GET.get("linked_overlays", "")
@@ -34,6 +36,12 @@ class ActivityLogsAPIView(ListCreateAPIView):
 
         if overlay_id:
             q = q.filter(overlay_id=str(overlay_id))
+
+        if type:
+            q = q.filter(type=str(type))
+
+        if only_latest == "true":
+            q = q.latest('created_at')
 
         return q
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from activitylogs.models import ActivityLog
+from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
 from documents.models import Document, Page, Overlay, Geojson
 
@@ -37,20 +37,24 @@ class PageSerializer(serializers.ModelSerializer):
     image_width = serializers.SerializerMethodField()
     file = serializers.ImageField()
 
-    latest_page_state = serializers.SerializerMethodField()
-    latest_overlay_state = serializers.SerializerMethodField()
+    latest_ocr_state = serializers.SerializerMethodField()
+    latest_translation_state = serializers.SerializerMethodField()
 
-    def get_latest_page_state(self, page):
-        q = ActivityLog.objects.filter(page=page)
-        serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
-        return serializer.data
-
-    def get_latest_overlay_state(self, page):
+    def get_latest_ocr_state(self, page):
         latest_overlay = Overlay.objects.filter(page=page)
         if latest_overlay:
             latest_overlay = latest_overlay.latest('created_at')
 
-            q = ActivityLog.objects.filter(overlay=latest_overlay)
+            q = ActivityLog.objects.filter(overlay=latest_overlay, type=ActivityLogType.OCR)
+            serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
+            return serializer.data
+
+    def get_latest_translation_state(self, page):
+        latest_overlay = Overlay.objects.filter(page=page)
+        if latest_overlay:
+            latest_overlay = latest_overlay.latest('created_at')
+
+            q = ActivityLog.objects.filter(overlay=latest_overlay, type=ActivityLogType.TRANSLATION)
             serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
             return serializer.data
 
