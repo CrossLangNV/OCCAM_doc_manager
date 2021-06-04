@@ -17,9 +17,8 @@ import LoadingSpinner from "../LoadingSpinner";
 import {Dialog} from "primereact/dialog";
 import PageHistory from "./PageHistory";
 import {ScrollPanel} from "primereact/scrollpanel";
-import axios from "axios";
-import {baseUrl} from "../../constants/axiosConf";
 import DocumentState from "../document/DocumentState";
+import PageMetadata from "./PageMetadata";
 
 
 const PageList = (props) => {
@@ -37,6 +36,8 @@ const PageList = (props) => {
     const [translationOverlayId, setTranslationOverlayId] = useState("");
     const [displayPageHistory, setDisplayPageHistory] = useState(false);
     const [pageHistoryId, setPageHistoryId] = useState("");
+    const [displayPageMetadata, setDisplayPageMetadata] = useState(false);
+    const [pageMetadataId, setPageMetadataId] = useState("");
 
     // Load pages initially
     useEffect(() => {
@@ -98,6 +99,12 @@ const PageList = (props) => {
         setPageHistoryId(page.id)
         // Toggle the menu
         setDisplayPageHistory(true)
+    }
+
+    const toggleMetadataMenu = (e, page) => {
+        setPageMetadataId(page.id)
+        // Toggle the menu
+        setDisplayPageMetadata(true)
     }
 
     const selectPage = async (page) => {
@@ -219,6 +226,14 @@ const PageList = (props) => {
                                                 tooltip="Show history"
                                                 tooltipOptions={{position: 'bottom'}}
                                             />
+                                            <Button
+                                                onClick={(e) => toggleMetadataMenu(e, page)}
+                                                label=""
+                                                icon="pi pi-tags"
+                                                className="p-button-primary margin-left"
+                                                tooltip="Show classification labels"
+                                                tooltipOptions={{position: 'bottom'}}
+                                            />
 
                                             <Row>
                                                 <Col>
@@ -297,9 +312,17 @@ const PageList = (props) => {
                                         </OverlayPanel>
 
                                         {/* Page history timeline view */}
-                                        <Dialog header="Page history" visible={displayPageHistory} style={{width: '50vw'}}
+                                        <Dialog header="Page history" visible={displayPageHistory}
+                                                style={{width: '50vw'}}
                                                 onHide={() => setDisplayPageHistory(false)}>
                                             <PageHistory pageId={pageHistoryId}/>
+                                        </Dialog>
+
+                                        {/* Page metadata */}
+                                        <Dialog header="Page classification labels" visible={displayPageMetadata}
+                                                style={{width: '50vw'}}
+                                                onHide={() => setDisplayPageMetadata(false)}>
+                                            <PageMetadata pageId={pageMetadataId}/>
                                         </Dialog>
 
                                     </Row>

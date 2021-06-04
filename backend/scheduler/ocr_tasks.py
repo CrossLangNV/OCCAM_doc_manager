@@ -10,7 +10,7 @@ from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
-from documents.models import Page, Overlay
+from documents.models import Page, Overlay, Label
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 
 logger = logging.getLogger(__name__)
@@ -30,8 +30,11 @@ def ocr_page(page_id, user=None):
     logger.info("Page name: %s", basename)
 
     # POST to Document Classifier
-    # TODO
-    get_document_classification(page)
+    classification_results = get_document_classification(page)
+
+    for label, value in classification_results.items():
+        Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
+        print("created label: ", label)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -127,3 +130,5 @@ def get_document_classification(page):
     res = r.json()
 
     print("classification result: ", res)
+
+    return res
