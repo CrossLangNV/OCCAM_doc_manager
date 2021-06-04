@@ -3,6 +3,7 @@ import logging
 import os
 import time
 
+import requests
 from celery import shared_task
 from django.contrib.auth.models import User
 from langdetect import detect
@@ -14,6 +15,7 @@ from documents.ocr_connector import get_request_id, check_state, get_result, upl
 
 logger = logging.getLogger(__name__)
 
+DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
 @shared_task
 def ocr_page(page_id, user=None):
@@ -26,6 +28,10 @@ def ocr_page(page_id, user=None):
     basename, _ = os.path.splitext(page.file.name)
 
     logger.info("Page name: %s", basename)
+
+    # POST to Document Classifier
+    # TODO
+    get_document_classification(page)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -106,3 +112,18 @@ def xml_lang_detect(xml_file):
     # l = list(map(detect, l_reg))
 
     return lang
+
+
+def get_document_classification(page):
+    headers = {
+        "model-id": "1",
+    }
+
+    f = page.file
+    files = {'file': f}
+
+    r = requests.post(DOCUMENT_CLASSIFIER_URL, headers=headers, files=files)
+
+    res = r.json()
+
+    print("classification result: ", res)

@@ -12,23 +12,16 @@ from documents import pagexml2geojson
 
 
 class LanguageCodes(models.TextChoices):
-    NL = 'NL', gettext_lazy('Nederlands')
-    EN = 'EN', gettext_lazy('English')
-    FR = 'FR', gettext_lazy('Français')
-    DE = 'DE', gettext_lazy('Deutsch')
-    CS = 'CS', gettext_lazy('Čeština')
+    NL = "NL", gettext_lazy("Nederlands")
+    EN = "EN", gettext_lazy("English")
+    FR = "FR", gettext_lazy("Français")
+    DE = "DE", gettext_lazy("Deutsch")
+    CS = "CS", gettext_lazy("Čeština")
 
 
 class LangField(models.CharField):
-    def __init__(self,
-                 *args,
-                 choices=LanguageCodes.choices,
-                 max_length=2,
-                 **kwargs):
-        super(LangField, self).__init__(*args,
-                                        choices=choices,
-                                        max_length=max_length,
-                                        **kwargs)
+    def __init__(self, *args, choices=LanguageCodes.choices, max_length=2, **kwargs):
+        super(LangField, self).__init__(*args, choices=choices, max_length=max_length, **kwargs)
 
 
 class Document(models.Model):
@@ -57,7 +50,7 @@ class Document(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def __str__(self):
         return self.name
@@ -78,16 +71,14 @@ class Page(models.Model):
         on_delete=models.CASCADE,
     )
 
-    # TODO: Create a link between TextRegions?
-
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def update_image(self, file):
-        """ Save a file to the page.
+        """Save a file to the page.
 
         Example:
             >> page = Page().objects.create()
@@ -110,12 +101,10 @@ class Overlay(models.Model):
     Can be both transcription, translation.
     Saved as Page XML.
     """
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(null=True,
-                            blank=True,
-                            upload_to='overlays')
-    translation_file = models.FileField(null=True, blank=True,
-                                        upload_to='overlays/trans')
+    file = models.FileField(null=True, blank=True, upload_to="overlays")
+    translation_file = models.FileField(null=True, blank=True, upload_to="overlays/trans")
 
     page = models.ForeignKey(
         Page,
@@ -129,10 +118,10 @@ class Overlay(models.Model):
     source_lang = LangField()
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ["-created_at"]
 
     def update_xml(self, file):
-        """ Save a file to overlay.
+        """Save a file to overlay.
 
         Example:
             >> overlay = Overlay().objects.create()
@@ -149,9 +138,8 @@ class Overlay(models.Model):
 
         self.create_geojson()
 
-    def update_transl_xml(self, file,
-                          target: str):
-        """ Save a file to the translation overlay.
+    def update_transl_xml(self, file, target: str):
+        """Save a file to the translation overlay.
 
         Example:
             >> overlay = Overlay().objects.create()
@@ -170,8 +158,7 @@ class Overlay(models.Model):
 
         self.create_geojson(target=target)
 
-    def create_geojson(self,
-                       target: str = None):
+    def create_geojson(self, target: str = None):
         """
         Creates
 
@@ -181,7 +168,7 @@ class Overlay(models.Model):
 
         if target is None:
 
-            assert self.file, 'Only make sense if overlay xml exists'
+            assert self.file, "Only make sense if overlay xml exists"
 
             # Create Geojson overlay and save to the object
             with self.file.open() as f:
@@ -189,22 +176,20 @@ class Overlay(models.Model):
                 # logger.info(geojson)
 
         else:
-            assert self.translation_file, 'Only make sense if overlay xml exists'
+            assert self.translation_file, "Only make sense if overlay xml exists"
 
             # Create Geojson overlay and save to the object
             with self.translation_file.open() as f:
-                geojson = pagexml2geojson.main(f,
-                                               target=target)
+                geojson = pagexml2geojson.main(f, target=target)
                 # logger.info(geojson)
 
-        geojson_object = Geojson.objects.create(overlay=self,
-                                                original=(target is None),
-                                                lang=self.source_lang if (target is None) else target
-                                                )
+        geojson_object = Geojson.objects.create(
+            overlay=self, original=(target is None), lang=self.source_lang if (target is None) else target
+        )
 
         basename, _ = os.path.splitext(self.file.name)
-        with io.BytesIO(json.dumps(geojson).encode('utf-8')) as f:
-            f.name = basename + '.geojson'
+        with io.BytesIO(json.dumps(geojson).encode("utf-8")) as f:
+            f.name = basename + ".geojson"
             geojson_object.update_file(f)
 
     def get_file(self):
@@ -214,7 +199,7 @@ class Overlay(models.Model):
         return self.translation_file
 
     def __str__(self):
-        return f"Overlay of '{self.page.file.name}'" + ' ' + '*source lang*' + ' ' + '*target lang*'
+        return f"Overlay of '{self.page.file.name}'" + " " + "*source lang*" + " " + "*target lang*"
 
 
 class Geojson(models.Model):
@@ -222,28 +207,21 @@ class Geojson(models.Model):
     # Language of text (can be after translation) (abbreviation)
 
     lang = LangField()
-    overlay = models.ForeignKey(
-        Overlay,
-        related_name="overlay_geojson",
-        on_delete=models.CASCADE,
-        unique=False
-    )
+    overlay = models.ForeignKey(Overlay, related_name="overlay_geojson", on_delete=models.CASCADE, unique=False)
     # Is this the source overlay?
     original = models.BooleanField()
 
     # Geojson file
-    file = models.FileField(null=True,
-                            blank=True,
-                            upload_to='overlays/geojson')
+    file = models.FileField(null=True, blank=True, upload_to="overlays/geojson")
 
     # Information about the translation engine (if applicable)
     trans_engine = models.CharField(blank=True, max_length=50)
 
     class Meta:
-        ordering = ['-overlay']
+        ordering = ["-overlay"]
 
     def update_file(self, file):
-        """ Save a geojson file to the geojson object.
+        """Save a geojson file to the geojson object.
 
         Example:
             >> geojson = Geojson.objects.create(...)
@@ -259,3 +237,23 @@ class Geojson(models.Model):
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Label(models.Model):
+    name = models.CharField(default="", max_length=1000)
+    value = models.TextField(default="", blank=True)
+
+    page = models.ForeignKey(
+        Page,
+        related_name="page_labels",
+        on_delete=models.CASCADE,
+    )
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return str(self.name)

@@ -7,8 +7,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay
-from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
+from documents.models import Document, Page, Overlay, Label
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer
 from scheduler.ocr_tasks import ocr_page
 from scheduler.translation_tasks import translate_overlay
 
@@ -62,6 +62,24 @@ class PageListAPIView(ListCreateAPIView):
 
         if document_id:
             q = q.filter(document__id=str(document_id))
+
+        return q
+
+
+class LabelsListAPIView(ListCreateAPIView):
+    queryset = Label.objects.all()
+    serializer_class = LabelSerializer
+
+    def get_queryset(self):
+        q = Label.objects.all()
+        page_id = self.request.GET.get("pageId", "")
+        name = self.request.GET.get("labelName", "")
+
+        if page_id:
+            q = q.filter(page__id=str(page_id))
+
+        if name:
+            q = q.filter(name=name)
 
         return q
 
