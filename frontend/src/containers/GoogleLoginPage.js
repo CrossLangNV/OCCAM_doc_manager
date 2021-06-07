@@ -5,6 +5,7 @@ import {GoogleAuthenticate, load_user} from "../actions/authActions";
 import {useHistory} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import {Card} from "primereact/card";
+import {googleOauthKey} from "../constants/axiosConf";
 
 const GoogleLoginPage = () => {
     const dispatch = useDispatch();
@@ -38,7 +39,7 @@ const GoogleLoginPage = () => {
                 <h5>Sign in with Google</h5>
                 <br/>
                 <GoogleLogin
-                    clientId="929639281599-8ufjqdo3t0plli2iql1710pkg27fth0l.apps.googleusercontent.com"
+                    clientId={googleOauthKey}
                     onSuccess={responseGoogle}
                     onFailure={onFailureMessage}
                 />

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from "axios";
 import {Timeline} from "primereact/timeline";
 import moment from "moment";
+import {baseUrl} from "../../constants/axiosConf";
 
 const PageHistory = (props) => {
     const pageId = props.pageId
@@ -14,7 +15,6 @@ const PageHistory = (props) => {
     }, [])
 
     const fetchHistoryForPage = async (pageId) => {
-        const baseUrl = process.env.REACT_APP_API_URL
 
         const config = {
             headers: {
