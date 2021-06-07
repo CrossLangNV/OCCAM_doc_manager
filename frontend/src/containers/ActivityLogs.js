@@ -83,8 +83,8 @@ const ActivityLogs = () => {
     return (
         <div>
 
-            <Row>
-                <Col md="11">
+            <Row className="justify-content-between">
+                <Col>
                     <Button
                         onClick={() => fetchActivityLogs(5, 1)}
                         label=""

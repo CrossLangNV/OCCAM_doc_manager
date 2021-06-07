@@ -161,16 +161,21 @@ const PageLeaflet = (props) => {
 
     return (
         <>
-            <Col className="margin-bottom">
-                <span className="margin-right">Language: </span>
-                <Dropdown
-                    md={7}
-                    value={language.toUpperCase()}
-                    options={selectableLanguages}
-                    onChange={(e) => setPageLanguage(overlay, e.value)}
-                    placeholder="Select a language"
-                />
-            </Col>
+            <Row className="justify-content-between">
+                <Col md={10}>
+                    <h5>Page view</h5>
+                </Col>
+                <Col md="auto" className="margin-bottom">
+                    <span className="margin-right">Language: </span>
+                    <Dropdown
+                        md={7}
+                        value={language.toUpperCase()}
+                        options={selectableLanguages}
+                        onChange={(e) => setPageLanguage(overlay, e.value)}
+                        placeholder="Select a language"
+                    />
+                </Col>
+            </Row>
 
             <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
 
@@ -191,7 +196,22 @@ const PageLeaflet = (props) => {
             <Row className="margin-top">
                 <Col>
                     <Card>
-                        <h5>Text view</h5>
+                        <Row className="justify-content-between">
+                            <Col md={10}>
+                                <h5>Text view</h5>
+                            </Col>
+                            <Col>
+                                <span className="margin-right">Language: </span>
+                                <Dropdown
+                                    md={7}
+                                    value={language.toUpperCase()}
+                                    options={selectableLanguages}
+                                    onChange={(e) => setPageLanguage(overlay, e.value)}
+                                    placeholder="Select a language"
+                                />
+                            </Col>
+                        </Row>
+
 
                         <div className="occ-plaintext white-space">
                             {plainText}

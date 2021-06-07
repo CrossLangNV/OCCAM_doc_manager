@@ -75,8 +75,8 @@ const DocumentList = () => {
                     icon="pi pi-plus"
             />
             <br/>
-            <Row>
-                <Col md="11"/>
+            <Row className="justify-content-between">
+                <Col/>
                 <Col md="mr-auto">
                     <p className="occ-table-result-count">Document(s) found: {documentList.count}</p>
                 </Col>
