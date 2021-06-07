@@ -167,9 +167,14 @@ a {
 }
 
 .white-space {
-  white-space: pre;
+    white-space: pre;
 }
 
 .occ-plaintext {
-  text-align: center;
+    text-align: center;
+}
+
+.occ-table-result-count {
+    font-size: 13px;
+    color: #575757;
 }

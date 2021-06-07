@@ -12,9 +12,10 @@ const DocumentState = (props) => {
             return <Tag value={state} icon="pi pi-check" severity="success"/>
         } else if (failStates.includes(state)) {
             return <Tag value={state} icon="pi pi-times" severity="danger"/>
-        }
-        else {
-            return <Tag value={state} />
+        } else if (!state) {
+            return <Tag value="Not started"/>
+        } else {
+            return <Tag value={state}/>
         }
     }
 

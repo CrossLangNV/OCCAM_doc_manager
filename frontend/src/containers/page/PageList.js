@@ -136,6 +136,8 @@ const PageList = (props) => {
 
     return (
         <>
+            <h5>Pages ({pageList.count})</h5>
+            <br/>
             <Row>
                 <Col md={3}>
                     {!_.isEmpty(pageList.data) && (
@@ -244,22 +246,20 @@ const PageList = (props) => {
                                                     <br/>
 
                                                     {/* OCR state - OCR task is done on the Page object*/}
-                                                    {(!_.isEmpty(page.latest_ocr_state) &&
-                                                        <Row>
-                                                            <Col md={5}>
-                                                                OCR:
-                                                            </Col>
+                                                    <Row>
+                                                        <Col md={5}>
+                                                            OCR:
+                                                        </Col>
 
-                                                            <Col md="auto">
-                                                                <DocumentState state={page.latest_ocr_state.state}/>
+                                                        <Col md="auto">
+                                                            <DocumentState state={page.latest_ocr_state.state}/>
 
-                                                                {((page.latest_ocr_state.state === "Processing") &&
-                                                                    <LoadingSpinner/>
-                                                                )}
-                                                            </Col>
+                                                            {((page.latest_ocr_state.state === "Processing") &&
+                                                                <LoadingSpinner/>
+                                                            )}
+                                                        </Col>
 
-                                                        </Row>
-                                                    )}
+                                                    </Row>
 
                                                     {/*Translation state - Translations are done on the Overlay object*/}
                                                     {(!_.isEmpty(page.latest_translation_state) &&

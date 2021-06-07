@@ -6,7 +6,7 @@ import {useHistory} from "react-router-dom";
 import DocumentState from "./document/DocumentState";
 import Moment from "react-moment";
 import {Button} from "primereact/button";
-import {Table} from "react-bootstrap";
+import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -82,14 +82,22 @@ const ActivityLogs = () => {
 
     return (
         <div>
-            <Button
-                onClick={() => fetchActivityLogs(5, 1)}
-                label=""
-                icon="pi pi-refresh"
-                className="p-button-primary margin-left"
-                tooltip="Refresh"
-                tooltipOptions={{position: 'bottom'}}
-            />
+
+            <Row>
+                <Col md="11">
+                    <Button
+                        onClick={() => fetchActivityLogs(5, 1)}
+                        label=""
+                        icon="pi pi-refresh"
+                        className="p-button-primary margin-left"
+                        tooltip="Refresh"
+                        tooltipOptions={{position: 'bottom'}}
+                    />
+                </Col>
+                <Col md="mr-auto">
+                    <p className="occ-table-result-count">Activity logs found: {activityList.count}</p>
+                </Col>
+            </Row>
             <Table striped borderless hover>
                 <thead>
                 <tr>

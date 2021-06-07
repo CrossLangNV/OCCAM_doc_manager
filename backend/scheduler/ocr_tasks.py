@@ -42,12 +42,13 @@ def ocr_page(page_id, user=None):
     # POST to Document Classifier
     classification_results = get_document_classification(page)
 
-    for label, value in classification_results.items():
-        Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
-        print("created label: ", label)
+    if classification_results:
+        for label, value in classification_results.items():
+            Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
+            print("created label: ", label)
 
-    activity_log.state = ActivityLogState.CLASSIFIED
-    activity_log.save()
+        activity_log.state = ActivityLogState.CLASSIFIED
+        activity_log.save()
 
     # POST to Pero OCR /post_processing_request
     # Creates the request

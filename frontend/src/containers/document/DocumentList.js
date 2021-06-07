@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
 import React from "react";
 import {Link, useHistory} from "react-router-dom";
-import {Table} from "react-bootstrap";
+import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
 import {Button} from "primereact/button";
 import Moment from 'react-moment';
@@ -74,16 +74,22 @@ const DocumentList = () => {
                     label="New document"
                     icon="pi pi-plus"
             />
-            <br/><br/>
+            <br/>
+            <Row>
+                <Col md="11"/>
+                <Col md="mr-auto">
+                    <p className="occ-table-result-count">Document(s) found: {documentList.count}</p>
+                </Col>
+            </Row>
             <Table striped borderless hover>
                 <thead>
-                    <tr>
-                        <th width="2rem">Preview</th>
-                        <th>Title</th>
-                        <th>State</th>
-                        <th>Created at</th>
-                        <th>Actions</th>
-                    </tr>
+                <tr>
+                    <th width="2rem">Preview</th>
+                    <th>Title</th>
+                    <th>State</th>
+                    <th>Created at</th>
+                    <th>Actions</th>
+                </tr>
                 </thead>
                 <tbody>
                     {loadTableRows()}

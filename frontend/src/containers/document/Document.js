@@ -129,9 +129,6 @@ const Document = (props) => {
                     <br/>
 
                         <div>
-                            <h5>Pages</h5>
-                            <br/>
-
                             <PageList documentId={documentId} />
 
                             <br/><br/>
