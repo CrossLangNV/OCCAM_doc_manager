@@ -48,6 +48,9 @@ const Document = (props) => {
             message: 'Do you want to start the OCR process for all the pages of this document?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
+                // Make sure all recently uploaded pages are included
+                dispatch(GetPageList(100, 1, documentId))
+
                 if (!_.isEmpty(documentState.data[documentId])) {
                     const documentData = documentState.data[documentId]
                     if (!_.isEmpty(documentData.document_page)) {
