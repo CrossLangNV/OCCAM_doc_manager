@@ -70,7 +70,11 @@ const PageList = (props) => {
 
     const startOcrForPage = (pageId) => {
         dispatch(OcrPage(pageId, auth.user));
-        toast.current.show({severity: 'success', summary: 'Success', detail: 'OCR started for page'});
+        toast.current.show({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'OCR task has been started for the selected page'
+        });
         dispatch(GetPageList(100, 1, documentId))
     }
 
@@ -247,9 +251,9 @@ const PageList = (props) => {
                                                             </Col>
 
                                                             <Col md="auto">
-                                                                <DocumentState state={page.latest_ocr_state[0].state} />
+                                                                <DocumentState state={page.latest_ocr_state.state}/>
 
-                                                                {((page.latest_ocr_state[0].state === "Processing") &&
+                                                                {((page.latest_ocr_state.state === "Processing") &&
                                                                     <LoadingSpinner/>
                                                                 )}
                                                             </Col>

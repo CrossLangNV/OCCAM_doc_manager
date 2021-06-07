@@ -6,6 +6,7 @@ from documents.models import Page, Overlay
 
 class ActivityLogState(models.TextChoices):
     CREATED = "Created"
+    CLASSIFIED = "Classified"
     WAITING = "Waiting"
     STARTED = "Started"
     PROCESSING = "Processing"

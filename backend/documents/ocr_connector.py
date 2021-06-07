@@ -74,8 +74,11 @@ def check_state(request_id: str, page_id: str, activity_log) -> bool:
 
     if state == "PROCESSED":
         activity_log.state = ActivityLogState.SUCCESS
+        activity_log.save()
     else:
         activity_log.state = ActivityLogState.PROCESSING
+        activity_log.save()
+
     activity_log.save()
 
     return not (state in ('WAITING', 'PROCESSING'))

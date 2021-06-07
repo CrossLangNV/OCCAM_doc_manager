@@ -17,12 +17,22 @@ logger = logging.getLogger(__name__)
 
 DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
+
 @shared_task
 def ocr_page(page_id, user=None):
     page = Page.objects.get(pk=page_id)
 
     logger.info("Started OCR for page: %s", page)
     logger.info("user: %s", user)
+
+    activity_log = ActivityLog.objects.create(page=page,
+                                              type=ActivityLogType.OCR)
+    if user:
+        user_obj = User.objects.get(email=user)
+        activity_log.user = user_obj
+        activity_log.save()
+
+    logger.info("Created activity log")
 
     page_id = str(page.id)
     basename, _ = os.path.splitext(page.file.name)
@@ -35,6 +45,9 @@ def ocr_page(page_id, user=None):
     for label, value in classification_results.items():
         Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
         print("created label: ", label)
+
+    activity_log.state = ActivityLogState.CLASSIFIED
+    activity_log.save()
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -52,15 +65,6 @@ def ocr_page(page_id, user=None):
     # GET to Pero OCR /request_status/{request_id}
     # Checks the processing state of the request
     # Check if finished!
-
-    activity_log = ActivityLog.objects.create(page=page,
-                                              type=ActivityLogType.OCR)
-
-    if user:
-        user_obj = User.objects.get(email=user)
-        activity_log.user = user_obj
-        activity_log.save()
-    logger.info("Created activity log")
 
     logger.info("Waiting for document to be processed....")
     while True:
@@ -95,7 +99,6 @@ def ocr_page(page_id, user=None):
 
     activity_log.overlay = overlay
     activity_log.save()
-    logger.info("Created activity log")
 
     # Save overlay XML to the object
     with io.BytesIO(overlay_xml) as f:

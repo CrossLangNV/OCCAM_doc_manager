@@ -41,13 +41,13 @@ class PageSerializer(serializers.ModelSerializer):
     latest_translation_state = serializers.SerializerMethodField()
 
     def get_latest_ocr_state(self, page):
-        latest_overlay = Overlay.objects.filter(page=page)
-        if latest_overlay:
-            latest_overlay = latest_overlay.latest('created_at')
-
-            q = ActivityLog.objects.filter(overlay=latest_overlay, type=ActivityLogType.OCR)
-            serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
+        latest_activity_for_page = ActivityLog.objects.filter(page=page, type=ActivityLogType.OCR)
+        if latest_activity_for_page:
+            latest_activity_for_page = latest_activity_for_page.latest('created_at')
+            serializer = ActivityLogSerializer(instance=latest_activity_for_page, many=False, read_only=True)
             return serializer.data
+        else:
+            return ""
 
     def get_latest_translation_state(self, page):
         latest_overlay = Overlay.objects.filter(page=page)
