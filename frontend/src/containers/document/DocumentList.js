@@ -28,7 +28,7 @@ const DocumentList = () => {
     const confirmDeleteDoc = (event) => {
         confirmPopup({
             target: event.currentTarget,
-            message: 'Are you sure you want to proceed?',
+            message: 'Are you sure you want to delete this document and all its pages?',
             icon: 'pi pi-exclamation-triangle',
             accept: () => dispatch(DeleteDocument(event)),
         });

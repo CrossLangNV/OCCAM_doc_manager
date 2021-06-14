@@ -71,24 +71,22 @@ const Document = (props) => {
             return (
                 <div>
                     <Row className="justify-content-between">
-                        <Col md={10}>
+                        <Col md={7}>
                             <h1>{documentData.name}</h1>
                         </Col>
                         <Col md="auto">
                             <Button
                                 onClick={() => dispatch(GetPageList(100, 1, documentId))}
-                                label=""
+                                label="Refresh"
                                 icon="pi pi-refresh"
                                 className="p-button-primary margin-left"
-                                tooltip="Refresh"
-                                tooltipOptions={{position: 'bottom'}}
                             />
                             <Button
                                 onClick={() => confirmStartOcr(documentId)}
-                                label=""
+                                label="OCR all pages"
                                 icon="pi pi-play"
                                 className="p-button-primary margin-left"
-                                tooltip="Run OCR"
+                                tooltip="Starts layout analysis for every page"
                                 tooltipOptions={{position: 'bottom'}}
                             />
                             <Button
@@ -100,19 +98,15 @@ const Document = (props) => {
                                             inline: 'nearest'
                                         })
                                 }}
-                                label=""
+                                label="Upload page(s)"
                                 icon="pi pi-upload"
                                 className="p-button-default margin-left"
-                                tooltip="Upload pages"
-                                tooltipOptions={{position: 'bottom'}}
                             />
                             <Button
                                 onClick={() => confirmDeleteDoc(documentId)}
-                                label=""
+                                label="Delete document"
                                 icon="pi pi-trash"
                                 className="p-button-danger margin-left"
-                                tooltip="Delete document"
-                                tooltipOptions={{position: 'bottom'}}
                             />
                         </Col>
                     </Row>

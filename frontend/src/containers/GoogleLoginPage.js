@@ -6,6 +6,7 @@ import {useHistory} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import {Card} from "primereact/card";
 import {googleOauthKey} from "../constants/axiosConf";
+import {Col, Row} from "react-bootstrap";
 
 const GoogleLoginPage = () => {
     const dispatch = useDispatch();
@@ -35,6 +36,21 @@ const GoogleLoginPage = () => {
 
     return (
         <div className="occ-login">
+            <Row>
+                <Col>
+                    <img
+                    alt="OCCAM"
+                    src="/occam-logo.png"
+                    width="100"
+                    height="100"
+                    className="d-inline-block"
+                />
+                    <span className="occ-branding-login">OCCAM</span>
+                </Col>
+
+            </Row>
+
+
             <Card className="occ-login-card">
                 <h5>Sign in with Google</h5>
                 <br/>

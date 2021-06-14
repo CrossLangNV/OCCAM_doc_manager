@@ -164,6 +164,7 @@ a {
 .occ-login-card {
   padding-left: 50px;
   padding-right: 50px;
+  margin-top: 15px
 }
 
 .white-space {
@@ -177,4 +178,9 @@ a {
 .occ-table-result-count {
     font-size: 13px;
     color: #575757;
+}
+
+.occ-branding-login {
+  font-size: 24px;
+  font-weight: bold;
 }

@@ -42,17 +42,20 @@ const Header = () => {
                 />{' '}
                 OCCAM
             </Navbar.Brand>
-            <Nav className="mr-auto">
-                <Nav.Link as={Link} to="/">Documents</Nav.Link>
-                <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
-                <Nav.Link as={Link} to="/help">Help</Nav.Link>
 
-                {/* Loading spinner */}
-                {(reduxIsLoading()) && (
-                    <ProgressSpinner style={{width: '50px', height: '40px'}} strokeWidth="8" fill="#343a40"
-                                     animationDuration=".5s"/>
-                )}
-            </Nav>
+            {(location.pathname !== "/login") &&
+                <Nav className="mr-auto">
+                    <Nav.Link as={Link} to="/">Documents</Nav.Link>
+                    <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
+                    <Nav.Link as={Link} to="/help">Help</Nav.Link>
+
+                    {/* Loading spinner */}
+                    {(reduxIsLoading()) && (
+                        <ProgressSpinner style={{width: '50px', height: '40px'}} strokeWidth="8" fill="#343a40"
+                                         animationDuration=".5s"/>
+                    )}
+                </Nav>
+            }
 
 
             {location.pathname === "/" &&
