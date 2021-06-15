@@ -25,3 +25,7 @@ class MouseTmConnectorTest(TestCase):
     def test_lookup_tu(self):
         response = self.conn.lookup_tu(False, '', 'en-nl', 'this is a test')
         print(response)
+
+    def test_add_tu(self):
+        response = self.conn.add_tu('', 'en-nl', 'this is a test', 'dit is een test')
+        print(response)

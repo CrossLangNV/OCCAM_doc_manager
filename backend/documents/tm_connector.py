@@ -53,3 +53,14 @@ class MouseTmConnector(TmConnector):
         response = requests.get(self.URL_GET, params=params)
         response.raise_for_status()
         return response.content
+
+    def add_tu(self, key: str, langpair: str, seg: str, tra: str):
+        payload = {
+            'key': key,
+            'langpair': langpair,
+            'seg': seg,
+            'tra': tra
+        }
+        response = requests.post(self.URL_SET, data=payload)
+        response.raise_for_status()
+        return response.content
