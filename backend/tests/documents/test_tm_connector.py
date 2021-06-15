@@ -19,4 +19,9 @@ class MouseTmConnectorTest(TestCase):
         self.conn = MouseTmConnector()
 
     def test_health(self):
-        self.conn.health_check()
+        response = self.conn.health_check()
+        print(response)
+
+    def test_lookup_tu(self):
+        response = self.conn.lookup_tu(False, '', 'en-nl', 'this is a test')
+        print(response)
