@@ -2,10 +2,10 @@ import io
 import logging
 import os
 
-from celery import shared_task
 from django.contrib.auth.models import User
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
+from celery import shared_task
 from documents.models import Overlay
 from documents.translation_connector import CEFeTranslationConnector
 
@@ -25,6 +25,9 @@ def translate_overlay(overlay_id, target, user=None):
     logger.info("Translating page: %s", overlay)
     logger.info("Source language: %s", source)
     logger.info("Target language: %s", target)
+
+    if source == target:
+        raise ValueError(f'Target language should be different from the source language. Source = {source}')
 
     activity_log = ActivityLog.objects.create(
         overlay=overlay,
