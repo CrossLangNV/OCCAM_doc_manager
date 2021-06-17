@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tmx version="1.4">
+<header creationdate="Fri Nov 13 03:32:58 2020"
+          srclang="en"
+          adminlang="en"
+          o-tmf="unknown"
+          segtype="sentence"
+          creationtool="Uplug"
+          creationtoolversion="unknown"
+          datatype="PlainText" />
+  <body>
+    <tu>
+      <tuv xml:lang="en"><seg>The profile of the blogger reads: </seg></tuv>
+      <tuv xml:lang="nl"><seg>In het profiel van de blogger staat: </seg></tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en"><seg>I write to stay sane. </seg></tuv>
+      <tuv xml:lang="nl"><seg>Ik schrijf om normaal te blijven. </seg></tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en"><seg>Her profile: </seg></tuv>
+      <tuv xml:lang="nl"><seg>Haar profiel : </seg></tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en"><seg>In her own words: </seg></tuv>
+      <tuv xml:lang="nl"><seg>In haar eigen woorden : </seg></tuv>
+    </tu>
+    <tu>
+      <tuv xml:lang="en"><seg>Photographer, writer, reporter. </seg></tuv>
+      <tuv xml:lang="nl"><seg>Fotografe, schrijfster, verslaggeefster. </seg></tuv>
+    </tu>
+  </body>
+</tmx>

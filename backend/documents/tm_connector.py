@@ -32,11 +32,19 @@ class TmConnector(abc.ABC):
         tra: target segment
         """
 
+    def import_tmx(self, key: str, name: str, tmx):
+        """
+        key: TM key, leave empty for public
+        name: name of tmx file (optional)
+        tmx: tmx file to upload
+        """
+
 
 class MouseTmConnector(TmConnector):
     URL_HEALTH = URL_BASE + '/admin/tminfo'
     URL_GET = URL_BASE + '/get'
     URL_SET = URL_BASE + '/set'
+    URL_IMPORT_TMX = URL_BASE + '/tmx/import'
 
     def health_check(self) -> bytes:
         response = requests.get(self.URL_HEALTH)
@@ -62,5 +70,17 @@ class MouseTmConnector(TmConnector):
             'tra': tra
         }
         response = requests.post(self.URL_SET, data=payload)
+        response.raise_for_status()
+        return response.content
+
+    def import_tmx(self, key: str, name: str, tmx):
+        data = {
+            'key': key,
+            'name': name,
+        }
+        files = {
+            'tmx': tmx
+        }
+        response = requests.post(self.URL_IMPORT_TMX, data=data, files=files)
         response.raise_for_status()
         return response.content
