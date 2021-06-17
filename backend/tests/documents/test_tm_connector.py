@@ -21,19 +21,23 @@ class MouseTmConnectorTest(TestCase):
 
     def test_health(self):
         response = self.conn.health_check()
-        print(response)
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
 
     def test_lookup_tu(self):
         response = self.conn.lookup_tu(False, '', 'en-nl', 'this is a test')
-        print(response)
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
 
     def test_add_tu(self):
         response = self.conn.add_tu('', 'en-nl', 'this is a test', 'dit is een test')
-        print(response)
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
 
     def test_import_tmx(self):
         response = self.conn.import_tmx('', 'en-nl', open(FILENAME_TMX, 'rb'))
-        print(response)
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
 
     def test_get_tu_amount(self):
         response = self.conn.get_tu_amount('', 'en-nl')

@@ -8,7 +8,7 @@ URL_BASE = os.environ['TM_URL']
 
 class TmConnector(abc.ABC):
 
-    def health_check(self) -> bytes:
+    def health_check(self):
         """
         returns:
             any response to check if TM API is up and running
@@ -47,6 +47,7 @@ class TmConnector(abc.ABC):
             total number of TUs for the given key and langpair
         """
 
+
 class MouseTmConnector(TmConnector):
     URL_HEALTH = URL_BASE + '/admin/tminfo'
     URL_GET = URL_BASE + '/get'
@@ -54,10 +55,10 @@ class MouseTmConnector(TmConnector):
     URL_IMPORT_TMX = URL_BASE + '/tmx/import'
     URL_TU_AMOUNT = URL_BASE + '/tu/amount'
 
-    def health_check(self) -> bytes:
+    def health_check(self):
         response = requests.get(self.URL_HEALTH)
         response.raise_for_status()
-        return response.content
+        return response
 
     def lookup_tu(self, concordance: bool, key: str, langpair: str, q: str):
         params = {
@@ -68,7 +69,7 @@ class MouseTmConnector(TmConnector):
         }
         response = requests.get(self.URL_GET, params=params)
         response.raise_for_status()
-        return response.content
+        return response
 
     def add_tu(self, key: str, langpair: str, seg: str, tra: str):
         payload = {
@@ -79,7 +80,7 @@ class MouseTmConnector(TmConnector):
         }
         response = requests.post(self.URL_SET, data=payload)
         response.raise_for_status()
-        return response.content
+        return response
 
     def import_tmx(self, key: str, name: str, tmx):
         data = {
@@ -91,7 +92,7 @@ class MouseTmConnector(TmConnector):
         }
         response = requests.post(self.URL_IMPORT_TMX, data=data, files=files)
         response.raise_for_status()
-        return response.content
+        return response
 
     def get_tu_amount(self, key: str, langpair: str) -> int:
         params = {
