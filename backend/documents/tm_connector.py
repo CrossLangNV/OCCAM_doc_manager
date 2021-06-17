@@ -34,6 +34,14 @@ class TmConnector(abc.ABC):
         tra: target segment
         """
 
+    def delete_tu(self, key: str, langpair: str, seg: str, tra: str):
+        """
+        key: TM key, leave empty for public
+        langpair: e.g.: en-nl
+        seg: source segment
+        tra: target segment
+        """
+
     def import_tmx(self, key: str, name: str, tmx):
         """
         key: TM key, leave empty for public
@@ -54,6 +62,7 @@ class MouseTmConnector(TmConnector):
     URL_HEALTH = URL_BASE + '/admin/tminfo'
     URL_GET = URL_BASE + '/get'
     URL_SET = URL_BASE + '/set'
+    URL_DELETE = URL_BASE + '/delete'
     URL_IMPORT_TMX = URL_BASE + '/tmx/import'
     URL_TU_AMOUNT = URL_BASE + '/tu/amount'
 
@@ -83,6 +92,17 @@ class MouseTmConnector(TmConnector):
             'tra': tra
         }
         response = requests.post(self.URL_SET, data=payload)
+        response.raise_for_status()
+        return response
+
+    def delete_tu(self, key: str, langpair: str, seg: str, tra: str):
+        payload = {
+            'key': key,
+            'langpair': langpair,
+            'seg': seg,
+            'tra': tra
+        }
+        response = requests.post(self.URL_DELETE, data=payload)
         response.raise_for_status()
         return response
 

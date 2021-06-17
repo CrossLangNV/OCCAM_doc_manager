@@ -37,6 +37,11 @@ class MouseTmConnectorTest(TestCase):
         print(response.content)
         self.assertEqual(response.status_code, 200)
 
+    def test_delete_tu(self):
+        response = self.conn.delete_tu('', 'en-nl', 'this is a test', 'dit is een test')
+        print(response.content)
+        self.assertEqual(response.status_code, 200)
+
     def test_import_tmx(self):
         response = self.conn.import_tmx('', 'en-nl', open(FILENAME_TMX, 'rb'))
         print(response.content)
