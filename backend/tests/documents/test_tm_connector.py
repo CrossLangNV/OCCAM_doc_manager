@@ -34,3 +34,8 @@ class MouseTmConnectorTest(TestCase):
     def test_import_tmx(self):
         response = self.conn.import_tmx('', 'en-nl', open(FILENAME_TMX, 'rb'))
         print(response)
+
+    def test_get_tu_amount(self):
+        response = self.conn.get_tu_amount('', 'en-nl')
+        print(response)
+        self.assertGreaterEqual(response, 0)

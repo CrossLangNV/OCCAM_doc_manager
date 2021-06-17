@@ -39,12 +39,20 @@ class TmConnector(abc.ABC):
         tmx: tmx file to upload
         """
 
+    def get_tu_amount(self, key: str, langpair: str) -> int:
+        """
+        key: TM key, leave empty for public
+        langpair: e.g.: en-nl
+        returns:
+            total number of TUs for the given key and langpair
+        """
 
 class MouseTmConnector(TmConnector):
     URL_HEALTH = URL_BASE + '/admin/tminfo'
     URL_GET = URL_BASE + '/get'
     URL_SET = URL_BASE + '/set'
     URL_IMPORT_TMX = URL_BASE + '/tmx/import'
+    URL_TU_AMOUNT = URL_BASE + '/tu/amount'
 
     def health_check(self) -> bytes:
         response = requests.get(self.URL_HEALTH)
@@ -84,3 +92,12 @@ class MouseTmConnector(TmConnector):
         response = requests.post(self.URL_IMPORT_TMX, data=data, files=files)
         response.raise_for_status()
         return response.content
+
+    def get_tu_amount(self, key: str, langpair: str) -> int:
+        params = {
+            'key': key,
+            'langpair': langpair
+        }
+        response = requests.get(self.URL_TU_AMOUNT, params=params)
+        response.raise_for_status()
+        return int(response.content.decode('utf-8'))
