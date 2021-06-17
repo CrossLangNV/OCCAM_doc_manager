@@ -21,6 +21,8 @@ class TmConnector(abc.ABC):
         key: TM key, leave empty for public
         langpair: e.g.: en-nl
         q: the term/phrase for which to look for in the TM
+        returns:
+            list of found TM matches
         """
         pass
 
@@ -69,7 +71,9 @@ class MouseTmConnector(TmConnector):
         }
         response = requests.get(self.URL_GET, params=params)
         response.raise_for_status()
-        return response
+        json_response = response.json()
+        matches = json_response["matches"]
+        return matches
 
     def add_tu(self, key: str, langpair: str, seg: str, tra: str):
         payload = {

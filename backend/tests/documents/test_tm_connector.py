@@ -25,9 +25,12 @@ class MouseTmConnectorTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_lookup_tu(self):
-        response = self.conn.lookup_tu(False, '', 'en-nl', 'this is a test')
-        print(response.content)
-        self.assertEqual(response.status_code, 200)
+        matches = self.conn.lookup_tu(False, '', 'en-nl', 'this is a test')
+        print(matches)
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0]["match"], 1.0)
+        self.assertEqual(matches[0]["segment"], 'this is a test')
+        self.assertEqual(matches[0]["translation"], 'dit is een test')
 
     def test_add_tu(self):
         response = self.conn.add_tu('', 'en-nl', 'this is a test', 'dit is een test')
