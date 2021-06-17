@@ -5,3 +5,4 @@ pyyaml==5.4.1
 django-cors-headers==3.7.0
 oauth2_provider==0.0
 langdetect==1.0.9
+dcxml==0.1.2
