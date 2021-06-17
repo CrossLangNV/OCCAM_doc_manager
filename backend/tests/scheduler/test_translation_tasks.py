@@ -25,22 +25,27 @@ class TranslateOverlayTest(TestCase):
         with open(FILENAME_XML, 'rb') as f:
             overlay.update_xml(f)
 
+        source = overlay.source_lang
+        target = 'EN'
+        self.assertNotEqual(source, target, 'Sanity check')
+
         translate_overlay(overlay.id,
-                          'nl',
-                          'en')
+                          target
+                          )
 
     def test_create_geojson(self):
-        source = 'NL'
-        target = 'EN'
-
         overlay = next(filter(lambda x: 'xml' in x.file.name.lower(), Overlay.objects.all()))
+
+        source = overlay.source_lang
+        target = 'EN'
+        self.assertNotEqual(source, target, 'Sanity check')
 
         geojson_0 = list(Geojson.objects.all())
         n_geojson_0 = len(geojson_0)
 
         translate_overlay(overlay.id,
-                          source,
-                          target)
+                          target
+                          )
 
         n_geojson_1 = len(Geojson.objects.all())
         # Get the newest Geojson object.
@@ -57,3 +62,20 @@ class TranslateOverlayTest(TestCase):
 
         with self.subTest('target lang'):
             self.assertEqual(geojson.lang, target)
+
+    def test_same_source_target_language(self):
+        overlay = Overlay.objects.all()[0]
+        with open(FILENAME_XML, 'rb') as f:
+            overlay.update_xml(f)
+
+        source = overlay.source_lang
+
+        try:
+            translate_overlay(overlay.id,
+                              source
+                              )
+        except Exception as e:
+            self.assertTrue(e, 'Should fail on source to source translation')
+
+        else:
+            self.fail('Should fail on source to source translation')
