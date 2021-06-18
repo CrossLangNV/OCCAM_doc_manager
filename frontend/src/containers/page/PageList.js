@@ -37,7 +37,7 @@ const PageList = (props) => {
     const [displayPageHistory, setDisplayPageHistory] = useState(false);
     const [pageHistoryId, setPageHistoryId] = useState("");
     const [displayPageMetadata, setDisplayPageMetadata] = useState(false);
-    const [pageMetadataId, setPageMetadataId] = useState("");
+    const [metadataPage, setMetadataPage] = useState("");
 
     // Load pages initially
     useEffect(() => {
@@ -106,7 +106,7 @@ const PageList = (props) => {
     }
 
     const toggleMetadataMenu = (e, page) => {
-        setPageMetadataId(page.id)
+        setMetadataPage(page)
         // Toggle the menu
         setDisplayPageMetadata(true)
     }
@@ -326,7 +326,7 @@ const PageList = (props) => {
                                         <Dialog header="Page classification labels" visible={displayPageMetadata}
                                                 style={{width: '50vw'}}
                                                 onHide={() => setDisplayPageMetadata(false)}>
-                                            <PageMetadata pageId={pageMetadataId}/>
+                                            <PageMetadata page={metadataPage}/>
                                         </Dialog>
 
                                     </Row>

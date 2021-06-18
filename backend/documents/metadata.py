@@ -13,7 +13,7 @@ class Metadata:
     def __init__(self,
                  titles: Union[list, str] = [],
                  creators: Union[list, str] = [OCCAM],
-                 subject: Union[list, str] = [],
+                 subjects: Union[list, str] = [],
                  descriptions: Union[list, str] = [],
                  publishers: Union[list, str] = [OCCAM],
                  contributors: Union[list, str] = [OCCAM],
@@ -34,7 +34,7 @@ class Metadata:
         Args:
             titles (list[str]): Title, e.g. "A Pilot's Guide to Aircraft Insurance"
             creators (list[str]): Author/Creator, e.g. "Duncan, Phyllis-Anne"
-            subject (list[str]): Subject and Keywords, e.g. "Dogs"
+            subjects (list[str]): Subject and Keywords, e.g. "Dogs"
             descriptions (list[str]): Description, e.g. "Illustrated guide to airport markings and lighting signals, with particular reference to SMGCS (Surface Movement Guidance and Control System) for airports with low visibility conditions"
             publishers (list[str]): Publisher, e.g. "University of Miami. Dept. of Economics"
             contributors (list[str]): Other Contributor. By default OCCAM
@@ -54,33 +54,45 @@ class Metadata:
             rights (list[str]): Rights Management, e.g. "http://cs-tr.cs.cornell.edu/Dienst/Repository/2.0/Terms"
         """
 
-        def single_to_list(el):
-            """ Can convert a single element to a list.
+        self.titles = self._single_to_list(titles)
+        self.creators = self._single_to_list(creators)
+        self.subjects = self._single_to_list(subjects)
+        self.descriptions = self._single_to_list(descriptions)
+        self.publishers = self._single_to_list(publishers)
+        self.contributors = self._single_to_list(contributors)
+        self.dates = self._single_to_list(dates)
+        self.types = self._single_to_list(types)
+        self.formats = self._single_to_list(formats)
+        self.identifiers = self._single_to_list(identifiers)
+        self.sources = self._single_to_list(sources)
+        self.languages = self._single_to_list(languages)
+        self.relations = self._single_to_list(relations)
+        self.coverage = self._single_to_list(coverage)
+        self.rights = self._single_to_list(rights)
 
-            Args:
-                el:
+    def get_dict(self):
+        data = dict(
+            titles=self.titles,
+            creators=self.creators,
+            subjects=self.subjects,
+            descriptions=self.descriptions,
+            publishers=self.publishers,
+            contributors=self.contributors,
+            dates=self.dates,
+            types=self.types,
+            formats=self.formats,
+            identifiers=self.identifiers,
+            sources=self.sources,
+            languages=self.languages,
+            relations=self.relations,
+            coverage=self.coverage,
+            rights=self.rights,
+        )
 
-            Returns:
+        # Remove empty elements
+        data = {key: value for key, value in data.items() if value}  # No list items
 
-            """
-
-            return [el] if isinstance(el, str) else el
-
-        self.titles = single_to_list(titles)
-        self.creators = single_to_list(creators)
-        self.subject = single_to_list(subject)
-        self.descriptions = single_to_list(descriptions)
-        self.publishers = single_to_list(publishers)
-        self.contributors = single_to_list(contributors)
-        self.dates = single_to_list(dates)
-        self.types = single_to_list(types)
-        self.formats = single_to_list(formats)
-        self.identifiers = single_to_list(identifiers)
-        self.sources = single_to_list(sources)
-        self.languages = single_to_list(languages)
-        self.relations = single_to_list(relations)
-        self.coverage = single_to_list(coverage)
-        self.rights = single_to_list(rights)
+        return data
 
     def to_xml(self):
         """
@@ -100,36 +112,30 @@ class Metadata:
             relations=['Invenio Software'],
             rights=['GPLv2'],
             sources=['Python'],
-            subject=['XML'],
+            subjects=['XML'],
             titles=['Dublin Core XML'],
             types=['Software'],
         )
         """
 
-        data = dict(
-            titles=self.titles,
-            creators=self.creators,
-            subject=self.subject,
-            descriptions=self.descriptions,
-            publishers=self.publishers,
-            contributors=self.contributors,
-            dates=self.dates,
-            types=self.types,
-            formats=self.formats,
-            identifiers=self.identifiers,
-            sources=self.sources,
-            languages=self.languages,
-            relations=self.relations,
-            coverage=self.coverage,
-            rights=self.rights,
-        )
-
+        data = self.get_dict()
         etree = simpledc.dump_etree(data)
         xml = simpledc.etree_to_string(etree)
 
-        print(xml)
-
         return xml
+
+    @staticmethod
+    def _single_to_list(el):
+        """ Can convert a single element to a list.
+
+        Args:
+            el:
+
+        Returns:
+
+        """
+
+        return [el] if isinstance(el, str) else el
 
     def __str__(self):
         return self.to_xml()

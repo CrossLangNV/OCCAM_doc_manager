@@ -1,3 +1,4 @@
+import mimetypes
 from datetime import date
 
 from documents.models import Page
@@ -21,13 +22,14 @@ class MetadataDjango(metadata.Metadata):
 
         today = date.today()
 
+        content_type_file = mimetypes.guess_type(page.file.file.name)[0]
+
         return cls(titles=f'Page {page_name}',
-                   subject='Pages',
+                   subjects='Pages',
                    descriptions=f'Page processed by OCCAM.',
                    dates=today.strftime("%Y-%m-%d"),
                    types=["image", "text", "XML"],
-                   # TODO get extension
-                   formats=["image/png", "/txt", 'application/xml'],
+                   formats=[content_type_file, "text/plain", 'application/xml'],
                    sources=f"The Document '{document_name}'",
                    languages=source
                    )
