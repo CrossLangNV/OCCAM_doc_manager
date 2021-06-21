@@ -14,6 +14,9 @@ class CEFeTranslationConnectorTest(TestCase):
     """
 
     def setUp(self):
+        self.source = 'fr'
+        self.target = 'en'
+
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
 
@@ -22,24 +25,20 @@ class CEFeTranslationConnectorTest(TestCase):
         self.conn = CEFeTranslationConnector()
 
     def test_translate_file(self):
-        source = 'fr'
-        target = 'en'
 
         with open(FILENAME_XML, 'rb') as f:
             xml_trans = self.conn.translate_xml(f,
-                                                source,
-                                                target)
+                                                self.source,
+                                                self.target)
 
         self.assertTrue(xml_trans)
 
     def test_translate_file_non_blocking(self):
-        source = 'fr'
-        target = 'en'
 
         with open(FILENAME_XML, 'rb') as f:
             xml_id = self.conn.translate_xml_post(f,
-                                                  source,
-                                                  target)
+                                                  self.source,
+                                                  self.target)
 
         with self.subTest('POST response'):
             self.assertTrue(xml_id)
@@ -48,3 +47,17 @@ class CEFeTranslationConnectorTest(TestCase):
 
         with self.subTest('get response'):
             self.assertTrue(xml_trans)
+
+    def test_translate_source_to_source(self):
+
+        with open(FILENAME_XML, 'rb') as f:
+            try:
+                xml_trans = self.conn.translate_xml(f,
+                                                    self.source,
+                                                    self.source)
+            except Exception as e:
+                self.assertTrue(e, 'Should raise an error about target being equal to source language.')
+
+            else:
+                self.fail(
+                    'Should have raised an error immediately that target should be different than the source language.')
