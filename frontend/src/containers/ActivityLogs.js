@@ -77,6 +77,14 @@ const ActivityLogs = () => {
                 </>
             )
         }
+
+        if (activityList.loading) {
+            return <p>Loading...</p>
+        }
+
+        if (activityList.errorMsg !== "") {
+            return <p>{activityList.errorMsg}</p>
+        }
     }
 
 

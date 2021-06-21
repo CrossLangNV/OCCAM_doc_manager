@@ -3,12 +3,17 @@ import {FileUpload} from "primereact/fileupload";
 import {useDispatch} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
 import {Toast} from "primereact/toast";
+import ProgressBar from "../ProgressBar";
+import {Col, Row} from "react-bootstrap";
+import {Button} from "primereact/button";
+import {useHistory} from "react-router-dom";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
     const ACCEPTED_FILE_TYPES = "image/*"
-    const documentId = props.documentId
+    const documentId = props.match.params.documentId
     const toast = useRef(null);
+    const history = useHistory();
 
     const pagesUploader = async (event) => {
         const files = event.files
@@ -28,8 +33,16 @@ const PageAdd = (props) => {
         )
     }
 
+    const nextStep = () => {
+        history.push(`/document/${documentId}`)
+    }
+
     return (
-        <div>
+        <Col>
+            <Row>
+                <ProgressBar activeStep={2} documentId={documentId}/>
+            </Row>
+
             <FileUpload
                 name="demo[]"
                 url="./upload"
@@ -39,10 +52,18 @@ const PageAdd = (props) => {
                 customUpload
                 uploadHandler={pagesUploader}
                 emptyTemplate={emptyTemplate}
+                className="margin-top"
             />
             <Toast ref={toast} />
 
-        </div>
+            <Row className="margin-top">
+                <Col md={6} />
+                <Col md="auto">
+                    <Button onClick={nextStep} label="Next" />
+                </Col>
+            </Row>
+        </Col>
+
     );
 };
 
