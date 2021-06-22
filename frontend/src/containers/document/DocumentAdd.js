@@ -96,7 +96,7 @@ const DocumentAdd = (props) => {
     return (
         <>
             <Row>
-                <ProgressBar activeStep={1}/>
+                <ProgressBar activeStep={1} documentId={documentId}/>
             </Row>
 
             <Row className="margin-top">
