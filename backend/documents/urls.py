@@ -2,7 +2,7 @@ from django.urls import path
 
 from .views import PageListAPIView, PageDetailAPIView, TranslatePageAPIView, OverlayListAPIView, \
     DocumentListAPIView, \
-    DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, LabelsListAPIView
+    DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, LabelsListAPIView, LayoutAnalysisModelsAPIView
 
 urlpatterns = [
     path("api/documents", DocumentListAPIView.as_view(), name="document_list_api"),
@@ -17,4 +17,5 @@ urlpatterns = [
     path("api/overlay/<str:pk>", OverlayDetailAPIView.as_view(), name="overlay_api_detail"),
 
     path('api/labels', LabelsListAPIView.as_view(), name='labels_list_api'),
+    path('api/layout_analysis_models', LayoutAnalysisModelsAPIView.as_view(), name='layout_analysis_models_list_api'),
 ]

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
-from documents.models import Document, Page, Overlay, Geojson, Label
+from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel
 
 
 class GeojsonSerializer(serializers.ModelSerializer):
@@ -80,4 +80,10 @@ class DocumentSerializer(serializers.ModelSerializer):
 class LabelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Label
+        fields = "__all__"
+
+
+class LayoutAnalysisModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LayoutAnalysisModel
         fields = "__all__"
