@@ -27,7 +27,9 @@ const ProgressBar = (props) => {
         {
             label: 'Layout Analysis',
             command: (event) => {
-
+                if (documentId !== undefined) {
+                    history.push(`/document-edit/${documentId}/layout_model`)
+                }
             }
         },
         {

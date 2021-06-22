@@ -17,6 +17,7 @@ import {useDispatch} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
 import Footer from "./containers/Footer";
 import PageAdd from "./containers/page/PageAdd";
+import DocumentLayoutAnalysis from "./containers/document/DocumentLayoutAnalysis";
 
 function App() {
     const location = useLocation();
@@ -46,6 +47,7 @@ function App() {
                         <PrivateRoute path={"/document-add"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/document-edit/:documentId"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
+                        <PrivateRoute path={"/document-edit/:documentId/layout_model"} exact component={DocumentLayoutAnalysis}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>

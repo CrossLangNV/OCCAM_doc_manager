@@ -34,7 +34,7 @@ const PageAdd = (props) => {
     }
 
     const nextStep = () => {
-        history.push(`/document/${documentId}`)
+        history.push(`/document-edit/${documentId}/layout_model`)
     }
 
     return (
