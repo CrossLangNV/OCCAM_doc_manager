@@ -7,7 +7,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label
+from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from scheduler.ocr_tasks import ocr_page
@@ -101,7 +101,7 @@ class OverlayListAPIView(ListCreateAPIView):
 
 
 class LayoutAnalysisModelsAPIView(ListCreateAPIView):
-    queryset = Overlay.objects.all()
+    queryset = LayoutAnalysisModel.objects.all()
     serializer_class = LayoutAnalysisModelSerializer
 
 
