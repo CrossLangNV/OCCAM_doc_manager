@@ -44,6 +44,7 @@ function App() {
                         <PrivateRoute path={"/document/:documentId"} exact component={Document}/>
                         <PrivateRoute path={"/document/:documentId/add-pages"} exact component={PageAdd}/>
                         <PrivateRoute path={"/document-add"} exact component={DocumentAdd}/>
+                        <PrivateRoute path={"/document-edit/:documentId"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>

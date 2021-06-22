@@ -71,7 +71,7 @@ const Document = (props) => {
                 <div>
                     <Row className="justify-content-between">
                         <Col md={3}>
-                            <h1>{documentData.name}</h1>
+                            <h2>{documentData.name}</h2>
                         </Col>
                         <Col md={5}>
                             <ProgressBar activeStep={4} documentId={documentId}/>

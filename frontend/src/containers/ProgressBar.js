@@ -11,7 +11,9 @@ const ProgressBar = (props) => {
         {
             label: 'Document Information',
             command: (event) => {
-
+                if (documentId !== undefined) {
+                    history.push('/document-edit/' + documentId)
+                }
             }
         },
         {
