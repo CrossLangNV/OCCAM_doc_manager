@@ -43,7 +43,9 @@ const ProgressBar = (props) => {
         {
             label: 'Publish',
             command: (event) => {
-
+                if (documentId !== undefined) {
+                    history.push('/publish/' + documentId)
+                }
             }
         }
     ];

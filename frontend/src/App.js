@@ -18,6 +18,8 @@ import {ScrollTop} from "primereact/scrolltop";
 import Footer from "./containers/core/Footer";
 import PageAdd from "./containers/page/PageAdd";
 import DocumentLayoutAnalysis from "./containers/document/DocumentLayoutAnalysis";
+import HelpComponent from "./containers/HelpComponent";
+import DocumentPublish from "./containers/document/DocumentPublish";
 
 function App() {
     const location = useLocation();
@@ -48,6 +50,8 @@ function App() {
                         <PrivateRoute path={"/document-edit/:documentId"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
                         <PrivateRoute path={"/document-edit/:documentId/layout_model"} exact component={DocumentLayoutAnalysis}/>
+                        <PrivateRoute path={"/help"} exact component={HelpComponent}/>
+                        <PrivateRoute path={"/publish/:documentId"} exact component={DocumentPublish}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>
