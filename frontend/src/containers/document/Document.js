@@ -6,9 +6,7 @@ import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
-import Moment from "react-moment";
 import PageList from "../page/PageList";
-import DocumentState from "./DocumentState";
 import {ModifySelectedPage} from "../../actions/uiActions";
 import {GetPageList, OcrPage} from "../../actions/pageActions";
 import ProgressBar from "../ProgressBar";
@@ -17,7 +15,6 @@ const Document = (props) => {
     const documentId = props.match.params.documentId
     const dispatch = useDispatch()
     let history = useHistory();
-
 
     // Redux states
     const documentState = useSelector(state => state.document)

@@ -36,8 +36,9 @@ const DocumentAdd = (props) => {
             axios.get(`${baseUrl}/documents/api/document/${documentId}`, config).then((res) => {
                 setTitle(res.data.name)
                 setContent(res.data.content)
-            }).catch((reason => {
+            }).catch((err => {
                 history.push("/")
+                console.log(err)
             }))
         }
 
@@ -100,7 +101,7 @@ const DocumentAdd = (props) => {
             </Row>
 
             <Row className="margin-top">
-                <Col md={5}></Col>
+                <Col md={5} />
                 <Col md={6}>
                     <h3>Add new document</h3>
                 </Col>
@@ -108,7 +109,7 @@ const DocumentAdd = (props) => {
             </Row>
 
             <Row className="margin-top">
-                <Col md={3}></Col>
+                <Col md={3} />
                 <Col md={6}>
                     <Card footer={footer}>
                         <h5>Document information</h5>
@@ -143,7 +144,7 @@ const DocumentAdd = (props) => {
             </Row>
 
             <Row className="margin-top">
-                <Col md={3}></Col>
+                <Col md={3}/>
                 <Col md={6}>
                     <div className='occ-center'>
                         <Button onClick={handleSubmit}

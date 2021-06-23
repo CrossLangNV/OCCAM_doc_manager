@@ -3,6 +3,7 @@ import axios from "axios";
 import {Timeline} from "primereact/timeline";
 import moment from "moment";
 import {baseUrl} from "../../constants/axiosConf";
+import _ from "lodash";
 
 const PageHistory = (props) => {
     const pageId = props.pageId
@@ -37,7 +38,9 @@ const PageHistory = (props) => {
 
     return (
         <div>
-            {/*<Timeline value={history} content={(item) => item.status} />*/}
+            {(_.isEmpty(history) &&
+                <p>No history available.</p>
+            )}
             <Timeline value={history} opposite={(item) => item.status}
                       content={(item) => <small className="p-text-secondary">{item.date}</small>}/>
         </div>

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import axios from "axios";
 import {Timeline} from "primereact/timeline";
 import {baseUrl} from "../../constants/axiosConf";
+import _ from "lodash";
 
 const PageHistory = (props) => {
     const pageId = props.pageId
@@ -38,6 +39,10 @@ const PageHistory = (props) => {
 
     return (
         <div>
+            {(_.isEmpty(metadata) &&
+                <p>No metadata available.</p>
+            )}
+
             <Timeline value={metadata} opposite={(item) => item.status}
                       content={(item) => <small className="p-text-secondary">{item.date}</small>}/>
         </div>

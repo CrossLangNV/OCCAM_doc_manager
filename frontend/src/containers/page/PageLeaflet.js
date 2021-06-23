@@ -11,6 +11,7 @@ import {Card} from "primereact/card";
 import {TabMenu} from "primereact/tabmenu";
 import PageMetadata from "./PageMetadata";
 import PageHistory from "./PageHistory";
+import PagePlainText from "./PagePlainText";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -215,7 +216,7 @@ const PageLeaflet = (props) => {
             {/* Plain Text View */}
             {(activeView === 1 &&
                 <div className="occ-plaintext white-space margin-top">
-                    {plainText}
+                    <PagePlainText content={plainText} />
                 </div>
             )}
 
