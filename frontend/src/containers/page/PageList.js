@@ -18,6 +18,7 @@ import {Dialog} from "primereact/dialog";
 import {ScrollPanel} from "primereact/scrollpanel";
 import DocumentState from "../document/DocumentState";
 import {ContextMenu} from "primereact/contextmenu";
+import NotSelectedMessage from "../NotSelectedMessage";
 
 
 const PageList = (props) => {
@@ -261,17 +262,8 @@ const PageList = (props) => {
                         </ScrollPanel>
                     )}
 
-                    {/* No pages are uploaded message */}
-                    {_.isEmpty(pageList.data) && (
-                        <div>
-                            <Card className="occ-ui-empty-leaflet-container">
-                                <div className="p-d-flex p-ai-center p-dir-col">
-                                    <i className="pi pi-image p-mt-3 p-p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}} />
-                                    <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">No pages are uploaded yet.</span>
-                                </div>
-                            </Card>
-                        </div>
-                    )}
+                    <NotSelectedMessage context={pageList.data} message="No pages are uploaded yet." />
+
                 </Col>
 
                 {!_.isEmpty(pageList.data) && (
@@ -288,16 +280,8 @@ const PageList = (props) => {
                         )}
 
                         {/* No page selected message */}
-                        {uiStates.selectedPage === "" && (
-                            <div>
-                                <Card className="occ-ui-empty-leaflet-container">
-                                    <div className="p-d-flex p-ai-center p-dir-col">
-                                        <i className="pi pi-image p-mt-3 p-p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}}/>
-                                        <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">No page selected</span>
-                                    </div>
-                                </Card>
-                            </div>
-                        )}
+                        <NotSelectedMessage context={uiStates.selectedPage} message="No page selected" />
+
                     </Col>
                 )}
             </Row>
