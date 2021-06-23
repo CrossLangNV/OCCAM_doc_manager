@@ -10,6 +10,7 @@ import {baseUrl} from "../../constants/axiosConf";
 import {Toast} from "primereact/toast";
 import {GetLayoutEngines, ModifySelectedEngine} from "../../actions/uiActions";
 import {useDispatch, useSelector} from "react-redux";
+import _ from "lodash"
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
@@ -17,6 +18,9 @@ const DocumentLayoutAnalysis = (props) => {
     const toast = useRef(null);
     const dispatch = useDispatch();
     const uiStates = useSelector(state => state.uiStates);
+    const [selectedOption, setSelectedOption] = useState([]);
+
+
 
     const config = {
         headers: {
@@ -25,7 +29,7 @@ const DocumentLayoutAnalysis = (props) => {
     }
 
     useEffect(() => {
-        dispatch(GetLayoutEngines(documentId))
+        dispatch(GetLayoutEngines(documentId));
     }, [])
 
     const handleSubmit = async (evt) => {
@@ -43,6 +47,7 @@ const DocumentLayoutAnalysis = (props) => {
     }
 
     const changeSelected = (e) => {
+        setSelectedOption(e)
         dispatch(ModifySelectedEngine(uiStates.layout_engines.filter(p => {
             return e.id === p.id;
         })))
@@ -64,8 +69,21 @@ const DocumentLayoutAnalysis = (props) => {
                             uiStates.layout_engines && uiStates.layout_engines.map((option) => {
                                 return (
                                     <div key={option.value} className="p-field-radiobutton">
-                                        <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].value === option.value} />
-                                        <label htmlFor={option.value}>{option.name}</label>
+
+                                        {(!_.isEmpty(uiStates.selected_layout_engine) &&
+                                            <>
+                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].value === option.value} />
+                                                <label htmlFor={option.value}>{option.name}</label>
+                                            </>
+                                        )}
+
+                                        {(_.isEmpty(uiStates.selected_layout_engine) &&
+                                            <>
+                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={selectedOption === option.value} />
+                                                <label htmlFor={option.value}>{option.name}</label>
+                                            </>
+                                        )}
+
                                     </div>
                                 )
                             })
