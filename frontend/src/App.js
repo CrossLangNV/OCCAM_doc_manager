@@ -1,7 +1,7 @@
 import {Route, Switch, useHistory, useLocation} from 'react-router-dom'
 import DocumentList from "./containers/document/DocumentList";
 import Document from "./containers/document/Document";
-import Header from "./containers/Header";
+import Header from "./containers/core/Header";
 import DocumentAdd from "./containers/document/DocumentAdd";
 import 'primeflex/primeflex.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
@@ -9,13 +9,13 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
 import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
-import GoogleLoginPage from "./containers/GoogleLoginPage";
-import PrivateRoute from "./containers/PrivateRoute";
+import GoogleLoginPage from "./containers/core/GoogleLoginPage";
+import PrivateRoute from "./containers/core/PrivateRoute";
 import {useEffect} from "react";
 import {load_user} from "./actions/authActions";
 import {useDispatch} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
-import Footer from "./containers/Footer";
+import Footer from "./containers/core/Footer";
 import PageAdd from "./containers/page/PageAdd";
 import DocumentLayoutAnalysis from "./containers/document/DocumentLayoutAnalysis";
 

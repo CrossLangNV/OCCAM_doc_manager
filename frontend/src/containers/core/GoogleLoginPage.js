@@ -1,11 +1,11 @@
 import React, {useEffect, useRef} from 'react';
 import GoogleLogin from "react-google-login";
 import {useDispatch, useSelector} from "react-redux";
-import {GoogleAuthenticate, load_user} from "../actions/authActions";
+import {GoogleAuthenticate, load_user} from "../../actions/authActions";
 import {useHistory} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import {Card} from "primereact/card";
-import {googleOauthKey} from "../constants/axiosConf";
+import {googleOauthKey} from "../../constants/axiosConf";
 import {Col, Row} from "react-bootstrap";
 
 const GoogleLoginPage = () => {

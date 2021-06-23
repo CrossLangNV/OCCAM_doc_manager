@@ -13,7 +13,7 @@ import {ModifySelectedPage} from "../../actions/uiActions";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {languageSelectItems} from "../../constants/language-selections";
 import {Dropdown} from "primereact/dropdown";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../core/LoadingSpinner";
 import {Dialog} from "primereact/dialog";
 import PageHistory from "./PageHistory";
 import {ScrollPanel} from "primereact/scrollpanel";

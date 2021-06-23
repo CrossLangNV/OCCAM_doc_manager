@@ -8,7 +8,7 @@ import Moment from "react-moment";
 import {Button} from "primereact/button";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate";
-import LoadingSpinner from "./LoadingSpinner";
+import LoadingSpinner from "./core/LoadingSpinner";
 
 const ActivityLogs = () => {
     const dispatch = useDispatch();
