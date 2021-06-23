@@ -1,0 +1,18 @@
+[
+  {
+    "model": "documents.layoutanalysismodel",
+    "pk": 1,
+    "fields": {
+      "name": "None",
+      "value": "None"
+    }
+  },
+  {
+    "model": "documents.layoutanalysismodel",
+    "pk": 2,
+    "fields": {
+      "name": "Pero OCR",
+      "value": "Pero OCR"
+    }
+  }
+]

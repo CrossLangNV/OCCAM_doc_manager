@@ -53,6 +53,7 @@ const PageAdd = (props) => {
                 uploadHandler={pagesUploader}
                 emptyTemplate={emptyTemplate}
                 className="margin-top"
+                auto={true}
             />
             <Toast ref={toast} />
 

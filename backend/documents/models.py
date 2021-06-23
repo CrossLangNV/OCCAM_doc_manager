@@ -55,7 +55,7 @@ class Document(models.Model):
         default=DocumentState.NEW,
     )
 
-    layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.CASCADE, blank=True, null=True)
+    layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
 
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
 

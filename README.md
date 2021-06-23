@@ -17,6 +17,8 @@ The React app requires an applications (uses django-oauth-toolkit)
 In your browser, navigate to http://localhost:8000/admin/oauth2_provider/application/ Go to the detail page of the
 searchapp app by clicking on it's id in the list of applications.
 
+`python manage.py loaddata engines`
+
 ## django-docker.env configuration (back-end)
 
 Make sure the values in the `django-docker.env` file are correct. To see which values must be present, use the example
