@@ -10,6 +10,7 @@ import {baseUrl} from "../../constants/axiosConf";
 import ProgressBar from "../ProgressBar";
 import {Col, Row} from "react-bootstrap";
 import {Toast} from "primereact/toast";
+import Tour from "reactour";
 
 
 const DocumentAdd = (props) => {
@@ -94,8 +95,28 @@ const DocumentAdd = (props) => {
                 className="p-button-secondary"/>
         </span>;
 
+    const steps = [
+        {
+            content: () => (
+                <div>
+                    <h3>Welcome</h3>
+                    <p>Let's take a quick tour on how to use the application.</p>
+                </div>
+
+            )
+        },
+    ]
+
+    const [tourOpened, setTourOpened] = useState(true);
+
     return (
         <>
+            <Tour
+                steps={steps}
+                isOpen={tourOpened}
+                onRequestClose={() => setTourOpened(false)}
+            />
+
             <Row>
                 <ProgressBar activeStep={1} documentId={documentId}/>
             </Row>

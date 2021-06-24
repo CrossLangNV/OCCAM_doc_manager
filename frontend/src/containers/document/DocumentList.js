@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
-import React from "react";
+import React, {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
@@ -9,6 +9,7 @@ import {Button} from "primereact/button";
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";
+import Tour from "reactour";
 
 
 const DocumentList = () => {
@@ -68,11 +69,56 @@ const DocumentList = () => {
             </tr>
         }
     }
+
+    const steps = [
+        {
+            content: () => (
+                <div>
+                    <h3>Welcome</h3>
+                    <p>Let's take a quick tour on how to use the application.</p>
+                </div>
+
+            )
+        },
+        {
+            selector: '.doc-list-step-two',
+            content: () => (
+                <div>
+                    <p>This is a table with all your documents.</p>
+                    <p>At the first glance, it should look pretty empty...</p>
+                    <p>When you created documents, you can always navigate to them by clicking on the titles.</p>
+                    <p>The table is paginated, and a search button in the header allows you to search for documents.</p>
+                </div>
+            )
+        },
+        {
+            selector: '.doc-list-step-three',
+            content: () => (
+                <div>
+                    <p>Let's create a document now!</p>
+                    <p>By pressing this button you can create a new document.</p>
+                </div>
+            )
+        },
+        // ...
+    ]
+
+    const [tourOpened, setTourOpened] = useState(true);
+
+
+
     return (
-        <div>
+        <div className="doc-list-step-two">
+            <Tour
+                steps={steps}
+                isOpen={tourOpened}
+                onRequestClose={() => setTourOpened(false)} />
+
+
             <Button onClick={() => history.push("/document-add")}
                     label="New document"
                     icon="pi pi-plus"
+                    className="doc-list-step-three"
             />
             <br/>
             <Row className="justify-content-between">
