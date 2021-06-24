@@ -19,12 +19,15 @@ import {ScrollPanel} from "primereact/scrollpanel";
 import DocumentState from "../document/DocumentState";
 import {ContextMenu} from "primereact/contextmenu";
 import NotSelectedMessage from "../NotSelectedMessage";
+import {useHistory} from "react-router-dom";
+import {InputSwitch} from "primereact/inputswitch";
 
 
 const PageList = (props) => {
     const documentId = props.documentId;
     const dispatch = useDispatch();
     const toast = useRef(null);
+    const history = useHistory();
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
@@ -36,6 +39,8 @@ const PageList = (props) => {
     const [translationOverlayId, setTranslationOverlayId] = useState("");
     const [contextMenuPage, setContextMenuPage] = useState("");
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
+    const [checkedTM, setCheckedTM] = useState(false);
+
 
     const cm = useRef(null);
 
@@ -76,7 +81,7 @@ const PageList = (props) => {
             detail: 'Translation task has been started for the selected page'
         });
         translationSelectionOverlay.current.hide(e);
-        dispatch(GetPageList(100, 1, documentId))
+        dispatch(GetPageList(100, 1, documentId, checkedTM))
     }
 
     const toggleTranslationMenu = (e, page) => {
@@ -239,6 +244,17 @@ const PageList = (props) => {
                                                     />
                                                 </Col>
 
+                                            </Row>
+                                            <br/>
+
+                                            <Row>
+                                                <Col>
+                                                    <div className="p-field-checkbox">
+                                                        <InputSwitch inputId="useTM" checked={checkedTM} onChange={e => setCheckedTM(e.value)} />
+                                                        <label htmlFor="useTM">Use translation memory</label>
+                                                    </div>
+                                                    Click <a className="occ-link" onClick={() => history.push("/")} >here</a> to see translation memory configuration.
+                                                </Col>
                                             </Row>
                                             <br/>
 
