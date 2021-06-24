@@ -5,8 +5,12 @@ import {baseUrl} from "../../constants/axiosConf";
 import _ from "lodash";
 
 const PageHistory = (props) => {
-    const pageId = props.pageId
+    const page = props.page
+    const pageId = page.id
 
+    // TODO
+    // page.metadata
+    // page.metadata_xml
 
     const [metadata, setMetadata] = useState([]);
 
