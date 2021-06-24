@@ -23,6 +23,7 @@ const PageLeaflet = (props) => {
     const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
     const [activeView, setActiveView] = useState(0);
+    const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
     const [plainText, setPlainText] = useState("");
     const viewOptions = [
         {label: 'Page View', icon: ''},
@@ -178,18 +179,14 @@ const PageLeaflet = (props) => {
                 <Col md={4}>
                     <TabMenu model={viewOptions} activeIndex={activeView} onTabChange={(e) => {
                         setActiveView(e.index);
-                        console.log(e.index)
                     }} />
                 </Col>
+
                 <Col md="auto" className="margin-bottom">
-                    <span className="margin-right">Language: </span>
-                    <Dropdown
-                        md={7}
-                        value={language.toUpperCase()}
-                        options={selectableLanguages}
-                        onChange={(e) => setPageLanguage(overlay, e.value)}
-                        placeholder="Select a language"
-                    />
+                    <TabMenu model={selectableLanguages} activeIndex={activeLanguageIndex} onTabChange={(e) => {
+                        setActiveLanguageIndex(e.index)
+                        setPageLanguage(overlay, e.value.value);
+                    }} />
                 </Col>
             </Row>
 
