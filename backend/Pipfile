@@ -22,6 +22,7 @@ lxml = "*"
 Pillow = "*"
 django-rest-framework-social-oauth2 = "*"
 langdetect = "==1.0.9"
+dcxml = "==0.1.2"
 
 [requires]
 python_version = "3.9"

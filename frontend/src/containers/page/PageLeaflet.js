@@ -2,12 +2,10 @@ import React, {useRef, useState} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../../constants/leafletFunctions";
-import {Dropdown} from "primereact/dropdown";
 import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {languageSelectItems} from "../../constants/language-selections"
 import _ from 'lodash';
-import {Card} from "primereact/card";
 import {TabMenu} from "primereact/tabmenu";
 import PageMetadata from "./PageMetadata";
 import PageHistory from "./PageHistory";
@@ -220,7 +218,7 @@ const PageLeaflet = (props) => {
             {/* Metadata View*/}
             {(activeView === 2 &&
                 <div className="occ-plaintext white-space margin-top">
-                    <PageMetadata pageId={page.id}/>
+                    <PageMetadata page={page}/>
                 </div>
             )}
 
