@@ -31,7 +31,7 @@ const GoogleLoginPage = () => {
     }
 
     const onFailureMessage = () => {
-        toast.current.show({severity: 'danger', summary: 'Failed', detail: 'Google authentication failed'});
+        toast.current.show({severity: 'error', summary: 'Failed', detail: 'Google authentication failed'});
     }
 
     return (

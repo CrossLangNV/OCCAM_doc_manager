@@ -37,6 +37,7 @@ const PageList = (props) => {
     // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
     const [translationOverlayId, setTranslationOverlayId] = useState("");
+    const [translationOverlaySourceLang, setTranslationOverlaySourceLang] = useState("");
     const [contextMenuPage, setContextMenuPage] = useState("");
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
     const [checkedTM, setCheckedTM] = useState(false);
@@ -74,14 +75,19 @@ const PageList = (props) => {
     }
 
     const startTranslationForPage = (e) => {
-        dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
-        toast.current.show({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Translation task has been started for the selected page'
-        });
-        translationSelectionOverlay.current.hide(e);
-        dispatch(GetPageList(100, 1, documentId, checkedTM))
+        if (translationOverlaySourceLang !== targetLanguage && targetLanguage !== "ORIGINAL") {
+            dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
+            toast.current.show({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Translation task has been started for the selected page'
+            });
+            translationSelectionOverlay.current.hide(e);
+            dispatch(GetPageList(100, 1, documentId, checkedTM))
+        } else {
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Target language cannot be the same as the source language'});
+        }
+
     }
 
     const toggleTranslationMenu = (e, page) => {
@@ -90,11 +96,12 @@ const PageList = (props) => {
 
             // Set states so the UI knows which overlay is selected, and which page is selecting for the loading animation
             setTranslationOverlayId(overlay);
+            setTranslationOverlaySourceLang(page.page_overlay[page.page_overlay.length - 1].source_lang)
 
             // Toggle the menu
             translationSelectionOverlay.current.toggle(e);
         } else {
-            toast.current.show({severity: 'danger', summary: 'Failed', detail: 'Translation is not possible when no overlay is available. Upload an overlay or OCR the page.'});
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Translation is not possible when no overlay is available. Upload an overlay or OCR the page.'});
         }
 
     }
@@ -113,7 +120,7 @@ const PageList = (props) => {
             e.preventDefault();
             window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
         } else {
-            toast.current.show({severity: 'danger', summary: 'Failed', detail: 'No overlay available. Upload an overlay or OCR the page first.'});
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'No overlay available. Upload an overlay or OCR the page first.'});
         }
 
     }
