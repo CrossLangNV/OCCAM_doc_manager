@@ -260,7 +260,7 @@ const PageList = (props) => {
                                                         <InputSwitch inputId="useTM" checked={checkedTM} onChange={e => setCheckedTM(e.value)} />
                                                         <label htmlFor="useTM">Use translation memory</label>
                                                     </div>
-                                                    Click <a className="occ-link" onClick={() => history.push("/")} >here</a> to see translation memory configuration.
+                                                    Click <a className="occ-link" onClick={() => history.push("/settings")} >here</a> to see translation memory configuration.
                                                 </Col>
                                             </Row>
                                             <br/>
