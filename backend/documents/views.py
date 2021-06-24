@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 
 from documents.models import Document, Page, Overlay, Label
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer
+from documents.tm_connector import MouseTmConnector
 from scheduler.ocr_tasks import ocr_page
 from scheduler.translation_tasks import translate_overlay
 
@@ -136,3 +137,29 @@ class PageLaunchOCRAPIView(APIView):
         logger.info("Starting celery task for translation")
 
         return Response("OCR Task launched", status=status.HTTP_201_CREATED)
+
+
+class TmxUploadAPIView(APIView):
+    queryset = Page.objects.none()
+
+    def post(self, request, format=None, *args, **kwargs):
+        tmx = request.FILES.get('tmx')
+        conn = MouseTmConnector()
+        conn.import_tmx("", "", tmx)
+
+        return Response("Uploaded TMX file", status=status.HTTP_201_CREATED)
+
+
+class TmStatsAPIView(APIView):
+    queryset = Page.objects.none()
+
+    def get(self, request, format=None, *args, **kwargs):
+        conn = MouseTmConnector()
+        langpairs = conn.get_available_langpairs("")
+        results = {}
+
+        for langpair in langpairs:
+            amount_tus = conn.get_tu_amount("", langpair)
+            results[langpair] = amount_tus
+
+        return Response(results)

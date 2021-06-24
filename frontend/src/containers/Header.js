@@ -48,6 +48,7 @@ const Header = () => {
                     <Nav.Link as={Link} to="/">Documents</Nav.Link>
                     <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
                     <Nav.Link as={Link} to="/help">Help</Nav.Link>
+                    <Nav.Link as={Link} to="/settings">Settings</Nav.Link>
 
                     {/* Loading spinner */}
                     {(reduxIsLoading()) && (

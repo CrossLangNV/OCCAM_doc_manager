@@ -57,6 +57,13 @@ class TmConnector(abc.ABC):
             total number of TUs for the given key and langpair
         """
 
+    def get_available_langpairs(self, key: str):
+        """
+        key: TM key, leave empty for public
+        returns:
+            array of available language pairs
+        """
+
 
 class MouseTmConnector(TmConnector):
     URL_HEALTH = URL_BASE + '/admin/tminfo'
@@ -126,3 +133,16 @@ class MouseTmConnector(TmConnector):
         response = requests.get(self.URL_TU_AMOUNT, params=params)
         response.raise_for_status()
         return int(response.content.decode('utf-8'))
+
+    def get_available_langpairs(self, key: str):
+        params = {
+            'key': key
+        }
+        response = requests.get(self.URL_HEALTH, params=params)
+        response.raise_for_status()
+        try:
+            json_response = response.json()
+            langpairs = json_response["langPairs"]
+        except ValueError:
+            return {}
+        return langpairs

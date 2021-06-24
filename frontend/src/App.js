@@ -16,6 +16,7 @@ import {load_user} from "./actions/authActions";
 import {useDispatch} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
 import Footer from "./containers/Footer";
+import Settings from './containers/Settings';
 
 function App() {
     const location = useLocation();
@@ -43,6 +44,7 @@ function App() {
                         <PrivateRoute path={"/document/:documentId"} exact component={Document}/>
                         <PrivateRoute path={"/document-add"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
+                        <PrivateRoute path={"/settings"} exact component={Settings}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>

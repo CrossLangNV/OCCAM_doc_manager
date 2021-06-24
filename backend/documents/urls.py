@@ -2,7 +2,8 @@ from django.urls import path
 
 from .views import PageListAPIView, PageDetailAPIView, TranslatePageAPIView, OverlayListAPIView, \
     DocumentListAPIView, \
-    DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, LabelsListAPIView
+    DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, LabelsListAPIView, TmxUploadAPIView, \
+    TmStatsAPIView
 
 urlpatterns = [
     path("api/documents", DocumentListAPIView.as_view(), name="document_list_api"),
@@ -17,4 +18,7 @@ urlpatterns = [
     path("api/overlay/<str:pk>", OverlayDetailAPIView.as_view(), name="overlay_api_detail"),
 
     path('api/labels', LabelsListAPIView.as_view(), name='labels_list_api'),
+
+    path('api/tmx/upload', TmxUploadAPIView.as_view(), name='tmx_upload_api'),
+    path('api/tm/stats', TmStatsAPIView.as_view(), name='tm_stats_api'),
 ]
