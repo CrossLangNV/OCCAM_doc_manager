@@ -4,7 +4,7 @@ import {Timeline} from "primereact/timeline";
 import {baseUrl} from "../../constants/axiosConf";
 import _ from "lodash";
 
-const PageHistory = (props) => {
+const PageMetadata = (props) => {
     const page = props.page
     const pageId = page.id
 
@@ -53,4 +53,4 @@ const PageHistory = (props) => {
     );
 };
 
-export default PageHistory;
+export default PageMetadata;
