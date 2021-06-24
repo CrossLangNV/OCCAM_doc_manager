@@ -2,23 +2,35 @@ import React, {useRef, useState} from 'react';
 import {ImageOverlay, MapContainer, Polygon, Tooltip, useMap} from 'react-leaflet'
 import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../../constants/leafletFunctions";
-import {Dropdown} from "primereact/dropdown";
 import {Col, Row} from "react-bootstrap";
 import axios from "axios";
 import {languageSelectItems} from "../../constants/language-selections"
 import _ from 'lodash';
-import {Card} from "primereact/card";
+import {TabMenu} from "primereact/tabmenu";
+import PageMetadata from "./PageMetadata";
+import PageHistory from "./PageHistory";
+import PagePlainText from "./PagePlainText";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
     const file = page.file
 
+    // UI Elements
     const [overlay, setOverlay] = useState("");
     const [language, setLanguage] = useState("ORIGINAL");
     const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
-
+    const [activeView, setActiveView] = useState(0);
+    const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
     const [plainText, setPlainText] = useState("");
+    const viewOptions = [
+        {label: 'Page View', icon: ''},
+        {label: 'Text View', icon: ''},
+        {label: 'Metadata', icon: ''},
+        {label: 'History', icon: ''},
+    ];
+
+
 
     React.useEffect(() => {
         if (page.page_overlay.length > 0) {
@@ -162,64 +174,60 @@ const PageLeaflet = (props) => {
     return (
         <>
             <Row className="justify-content-between">
-                <Col md={10}>
-                    <h5>Page view</h5>
+                <Col md={4}>
+                    <TabMenu model={viewOptions} activeIndex={activeView} onTabChange={(e) => {
+                        setActiveView(e.index);
+                    }} />
                 </Col>
+
                 <Col md="auto" className="margin-bottom">
-                    <span className="margin-right">Language: </span>
-                    <Dropdown
-                        md={7}
-                        value={language.toUpperCase()}
-                        options={selectableLanguages}
-                        onChange={(e) => setPageLanguage(overlay, e.value)}
-                        placeholder="Select a language"
+                    <TabMenu model={selectableLanguages} activeIndex={activeLanguageIndex} onTabChange={(e) => {
+                        setActiveLanguageIndex(e.index)
+                        setPageLanguage(overlay, e.value.value);
+                    }} />
+                </Col>
+            </Row>
+
+            {/* Leaflet Page View */}
+            {(activeView === 0 &&
+
+                <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
+
+                    <ImageOverlay
+                        ref={mapRef}
+                        url={file}
+                        bounds={imageBounds}
+                        opacity={1}
+                        zIndex={10}
                     />
-                </Col>
-            </Row>
 
-            <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
+                    <ResizeComponent/>
 
-                <ImageOverlay
-                    ref={mapRef}
-                    url={file}
-                    bounds={imageBounds}
-                    opacity={1}
-                    zIndex={10}
-                />
+                    <LeafletMarkers leafletMarkers={leafletMarkers} />
 
-                <ResizeComponent/>
+                </MapContainer>
+            )}
 
-                <LeafletMarkers leafletMarkers={leafletMarkers} />
+            {/* Plain Text View */}
+            {(activeView === 1 &&
+                <div className="occ-plaintext white-space margin-top">
+                    <PagePlainText content={plainText} />
+                </div>
+            )}
 
-            </MapContainer>
+            {/* Metadata View*/}
+            {(activeView === 2 &&
+                <div className="occ-plaintext white-space margin-top">
+                    <PageMetadata page={page}/>
+                </div>
+            )}
 
-            <Row className="margin-top">
-                <Col>
-                    <Card>
-                        <Row className="justify-content-between">
-                            <Col md={10}>
-                                <h5>Text view</h5>
-                            </Col>
-                            <Col>
-                                <span className="margin-right">Language: </span>
-                                <Dropdown
-                                    md={7}
-                                    value={language.toUpperCase()}
-                                    options={selectableLanguages}
-                                    onChange={(e) => setPageLanguage(overlay, e.value)}
-                                    placeholder="Select a language"
-                                />
-                            </Col>
-                        </Row>
-
-
-                        <div className="occ-plaintext white-space">
-                            {plainText}
-                        </div>
-
-                    </Card>
-                </Col>
-            </Row>
+            {/* History View*/}
+            {(activeView === 3 &&
+                <div className="occ-plaintext white-space margin-top">
+                    <PageHistory pageId={page.id}/>
+                </div>
+            )}
         </>
     )
 }

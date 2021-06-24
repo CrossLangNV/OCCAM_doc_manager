@@ -27,7 +27,7 @@ const Settings = () => {
         if (files) {
             dispatch(UploadTMX(files[0]));
             toast.current.show({ severity: 'success', summary: 'Success', detail: 'TMX file has been uploaded.' });
-            //uploadRef.current.clear();
+            uploadRef.current.clear();
         }
     }
 

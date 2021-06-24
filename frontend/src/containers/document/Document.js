@@ -1,24 +1,20 @@
 import {useDispatch, useSelector} from "react-redux";
 import {DeleteDocument, GetDocument, GetDocumentList} from "../../actions/documentActions";
-import React, {useRef} from "react";
+import React from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
-import Moment from "react-moment";
-import PageAdd from "../page/PageAdd";
 import PageList from "../page/PageList";
-import DocumentState from "./DocumentState";
 import {ModifySelectedPage} from "../../actions/uiActions";
 import {GetPageList, OcrPage} from "../../actions/pageActions";
+import ProgressBar from "../ProgressBar";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
     const dispatch = useDispatch()
     let history = useHistory();
-    const uploadRef = useRef();
-
 
     // Redux states
     const documentState = useSelector(state => state.document)
@@ -71,8 +67,11 @@ const Document = (props) => {
             return (
                 <div>
                     <Row className="justify-content-between">
-                        <Col md={7}>
-                            <h1>{documentData.name}</h1>
+                        <Col md={3}>
+                            <h2>{documentData.name}</h2>
+                        </Col>
+                        <Col md={5}>
+                            <ProgressBar activeStep={4} documentId={documentId}/>
                         </Col>
                         <Col md="auto">
                             <Button
@@ -90,19 +89,6 @@ const Document = (props) => {
                                 tooltipOptions={{position: 'bottom'}}
                             />
                             <Button
-                                onClick={() => {
-                                    uploadRef.current.scrollIntoView(
-                                        {
-                                            behavior: 'smooth',
-                                            block: 'end',
-                                            inline: 'nearest'
-                                        })
-                                }}
-                                label="Upload page(s)"
-                                icon="pi pi-upload"
-                                className="p-button-default margin-left"
-                            />
-                            <Button
                                 onClick={() => confirmDeleteDoc(documentId)}
                                 label="Delete document"
                                 icon="pi pi-trash"
@@ -111,18 +97,6 @@ const Document = (props) => {
                         </Col>
                     </Row>
 
-                    <p>
-                        <b>Content: </b> {documentData.content}
-                    </p>
-                    <p>
-                        <b className="margin-right">State:</b>
-                        <DocumentState state={documentData.state} />
-                    </p>
-                    <p>
-                        <b>Created at:</b>
-                        <Moment format="DD/MM/YYYY H:mm" date={documentData.created_at} />
-                    </p>
-
                     <br/>
 
                         <div>
@@ -130,13 +104,6 @@ const Document = (props) => {
 
                             <br/><br/>
                         </div>
-
-
-                    <h5>Upload pages</h5>
-                    <div ref={uploadRef}>
-                        <PageAdd documentId={documentId} />
-                    </div>
-
                 </div>
             )
         }

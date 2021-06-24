@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
-from documents.models import Document, Page, Overlay, Geojson, Label
+from documents.metadata_django import MetadataDjango
+from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel
 
 
 class GeojsonSerializer(serializers.ModelSerializer):
@@ -39,6 +40,8 @@ class PageSerializer(serializers.ModelSerializer):
 
     latest_ocr_state = serializers.SerializerMethodField()
     latest_translation_state = serializers.SerializerMethodField()
+    metadata = serializers.SerializerMethodField()
+    metadata_xml = serializers.SerializerMethodField()
 
     def get_latest_ocr_state(self, page):
         latest_activity_for_page = ActivityLog.objects.filter(page=page, type=ActivityLogType.OCR)
@@ -64,6 +67,23 @@ class PageSerializer(serializers.ModelSerializer):
     def get_image_width(self, page):
         return page.file.width
 
+    def get_metadata(self, page):
+        metadata = MetadataDjango.from_page(page)
+
+        data = metadata.get_dict()
+
+        page_labels = page.page_labels.all()
+        for page_label in page_labels:
+            data.setdefault(page_label.name, []).append(page_label.value)
+
+        return data
+
+    def get_metadata_xml(self, page):
+
+        metadata = MetadataDjango.from_page(page)
+
+        return metadata.to_xml()
+
     class Meta:
         model = Page
         fields = "__all__"
@@ -80,4 +100,10 @@ class DocumentSerializer(serializers.ModelSerializer):
 class LabelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Label
+        fields = "__all__"
+
+
+class LayoutAnalysisModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LayoutAnalysisModel
         fields = "__all__"

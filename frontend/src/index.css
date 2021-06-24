@@ -45,9 +45,10 @@ a {
 }
 
 .page-card-img {
-  width: 18rem !important;
+  width: 75%;
+  margin-left: 10%;
+  margin-bottom: 15px;
   cursor: pointer;
-  margin-bottom: 8px;
 }
 
 .margin-left {
@@ -70,10 +71,6 @@ a {
   margin-top: 1rem !important;
 }
 
-.page-container {
-  min-height: 408px;
-}
-
 #mapid { height: 180px; }
 
 .leaflet-container {
@@ -84,7 +81,7 @@ a {
 }
 
 .selectedPage {
-  border: 2px solid #2196F3;
+  border: 4px solid #2196F3;
 }
 
 .occ-leaflet-tooltip {
@@ -183,4 +180,27 @@ a {
 .occ-branding-login {
   font-size: 24px;
   font-weight: bold;
+}
+
+.occ-full-width {
+  width: 100% !important;
+}
+
+.occ-summary-field {
+  height: 200px;
+}
+
+.occ-center {
+  left: 50%;
+  right: 50%;
+  position: absolute !important;
+}
+
+.occ-context-menu-button {
+  margin-left: -20px !important;
+}
+
+.occ-link {
+  color: #2196F3;
+  cursor: pointer;
 }

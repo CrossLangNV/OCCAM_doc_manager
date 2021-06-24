@@ -13,18 +13,21 @@ import {ModifySelectedPage} from "../../actions/uiActions";
 import {OverlayPanel} from "primereact/overlaypanel";
 import {languageSelectItems} from "../../constants/language-selections";
 import {Dropdown} from "primereact/dropdown";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../core/LoadingSpinner";
 import {Dialog} from "primereact/dialog";
-import PageHistory from "./PageHistory";
 import {ScrollPanel} from "primereact/scrollpanel";
 import DocumentState from "../document/DocumentState";
-import PageMetadata from "./PageMetadata";
+import {ContextMenu} from "primereact/contextmenu";
+import NotSelectedMessage from "../NotSelectedMessage";
+import {useHistory} from "react-router-dom";
+import {InputSwitch} from "primereact/inputswitch";
 
 
 const PageList = (props) => {
     const documentId = props.documentId;
     const dispatch = useDispatch();
     const toast = useRef(null);
+    const history = useHistory();
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
@@ -34,25 +37,18 @@ const PageList = (props) => {
     // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
     const [translationOverlayId, setTranslationOverlayId] = useState("");
-    const [displayPageHistory, setDisplayPageHistory] = useState(false);
-    const [pageHistoryId, setPageHistoryId] = useState("");
-    const [displayPageMetadata, setDisplayPageMetadata] = useState(false);
-    const [pageMetadataId, setPageMetadataId] = useState("");
+    const [translationOverlaySourceLang, setTranslationOverlaySourceLang] = useState("");
+    const [contextMenuPage, setContextMenuPage] = useState("");
+    const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
+    const [checkedTM, setCheckedTM] = useState(false);
+
+
+    const cm = useRef(null);
 
     // Load pages initially
     useEffect(() => {
         dispatch(GetPageList(100, 1, documentId));
     }, [])
-
-    // Refresh the pages every 5 seconds
-    // TODO Fix Leaflet zoom is also being reset with this
-    // useEffect(() => {
-    //     const timer = setTimeout(
-    //         () => dispatch(GetPageList(100, 1, documentId)),
-    //         5000
-    //     );
-    //     return () => clearTimeout(timer);
-    // })
 
     const translationSelectionOverlay = useRef(null);
 
@@ -79,60 +75,91 @@ const PageList = (props) => {
     }
 
     const startTranslationForPage = (e) => {
-        dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
-        toast.current.show({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Translation task has been started for the selected page'
-        });
-        translationSelectionOverlay.current.hide(e);
-        dispatch(GetPageList(100, 1, documentId))
+        if (translationOverlaySourceLang !== targetLanguage && targetLanguage !== "ORIGINAL") {
+            dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
+            toast.current.show({
+                severity: 'success',
+                summary: 'Success',
+                detail: 'Translation task has been started for the selected page'
+            });
+            translationSelectionOverlay.current.hide(e);
+            dispatch(GetPageList(100, 1, documentId, checkedTM))
+        } else {
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Target language cannot be the same as the source language'});
+        }
+
     }
 
     const toggleTranslationMenu = (e, page) => {
-        const overlay = page.page_overlay[page.page_overlay.length - 1].id
+        if (!_.isEmpty(page.page_overlay)) {
+            const overlay = page.page_overlay[page.page_overlay.length - 1].id
 
-        // Set states so the UI knows which overlay is selected, and which page is selecting for the loading animation
-        setTranslationOverlayId(overlay);
+            // Set states so the UI knows which overlay is selected, and which page is selecting for the loading animation
+            setTranslationOverlayId(overlay);
+            setTranslationOverlaySourceLang(page.page_overlay[page.page_overlay.length - 1].source_lang)
 
-        // Toggle the menu
-        translationSelectionOverlay.current.toggle(e);
-    }
+            // Toggle the menu
+            translationSelectionOverlay.current.toggle(e);
+        } else {
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Translation is not possible when no overlay is available. Upload an overlay or OCR the page.'});
+        }
 
-    const toggleHistoryMenu = (e, page) => {
-        setPageHistoryId(page.id)
-        // Toggle the menu
-        setDisplayPageHistory(true)
-    }
-
-    const toggleMetadataMenu = (e, page) => {
-        setPageMetadataId(page.id)
-        // Toggle the menu
-        setDisplayPageMetadata(true)
     }
 
     const selectPage = async (page) => {
         dispatch(ModifySelectedPage(page))
     }
 
-    // const getPageState = async (pageId, type) => {
-    //     const config = {
-    //         headers: {
-    //             'Authorization': `Bearer ${localStorage.getItem("access")}`
-    //         }
-    //     }
-    //
-    //     const res = await axios.get(`${baseUrl}/activitylogs/api/activitylogs?rows=1&offset=0&page=${pageId}&type=${type}&onlyLatest=true`,
-    //         config).then(res => {
-    //             if (res.data.count > 0) {
-    //                 console.log(res.data)
-    //                 return <div>{res.data.results[0].state}</div>
-    //             }
-    //     })
-    //
-    //     return <div>No state</div>
-    //
-    // }
+    const openContextMenu = (e, page) => {
+        setContextMenuPage(page)
+        cm.current.show(e)
+    }
+
+    const downloadOverlay = (e, page) => {
+        if (!_.isEmpty(page.page_overlay)) {
+            e.preventDefault();
+            window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
+        } else {
+            toast.current.show({severity: 'error', summary: 'Failed', detail: 'No overlay available. Upload an overlay or OCR the page first.'});
+        }
+
+    }
+
+    const contextMenuItems = [
+        {
+            label: 'Start OCR',
+            icon: 'pi pi-play',
+            command: () => startOcrForPage(contextMenuPage.id)
+        },
+        {
+            label: 'Translate...',
+            icon: 'pi pi-globe',
+            command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
+        },
+        {
+            label: 'Upload overlay...',
+            icon: 'pi pi-upload',
+            command: () => setDisplayUploadOverlayDialog(true)
+        },
+        {
+            label: 'View page overlay',
+            icon: 'pi pi-fw pi-file',
+            command: (event) => downloadOverlay(event.originalEvent, contextMenuPage)
+        },
+        {
+            label: 'View full-size page',
+            icon: 'pi pi-fw pi-file',
+            command: () => window.open(contextMenuPage.file, '_blank')
+        },
+        {
+            separator:true
+        },
+        {
+            label: 'Delete page',
+            icon: 'pi pi-trash',
+            command: () => confirmDeletePage(contextMenuPage.id)
+        },
+    ]
 
     return (
         <>
@@ -145,102 +172,27 @@ const PageList = (props) => {
                             {pageList.data.map(page => {
                                 return <Card key={page.id} className='page-card'>
                                     <Row>
-                                        <Col className="page-container">
+                                        <Col>
                                             <Image
                                                 onClick={() => selectPage(page)}
                                                 className={uiStates.selectedPage.id === page.id ?
                                                     'page-card-img selectedPage' : 'page-card-img'}
                                                 src={page.file}
                                             />
+                                            <Button
+                                                className="occ-context-menu-button p-button-rounded p-button-secondary"
+                                                label=""
+                                                icon="pi pi-ellipsis-h"
+                                                onClick={(e) => openContextMenu(e, page)}
+                                            />
+                                            <ContextMenu model={contextMenuItems} ref={cm}/>
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col>
-                                            <Button
-                                                onClick={() => confirmDeletePage(page.id)}
-                                                label=""
-                                                icon="pi pi-trash"
-                                                className="p-button-danger"
-                                                tooltip="Delete page"
-                                                tooltipOptions={{position: 'bottom'}}
-                                            />
-                                            <Button
-                                                className="margin-left"
-                                                label=""
-                                                icon="pi pi-search-plus"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    window.open(page.file, '_blank');
-                                                }}
-                                                tooltip="View full size page"
-                                                tooltipOptions={{position: 'bottom'}}
-                                            />
-                                        </Col>
-                                    </Row>
-                                    <br/>
 
-                                    <Row className="justify-content-between">
-                                        <Col md={7}>
-                                            <OverlayAdd
-                                                pageId={page.id}
-                                                label={!_.isEmpty(page.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
-                                            />
-                                        </Col>
-                                        <Col md="auto">
-                                            {(!_.isEmpty(page.page_overlay) &&
-                                                <Button
-                                                    className="margin-right"
-                                                    label=""
-                                                    icon="pi pi-eye"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
-                                                    }}
-                                                    tooltip="View overlay"
-                                                    tooltipOptions={{position: 'bottom'}}
-                                                />
-                                            )}
-                                        </Col>
-                                    </Row>
                                     <hr/>
 
                                     <Row>
                                         <Col>
-                                            <Button
-                                                onClick={() => startOcrForPage(page.id)}
-                                                label=""
-                                                icon="pi pi-play"
-                                                className="p-button-primary"
-                                                tooltip="Run OCR"
-                                                tooltipOptions={{position: 'bottom'}}
-                                            />
-                                            {(!_.isEmpty(page.page_overlay) &&
-                                                <Button
-                                                    onClick={(e) => toggleTranslationMenu(e, page)}
-                                                    label=""
-                                                    icon="pi pi-globe"
-                                                    className="p-button-primary margin-left"
-                                                    tooltip="Translate page"
-                                                    tooltipOptions={{position: 'bottom'}}
-                                                />
-                                            )}
-                                            <Button
-                                                onClick={(e) => toggleHistoryMenu(e, page)}
-                                                label=""
-                                                icon="pi pi-info-circle"
-                                                className="p-button-primary margin-left"
-                                                tooltip="Show history"
-                                                tooltipOptions={{position: 'bottom'}}
-                                            />
-                                            <Button
-                                                onClick={(e) => toggleMetadataMenu(e, page)}
-                                                label=""
-                                                icon="pi pi-tags"
-                                                className="p-button-primary margin-left"
-                                                tooltip="Show classification labels"
-                                                tooltipOptions={{position: 'bottom'}}
-                                            />
-
                                             <Row>
                                                 <Col>
                                                     <br/>
@@ -281,6 +233,8 @@ const PageList = (props) => {
                                                 </Col>
                                             </Row>
                                         </Col>
+
+                                        {/* Translation Overlay Panel */}
                                         <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
                                             <h6>Translate page</h6>
                                             <Row>
@@ -302,6 +256,17 @@ const PageList = (props) => {
 
                                             <Row>
                                                 <Col>
+                                                    <div className="p-field-checkbox">
+                                                        <InputSwitch inputId="useTM" checked={checkedTM} onChange={e => setCheckedTM(e.value)} />
+                                                        <label htmlFor="useTM">Use translation memory</label>
+                                                    </div>
+                                                    Click <a className="occ-link" onClick={() => history.push("/")} >here</a> to see translation memory configuration.
+                                                </Col>
+                                            </Row>
+                                            <br/>
+
+                                            <Row>
+                                                <Col>
                                                     <Button onClick={(e) => startTranslationForPage(e)}
                                                             label="Translate"
                                                             icon="pi pi-check"
@@ -311,43 +276,17 @@ const PageList = (props) => {
                                                 </Col>
 
                                             </Row>
-
-
                                         </OverlayPanel>
-
-                                        {/* Page history timeline view */}
-                                        <Dialog header="Page history" visible={displayPageHistory}
-                                                style={{width: '50vw'}}
-                                                onHide={() => setDisplayPageHistory(false)}>
-                                            <PageHistory pageId={pageHistoryId}/>
-                                        </Dialog>
-
-                                        {/* Page metadata */}
-                                        <Dialog header="Page classification labels" visible={displayPageMetadata}
-                                                style={{width: '50vw'}}
-                                                onHide={() => setDisplayPageMetadata(false)}>
-                                            <PageMetadata pageId={pageMetadataId}/>
-                                        </Dialog>
-
                                     </Row>
                                 </Card>
                             })}
-                            <Toast ref={toast} />
+
 
                         </ScrollPanel>
                     )}
 
-                    {/* No pages are uploaded message */}
-                    {_.isEmpty(pageList.data) && (
-                        <div>
-                            <Card className="occ-ui-empty-leaflet-container">
-                                <div className="p-d-flex p-ai-center p-dir-col">
-                                    <i className="pi pi-image p-mt-3 p-p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}} />
-                                    <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">No pages are uploaded yet.</span>
-                                </div>
-                            </Card>
-                        </div>
-                    )}
+                    <NotSelectedMessage context={pageList.data} message="No pages are uploaded yet." />
+
                 </Col>
 
                 {!_.isEmpty(pageList.data) && (
@@ -364,21 +303,21 @@ const PageList = (props) => {
                         )}
 
                         {/* No page selected message */}
-                        {uiStates.selectedPage === "" && (
-                            <div>
-                                <Card className="occ-ui-empty-leaflet-container">
-                                    <div className="p-d-flex p-ai-center p-dir-col">
-                                        <i className="pi pi-image p-mt-3 p-p-5" style={{'fontSize': '5em', borderRadius: '50%', backgroundColor: 'var(--surface-b)', color: 'var(--surface-d)'}}/>
-                                        <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">No page selected</span>
-                                    </div>
-                                </Card>
-                            </div>
-                        )}
+                        <NotSelectedMessage context={uiStates.selectedPage} message="No page selected" />
+
                     </Col>
                 )}
             </Row>
 
+            <Dialog visible={displayUploadOverlayDialog} onHide={() => setDisplayUploadOverlayDialog(false)}>
+                    <OverlayAdd
+                        pageId={contextMenuPage.id}
+                        label={!_.isEmpty(contextMenuPage.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
+                    />
 
+            </Dialog>
+
+            <Toast ref={toast} />
         </>
 
     );

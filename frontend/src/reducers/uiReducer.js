@@ -3,7 +3,9 @@ import {UiActionTypes} from "../constants/ui-action-types";
 
 const DefaultState = {
     documentQuery: "",
-    selectedPage: ""
+    selectedPage: "",
+    layout_engines: [],
+    selected_layout_engine: ""
 };
 
 const UiReducer = (state = DefaultState, action) => {
@@ -17,6 +19,19 @@ const UiReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 selectedPage: action.payload
+            }
+        case UiActionTypes.UI_DOCUMENT_SELECTED_ENGINE_MODIFY:
+            return {
+                ...state,
+                selected_layout_engine: action.payload
+            }
+        case UiActionTypes.UI_DOCUMENT_LAYOUT_ENGINES_SUCCESS:
+            return {
+                ...state,
+                layout_engines: action.payload,
+                selected_layout_engine: action.payload.filter(p => {
+                    return p.selected
+                })
             }
         default:
             return state

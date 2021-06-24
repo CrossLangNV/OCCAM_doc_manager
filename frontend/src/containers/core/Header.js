@@ -3,10 +3,10 @@ import {Button, Container, Form, FormControl, Nav, Navbar} from "react-bootstrap
 
 import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {ModifyDocumentQuery} from "../actions/uiActions";
-import {GetDocumentList} from "../actions/documentActions";
+import {ModifyDocumentQuery} from "../../actions/uiActions";
+import {GetDocumentList} from "../../actions/documentActions";
 import {ProgressSpinner} from "primereact/progressspinner";
-import {Logout} from "../actions/authActions";
+import {Logout} from "../../actions/authActions";
 
 const Header = () => {
     const location = useLocation();

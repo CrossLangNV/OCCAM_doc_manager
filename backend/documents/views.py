@@ -7,8 +7,9 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label
-from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer
+from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
+    LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
 from scheduler.ocr_tasks import ocr_page
 from scheduler.translation_tasks import translate_overlay
@@ -98,6 +99,11 @@ class OverlayListAPIView(ListCreateAPIView):
             q = q.filter(page__id=str(page_id))
 
         return q
+
+
+class LayoutAnalysisModelsAPIView(ListCreateAPIView):
+    queryset = LayoutAnalysisModel.objects.all()
+    serializer_class = LayoutAnalysisModelSerializer
 
 
 class OverlayDetailAPIView(RetrieveUpdateDestroyAPIView):

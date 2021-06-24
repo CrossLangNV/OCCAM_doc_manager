@@ -11,6 +11,17 @@ from django.utils.translation import gettext_lazy
 from documents import pagexml2geojson
 
 
+class LayoutAnalysisModel(models.Model):
+    name = models.CharField(default="", max_length=1000)
+    value = models.TextField(default="", blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+    def __str__(self):
+        return str(self.name)
+
+
 class LanguageCodes(models.TextChoices):
     NL = "NL", gettext_lazy("Nederlands")
     EN = "EN", gettext_lazy("English")
@@ -43,6 +54,8 @@ class Document(models.Model):
         choices=DocumentState.choices,
         default=DocumentState.NEW,
     )
+
+    layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
 
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
 

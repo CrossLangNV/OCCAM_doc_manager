@@ -2,8 +2,10 @@ import {PageActionTypes} from "../constants/page-action-types";
 import axios from "axios";
 import {baseUrl} from "../constants/axiosConf";
 
-export const GetPageList = (rows, page, doc_id) => async dispatch => {
+export const GetPageList = (rows, page, doc_id, checkedTM) => async dispatch => {
     try {
+
+        // TODO use the checkedTM value
 
         dispatch({
             type: PageActionTypes.PAGE_LIST_LOADING
