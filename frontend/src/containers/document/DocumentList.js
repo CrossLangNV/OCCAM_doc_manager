@@ -10,16 +10,26 @@ import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";
 import Tour from "reactour";
+import {ChangeTutorialState} from "../../actions/authActions";
 
 
 const DocumentList = () => {
     const dispatch = useDispatch();
+    let history = useHistory();
+
+    // Redux states
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
-    let history = useHistory();
+    const auth = useSelector(state => state.auth)
+
+    const [tourOpened, setTourOpened] = useState(false);
+
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery);
+        if (!auth.hasCompletedTutorial) {
+            setTourOpened(true)
+        }
     }, []);
 
     const fetchDocuments = (rows, page, query) => {
@@ -76,6 +86,11 @@ const DocumentList = () => {
                 <div>
                     <h3>Welcome</h3>
                     <p>Let's take a quick tour on how to use the application.</p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                        setTourOpened(false)
+                    }}/>
                 </div>
 
             )
@@ -84,6 +99,7 @@ const DocumentList = () => {
             selector: '.doc-list-step-two',
             content: () => (
                 <div>
+                    <h3>Document List</h3>
                     <p>This is a table with all your documents.</p>
                     <p>At the first glance, it should look pretty empty...</p>
                     <p>When you created documents, you can always navigate to them by clicking on the titles.</p>
@@ -95,17 +111,13 @@ const DocumentList = () => {
             selector: '.doc-list-step-three',
             content: () => (
                 <div>
-                    <p>Let's create a document now!</p>
+                    <h3>Add new document</h3>
                     <p>By pressing this button you can create a new document.</p>
                 </div>
             )
         },
         // ...
     ]
-
-    const [tourOpened, setTourOpened] = useState(true);
-
-
 
     return (
         <div className="doc-list-step-two">

@@ -97,12 +97,42 @@ const DocumentAdd = (props) => {
 
     const steps = [
         {
+            selector: '.add-doc-step-one',
             content: () => (
                 <div>
-                    <h3>Welcome</h3>
-                    <p>Let's take a quick tour on how to use the application.</p>
+                    <h3>Document Title</h3>
+                    <p>A document is a collection of pages/images.</p>
+                    <p>Here you can fill in a title for your new document.</p>
                 </div>
-
+            )
+        },
+        {
+            selector: '.add-doc-step-two',
+            content: () => (
+                <div>
+                    <h3>Summary</h3>
+                    <p><b>Optional</b>: A summary of your document, for your own reference. </p>
+                </div>
+            )
+        },
+        {
+            selector: '.doc-list-step-four',
+            content: () => (
+                <div>
+                    <h3>Next steps</h3>
+                    <p>With this progress bar you can see which step you are currently in.</p>
+                    <p>You can always use it to navigate back or forward.</p>
+                </div>
+            )
+        },
+        {
+            selector: '.doc-list-step-five',
+            content: () => (
+                <div>
+                    <h3>Next button</h3>
+                    <p>When you have filled in the information of your document, you can press this button to proceed to
+                        the next step.</p>
+                </div>
             )
         },
     ]
@@ -117,7 +147,7 @@ const DocumentAdd = (props) => {
                 onRequestClose={() => setTourOpened(false)}
             />
 
-            <Row>
+            <Row className="doc-list-step-four">
                 <ProgressBar activeStep={1} documentId={documentId}/>
             </Row>
 
@@ -135,7 +165,7 @@ const DocumentAdd = (props) => {
                     <Card footer={footer}>
                         <h5>Document information</h5>
                         <br/>
-                        <span className="p-float-label">
+                        <span className="p-float-label add-doc-step-one">
                             <InputText
                                 id="title"
                                 value={title}
@@ -156,15 +186,15 @@ const DocumentAdd = (props) => {
                         rows={5}
                         cols={30}
                         onChange={(e) => setContent(e.target.value)}
-                        className='occ-full-width occ-summary-field'
+                        className='occ-full-width occ-summary-field add-doc-step-two'
                     />
-                    <label htmlFor="content">Content</label>
+                    <label htmlFor="content">Summary</label>
                 </span>
                     </Card>
                 </Col>
             </Row>
 
-            <Row className="margin-top">
+            <Row>
                 <Col md={3}/>
                 <Col md={6}>
                     <div className='occ-center'>
@@ -172,6 +202,7 @@ const DocumentAdd = (props) => {
                                 label={documentId !== undefined ? "Save" : "Next"}
                                 style={{marginRight: '.25em'}}
                                 disabled={!title}
+                                className="margin-top doc-list-step-five"
                         />
                     </div>
                 </Col>

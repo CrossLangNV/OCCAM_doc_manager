@@ -5,6 +5,7 @@ const DefaultState = {
     access: localStorage.getItem("access"),
     refresh: localStorage.getItem("refresh"),
     isAuthenticated: localStorage.getItem("isAuthenticated"),
+    hasCompletedTutorial: false,
     user: "",
     errorMsg: "",
 };
@@ -44,7 +45,8 @@ const AuthReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 user: action.payload.email,
-                isAuthenticated: true
+                isAuthenticated: true,
+                hasCompletedTutorial: action.payload.has_completed,
             }
 
         case AuthActionTypes.GET_USER_FAIL:
@@ -62,6 +64,11 @@ const AuthReducer = (state = DefaultState, action) => {
                 refresh: null,
                 isAuthenticated: false,
                 user: null
+            }
+        case AuthActionTypes.CHANGE_TUTORIAL_STATE_SUCCESS:
+            return {
+                ...state,
+                hasCompletedTutorial: action.payload
             }
         default:
             return state

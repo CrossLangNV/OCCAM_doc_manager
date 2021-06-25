@@ -16,6 +16,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('documents/', include(('documents.urls', 'documents'), namespace='documents')),
     path('activitylogs/', include(('activitylogs.urls', 'activitylogs'), namespace='activitylogs')),
+    path('tutorial/', include(('tutorial.urls', 'tutorial'), namespace='tutorial')),
 ]
 
 if settings.DEBUG:

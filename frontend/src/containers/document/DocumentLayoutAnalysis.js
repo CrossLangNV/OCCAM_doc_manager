@@ -11,6 +11,7 @@ import {Toast} from "primereact/toast";
 import {GetLayoutEngines, ModifySelectedEngine} from "../../actions/uiActions";
 import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash"
+import Tour from "reactour";
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
@@ -53,16 +54,38 @@ const DocumentLayoutAnalysis = (props) => {
         })))
     }
 
+    const steps = [
+        {
+            selector: '.document-layout-step-one',
+            content: () => (
+                <div>
+                    <h3>Layout Analysis Engine</h3>
+                    <p>In this step you can select which model you wish to use for the layout analysis (OCR).</p>
+                    <p>Depending on your documents and the selected engine, the layout analysis results might be
+                        different.</p>
+                </div>
+            )
+        }
+    ]
+
+    const [tourOpened, setTourOpened] = useState(true);
+
     return (
         <>
+            <Tour
+                steps={steps}
+                isOpen={tourOpened}
+                onRequestClose={() => setTourOpened(false)}
+            />
+
             <Row>
                 <ProgressBar activeStep={3} documentId={documentId}/>
             </Row>
 
             <Row className="margin-top">
-                <Col md={3} />
+                <Col md={3}/>
                 <Col md={6}>
-                    <Card>
+                    <Card className="document-layout-step-one">
                         <h5>Choose a layout analysis engine</h5>
                         <br/>
                         {
@@ -72,7 +95,9 @@ const DocumentLayoutAnalysis = (props) => {
 
                                         {(!_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
-                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].value === option.value} />
+                                                <RadioButton inputId={option.value} name="layout_model" value={option}
+                                                             onChange={(e) => changeSelected(e.value)}
+                                                             checked={uiStates.selected_layout_engine[0].value === option.value}/>
                                                 <label htmlFor={option.value}>{option.name}</label>
                                             </>
                                         )}
