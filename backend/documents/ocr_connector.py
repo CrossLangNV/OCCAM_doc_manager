@@ -1,5 +1,4 @@
 import os
-import warnings
 
 import requests
 
@@ -7,16 +6,19 @@ from activitylogs.models import ActivityLogState
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
+PERO_OCR_API = 'https://pero-ocr.fit.vutbr.cz/api/'
 
-def get_request_id(page_id: str):
+
+def get_request_id(page_id: str,
+                   engine_id=1) -> str:
     data = {
-        "engine": 1,
+        "engine": engine_id,
         "images": {
             page_id: None
         }
     }
 
-    response_request = requests.post('https://pero-ocr.fit.vutbr.cz/api/post_processing_request',
+    response_request = requests.post(PERO_OCR_API + 'post_processing_request',
                                      json=data,
                                      headers={'api-key': API_KEY_PERO_OCR,
                                               'Content-Type': 'application/json',
@@ -34,7 +36,7 @@ def get_request_id(page_id: str):
 def upload_file(file,
                 request_id: str,
                 page_id: str,
-                ):
+                ) -> None:
     """
 
     Example:
@@ -87,7 +89,7 @@ def check_state(request_id: str, page_id: str, activity_log) -> bool:
 def get_result(request_id,
                page_id,
                result_format='page'  # alto, page, txt
-               ):
+               ) -> bytes:
     """
     Returns the Overlay xml as bytestring
     """
@@ -105,8 +107,17 @@ def get_result(request_id,
     return response_download_results.content
 
 
-def get_engines():
-    warnings.warn('Has no use yet', PendingDeprecationWarning)
+def get_engines() -> dict:
+    """
+    info about the OCR engines in PERO-OCR. Engine includes layout analysis + OCR.
+
+    Returns a dictionary: {name_engine : info_engine, ...}.
+    info_engine contains another dictionary with additional info.
+    """
+
+    KEY_ENGINES = 'engines'
+    KEY_STATUS = 'status'
+    VALUE_STATUS = 'success'
 
     response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
                                     headers={'api-key': API_KEY_PERO_OCR})
@@ -118,8 +129,21 @@ def get_engines():
                    }
         raise ConnectionError(content)
 
-    model_czech = response_engines.json()['engines']['czech_old_printed']
-    model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
-    model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
+    b = 0
+    if b:
+        model_czech = response_engines.json()['engines']['czech_old_printed']
+        model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
+        model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
 
-    return response_engines.json()
+    if not response_engines.ok:
+        raise Exception({'status_code': response_engines.status_code,
+                         'content': response_engines.content})
+
+    d_response = response_engines.json()
+
+    if VALUE_STATUS not in d_response.get(KEY_STATUS):
+        raise Exception({'message': 'No success found',
+                         'status_code': response_engines.status_code,
+                         'content': response_engines.content})
+
+    return d_response[KEY_ENGINES]

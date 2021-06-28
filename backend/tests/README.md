@@ -1,6 +1,6 @@
 To clear test database:
 `
-python manage.py test tests.documents.test_models
+python manage.py test tests.documents.test_metadata_django
 `
 
 When it complains about the folder:

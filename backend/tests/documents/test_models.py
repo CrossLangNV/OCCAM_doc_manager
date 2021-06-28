@@ -3,8 +3,6 @@ import os
 from django.db.utils import IntegrityError
 from django.test import TransactionTestCase
 
-# The following import gives an error:
-# from backend.documents.models import Document
 from documents.models import Document, Page, Overlay, Geojson
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
