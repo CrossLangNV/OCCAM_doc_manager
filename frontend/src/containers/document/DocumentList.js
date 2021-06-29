@@ -9,13 +9,18 @@ import {Button} from "primereact/button";
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";
+import Tour from "reactour";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const DocumentList = () => {
     const dispatch = useDispatch();
+    let history = useHistory();
+
+    // Redux states
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
-    let history = useHistory();
+    const auth = useSelector(state => state.auth)
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery);
@@ -40,7 +45,7 @@ const DocumentList = () => {
                 <>
                     {documentList.data.map(item => {
                         return <tr key={item.id}>
-                            <td className='w-10'></td>
+                            <td className='w-10'/>
                             <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>
                                 <DocumentState state={item.state} />
@@ -68,11 +73,56 @@ const DocumentList = () => {
             </tr>
         }
     }
+
+    const steps = [
+        {
+            content: () => (
+                <div>
+                    <h3>Welcome</h3>
+                    <p>Let's take a quick tour on how to use the application.</p>
+                    <br/>
+                    <Button label="Skip product tour" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
+                </div>
+
+            )
+        },
+        {
+            selector: '.doc-list-step-two',
+            content: () => (
+                <div>
+                    <h3>Document List</h3>
+                    <p>This is a table with all your documents.</p>
+                    <p>At the first glance, it should look pretty empty...</p>
+                    <p>When you created documents, you can always navigate to them by clicking on the titles.</p>
+                    <p>The table is paginated, and a search button in the header allows you to search for documents.</p>
+                </div>
+            )
+        },
+        {
+            selector: '.doc-list-step-three',
+            content: () => (
+                <div>
+                    <h3>Add new document</h3>
+                    <p>By pressing this button you can create a new document.</p>
+                </div>
+            )
+        }
+    ]
+
     return (
-        <div>
+        <div className="doc-list-step-two">
+            <Tour
+                steps={steps}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())} />
+
+
             <Button onClick={() => history.push("/document-add")}
                     label="New document"
                     icon="pi pi-plus"
+                    className="doc-list-step-three"
             />
             <br/>
             <Row className="justify-content-between">

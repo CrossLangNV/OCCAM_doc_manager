@@ -70,8 +70,42 @@ export const Logout = () => async dispatch => {
     });
 }
 
-export const CheckAuthenticated = () => async dispatch => {
-    if (localStorage.getItem('access')) {
+export const ChangeTutorialState = (userId, value) => async dispatch => {
 
+    dispatch({
+        type: AuthActionTypes.CHANGE_TUTORIAL_STATE_LOADING
+    })
+
+    try {
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        await axios.post(`${baseUrl}/tutorial/api/usertutorials`,
+            {
+                "user": userId,
+                "value": value
+            },
+            config)
+
+        dispatch({
+            type: AuthActionTypes.CHANGE_TUTORIAL_STATE_SUCCESS,
+            payload: value
+        })
+    } catch (err) {
+        dispatch({
+            type: AuthActionTypes.CHANGE_TUTORIAL_STATE_FAILED,
+        })
     }
+}
+
+export const CloseTutorial = () => async dispatch => {
+
+    dispatch({
+        type: AuthActionTypes.CHANGE_TUTORIAL_STATE_SUCCESS,
+        payload: true
+    })
+
 }

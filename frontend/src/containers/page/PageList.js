@@ -21,6 +21,9 @@ import {ContextMenu} from "primereact/contextmenu";
 import NotSelectedMessage from "../NotSelectedMessage";
 import {useHistory} from "react-router-dom";
 import {InputSwitch} from "primereact/inputswitch";
+import Tour from "reactour";
+import {Message} from "primereact/message";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const PageList = (props) => {
@@ -42,12 +45,16 @@ const PageList = (props) => {
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
     const [checkedTM, setCheckedTM] = useState(false);
 
+    const [tourOpened, setTourOpened] = useState(false);
 
     const cm = useRef(null);
 
     // Load pages initially
     useEffect(() => {
         dispatch(GetPageList(100, 1, documentId));
+        if (auth.hasCompletedTutorial === false) {
+            setTourOpened(true)
+        }
     }, [])
 
     const translationSelectionOverlay = useRef(null);
@@ -152,7 +159,7 @@ const PageList = (props) => {
             command: () => window.open(contextMenuPage.file, '_blank')
         },
         {
-            separator:true
+            separator: true
         },
         {
             label: 'Delete page',
@@ -161,14 +168,60 @@ const PageList = (props) => {
         },
     ]
 
+    const steps = [
+        {
+            selector: '.document-step-one',
+            content: () => (
+                <div>
+                    <h3>Document Actions</h3>
+                    <p>These buttons have actions on the document level.</p>
+                    <ul>
+                        <li>
+                            <b>Refresh:</b> refreshes the states of the document and its pages.
+                        </li>
+                        <li>
+                            <b>OCR all pages:</b> starts the layout engine analysis for all the pages of the document.
+                        </li>
+                        <li>
+                            <b>Delete document: </b> deletes the document with all its pages.
+                        </li>
+                    </ul>
+                </div>
+            )
+        },
+        {
+            selector: '.document-step-two',
+            content: () => (
+                <div>
+                    <h3>Page List</h3>
+                    <p>All the pages that you have uploaded will appear here. </p>
+                    <p>You can scroll down the list if you have more than two pages. </p>
+                    <br/>
+                    <div>
+                        <Message severity="info" text="Click on a page to view your page and all its information. "/>
+                    </div>
+                </div>
+            )
+        }
+    ]
+
     return (
         <>
+            <Tour
+                steps={steps}
+                isOpen={!auth.hasCompletedTutorial && tourOpened}
+                onRequestClose={() => {
+                    setTourOpened(false)
+                    dispatch(CloseTutorial())
+                }}
+            />
+
             <h5>Pages ({pageList.count})</h5>
             <br/>
             <Row>
                 <Col md={3}>
                     {!_.isEmpty(pageList.data) && (
-                        <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable">
+                        <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
                             {pageList.data.map(page => {
                                 return <Card key={page.id} className='page-card'>
                                     <Row>
@@ -185,7 +238,8 @@ const PageList = (props) => {
                                                 icon="pi pi-ellipsis-h"
                                                 onClick={(e) => openContextMenu(e, page)}
                                             />
-                                            <ContextMenu model={contextMenuItems} ref={cm}/>
+                                            <ContextMenu className="document-step-three" model={contextMenuItems}
+                                                         ref={cm}/>
                                         </Col>
                                     </Row>
 
@@ -294,7 +348,7 @@ const PageList = (props) => {
 
                         {/* Leaflet.js View */}
                         {uiStates.selectedPage !== "" && (
-                            <Card className="occ-ui-leaflet-container">
+                            <Card className="occ-ui-leaflet-container document-step-four">
                                 <PageLeaflet
                                     key={uiStates.selectedPage.id}
                                     selectedPage={uiStates.selectedPage}

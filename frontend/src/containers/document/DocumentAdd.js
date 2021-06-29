@@ -5,17 +5,20 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {baseUrl} from "../../constants/axiosConf";
 import ProgressBar from "../ProgressBar";
 import {Col, Row} from "react-bootstrap";
 import {Toast} from "primereact/toast";
+import Tour from "reactour";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const DocumentAdd = (props) => {
     const documentId = props.match.params.documentId
 
     let history = useHistory();
+    const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
 
     const [title, setTitle] = useState("");
@@ -94,9 +97,51 @@ const DocumentAdd = (props) => {
                 className="p-button-secondary"/>
         </span>;
 
+    const steps = [
+        {
+            selector: '.add-doc-step-one',
+            content: () => (
+                <div>
+                    <h3>Document Title</h3>
+                    <p>A document is a collection of pages/images.</p>
+                    <p>Here you can fill in a title for your new document.</p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
+                </div>
+            )
+        },
+        {
+            selector: '.add-doc-step-two',
+            content: () => (
+                <div>
+                    <h3>Summary</h3>
+                    <p><b>Optional</b>: A summary of your document, for your own reference. </p>
+                </div>
+            )
+        },
+        {
+            selector: '.doc-list-step-five',
+            content: () => (
+                <div>
+                    <h3>Next button</h3>
+                    <p>When you have filled in the information of your document, you can press this button to proceed to
+                        the next step.</p>
+                </div>
+            )
+        }
+    ]
+
     return (
         <>
-            <Row>
+            <Tour
+                steps={steps}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())}
+            />
+
+            <Row className="doc-list-step-four">
                 <ProgressBar activeStep={1} documentId={documentId}/>
             </Row>
 
@@ -114,7 +159,7 @@ const DocumentAdd = (props) => {
                     <Card footer={footer}>
                         <h5>Document information</h5>
                         <br/>
-                        <span className="p-float-label">
+                        <span className="p-float-label add-doc-step-one">
                             <InputText
                                 id="title"
                                 value={title}
@@ -135,15 +180,15 @@ const DocumentAdd = (props) => {
                         rows={5}
                         cols={30}
                         onChange={(e) => setContent(e.target.value)}
-                        className='occ-full-width occ-summary-field'
+                        className='occ-full-width occ-summary-field add-doc-step-two'
                     />
-                    <label htmlFor="content">Content</label>
+                    <label htmlFor="content">Summary</label>
                 </span>
                     </Card>
                 </Col>
             </Row>
 
-            <Row className="margin-top">
+            <Row>
                 <Col md={3}/>
                 <Col md={6}>
                     <div className='occ-center'>
@@ -151,6 +196,7 @@ const DocumentAdd = (props) => {
                                 label={documentId !== undefined ? "Save" : "Next"}
                                 style={{marginRight: '.25em'}}
                                 disabled={!title}
+                                className="margin-top doc-list-step-five"
                         />
                     </div>
                 </Col>

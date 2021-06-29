@@ -73,7 +73,7 @@ const Document = (props) => {
                         <Col md={5}>
                             <ProgressBar activeStep={4} documentId={documentId}/>
                         </Col>
-                        <Col md="auto">
+                        <Col md="auto" className="justify-content-between document-step-one">
                             <Button
                                 onClick={() => dispatch(GetPageList(100, 1, documentId))}
                                 label="Refresh"

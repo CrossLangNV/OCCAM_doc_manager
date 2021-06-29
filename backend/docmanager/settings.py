@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'documents',
+    'tutorial',
     'rest_framework',
     'corsheaders',
     'minio_storage',
