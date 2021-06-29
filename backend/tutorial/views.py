@@ -1,3 +1,6 @@
+import os
+
+from atlassian import Confluence
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
@@ -16,11 +19,26 @@ class UserTutorialAPIView(APIView):
         value = request.data["value"]
         user = User.objects.get(email=user_email)
 
-        print("user_email: ", user_email)
-        print("value: ", value)
         if value:
             UserTutorial.objects.filter(user=user).update(has_completed=True)
         else:
             UserTutorial.objects.filter(user=user).update(has_completed=False)
 
         return Response("", HTTP_200_OK)
+
+
+class HelpPageAPIView(APIView):
+
+    def get(self, request):
+        confluence = Confluence(
+            url=os.environ['CONFLUENCE_URL'],
+            username=os.environ['CONFLUENCE_USERNAME'],
+            password=os.environ['CONFLUENCE_PASSWORD'])
+
+        page = confluence.get_page_by_title(os.environ['CONFLUENCE_SPACE'], os.environ['CONFLUENCE_MANUAL_PAGE_TITLE'],
+                                            expand='body.storage')
+
+        page_id = page['id']
+        content = page['body']['storage']
+
+        return Response(content, HTTP_200_OK)
