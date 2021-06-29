@@ -5,7 +5,7 @@ const DefaultState = {
     access: localStorage.getItem("access"),
     refresh: localStorage.getItem("refresh"),
     isAuthenticated: localStorage.getItem("isAuthenticated"),
-    hasCompletedTutorial: false,
+    hasCompletedTutorial: true,
     user: "",
     errorMsg: "",
 };

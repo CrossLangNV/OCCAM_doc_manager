@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {FileUpload} from "primereact/fileupload";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
 import {Toast} from "primereact/toast";
 import ProgressBar from "../ProgressBar";
@@ -8,6 +8,7 @@ import {Col, Row} from "react-bootstrap";
 import {Button} from "primereact/button";
 import {useHistory} from "react-router-dom";
 import Tour from "reactour";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
@@ -15,6 +16,8 @@ const PageAdd = (props) => {
     const documentId = props.match.params.documentId
     const toast = useRef(null);
     const history = useHistory();
+
+    const auth = useSelector(state => state.auth);
 
     const pagesUploader = async (event) => {
         const files = event.files
@@ -53,6 +56,10 @@ const PageAdd = (props) => {
                         that you wish to add to your document. </p>
                     <p>All pages in a PDF file will automatically be converted to images.</p>
                     <p>Documents will automatically be uploaded once you selected them from your system.</p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
                 </div>
             )
         },
@@ -67,14 +74,14 @@ const PageAdd = (props) => {
         },
     ]
 
-    const [tourOpened, setTourOpened] = useState(true);
+
 
     return (
         <Col>
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())}
             />
 
             <Row>

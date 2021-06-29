@@ -12,13 +12,17 @@ import {GetLayoutEngines, ModifySelectedEngine} from "../../actions/uiActions";
 import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash"
 import Tour from "reactour";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
     let history = useHistory();
     const toast = useRef(null);
     const dispatch = useDispatch();
+
     const uiStates = useSelector(state => state.uiStates);
+    const auth = useSelector(state => state.auth);
+
     const [selectedOption, setSelectedOption] = useState([]);
 
 
@@ -63,19 +67,21 @@ const DocumentLayoutAnalysis = (props) => {
                     <p>In this step you can select which model you wish to use for the layout analysis (OCR).</p>
                     <p>Depending on your documents and the selected engine, the layout analysis results might be
                         different.</p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
                 </div>
             )
         }
     ]
 
-    const [tourOpened, setTourOpened] = useState(true);
-
     return (
         <>
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())}
             />
 
             <Row>

@@ -5,18 +5,20 @@ import {Button} from "primereact/button";
 import {InputTextarea} from "primereact/inputtextarea";
 import axios from "axios";
 import {useHistory} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {baseUrl} from "../../constants/axiosConf";
 import ProgressBar from "../ProgressBar";
 import {Col, Row} from "react-bootstrap";
 import {Toast} from "primereact/toast";
 import Tour from "reactour";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const DocumentAdd = (props) => {
     const documentId = props.match.params.documentId
 
     let history = useHistory();
+    const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
 
     const [title, setTitle] = useState("");
@@ -103,6 +105,10 @@ const DocumentAdd = (props) => {
                     <h3>Document Title</h3>
                     <p>A document is a collection of pages/images.</p>
                     <p>Here you can fill in a title for your new document.</p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
                 </div>
             )
         },
@@ -124,17 +130,15 @@ const DocumentAdd = (props) => {
                         the next step.</p>
                 </div>
             )
-        },
+        }
     ]
-
-    const [tourOpened, setTourOpened] = useState(true);
 
     return (
         <>
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())}
             />
 
             <Row className="doc-list-step-four">

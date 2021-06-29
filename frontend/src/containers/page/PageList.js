@@ -23,6 +23,7 @@ import {useHistory} from "react-router-dom";
 import {InputSwitch} from "primereact/inputswitch";
 import Tour from "reactour";
 import {Message} from "primereact/message";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const PageList = (props) => {
@@ -44,12 +45,16 @@ const PageList = (props) => {
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
     const [checkedTM, setCheckedTM] = useState(false);
 
+    const [tourOpened, setTourOpened] = useState(false);
 
     const cm = useRef(null);
 
     // Load pages initially
     useEffect(() => {
         dispatch(GetPageList(100, 1, documentId));
+        if (auth.hasCompletedTutorial === false) {
+            setTourOpened(true)
+        }
     }, [])
 
     const translationSelectionOverlay = useRef(null);
@@ -200,14 +205,15 @@ const PageList = (props) => {
         }
     ]
 
-    const [tourOpened, setTourOpened] = useState(true);
-
     return (
         <>
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)}
+                isOpen={!auth.hasCompletedTutorial && tourOpened}
+                onRequestClose={() => {
+                    setTourOpened(false)
+                    dispatch(CloseTutorial())
+                }}
             />
 
             <h5>Pages ({pageList.count})</h5>

@@ -11,6 +11,9 @@ import PageMetadata from "./PageMetadata";
 import PageHistory from "./PageHistory";
 import PagePlainText from "./PagePlainText";
 import Tour from "reactour";
+import {useDispatch, useSelector} from "react-redux";
+import {ChangeTutorialState, CloseTutorial, load_user} from "../../actions/authActions";
+import {Button} from "primereact/button";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -24,6 +27,11 @@ const PageLeaflet = (props) => {
     const [activeView, setActiveView] = useState(0);
     const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
     const [plainText, setPlainText] = useState("");
+
+    // Redux
+    const auth = useSelector(state => state.auth);
+    const dispatch = useDispatch()
+
     const viewOptions = [
         {label: 'Page View', icon: ''},
         {label: 'Text View', icon: ''},
@@ -34,6 +42,7 @@ const PageLeaflet = (props) => {
 
 
     React.useEffect(() => {
+        dispatch(load_user())
         if (page.page_overlay.length > 0) {
             const latestOverlay = page.page_overlay[page.page_overlay.length - 1]
 
@@ -217,20 +226,21 @@ const PageLeaflet = (props) => {
                     <h3>Language Switch</h3>
                     <p>Switch between the available languages of your page. </p>
                     <p>If the desired language is not present, use the context menu to translate your page. </p>
+                    <br/>
+                    <Button label="Don't show me again" onClick={() => {
+                        dispatch(ChangeTutorialState(auth.user, true))
+                    }}/>
                 </div>
             )
         },
     ]
 
-    const [tourOpened, setTourOpened] = useState(true);
-
-
     return (
         <>
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)}
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())}
             />
 
             <Row className="justify-content-between">

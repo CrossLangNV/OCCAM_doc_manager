@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
-import React, {useState} from "react";
+import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate"
@@ -10,7 +10,7 @@ import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";
 import Tour from "reactour";
-import {ChangeTutorialState} from "../../actions/authActions";
+import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 
 
 const DocumentList = () => {
@@ -22,14 +22,8 @@ const DocumentList = () => {
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
 
-    const [tourOpened, setTourOpened] = useState(false);
-
-
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery);
-        if (!auth.hasCompletedTutorial) {
-            setTourOpened(true)
-        }
     }, []);
 
     const fetchDocuments = (rows, page, query) => {
@@ -51,7 +45,7 @@ const DocumentList = () => {
                 <>
                     {documentList.data.map(item => {
                         return <tr key={item.id}>
-                            <td className='w-10'></td>
+                            <td className='w-10'/>
                             <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>
                                 <DocumentState state={item.state} />
@@ -87,9 +81,8 @@ const DocumentList = () => {
                     <h3>Welcome</h3>
                     <p>Let's take a quick tour on how to use the application.</p>
                     <br/>
-                    <Button label="Don't show me again" onClick={() => {
+                    <Button label="Skip product tour" onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
-                        setTourOpened(false)
                     }}/>
                 </div>
 
@@ -115,16 +108,15 @@ const DocumentList = () => {
                     <p>By pressing this button you can create a new document.</p>
                 </div>
             )
-        },
-        // ...
+        }
     ]
 
     return (
         <div className="doc-list-step-two">
             <Tour
                 steps={steps}
-                isOpen={tourOpened}
-                onRequestClose={() => setTourOpened(false)} />
+                isOpen={!auth.hasCompletedTutorial}
+                onRequestClose={() => dispatch(CloseTutorial())} />
 
 
             <Button onClick={() => history.push("/document-add")}

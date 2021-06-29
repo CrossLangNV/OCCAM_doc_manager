@@ -99,6 +99,13 @@ export const ChangeTutorialState = (userId, value) => async dispatch => {
             type: AuthActionTypes.CHANGE_TUTORIAL_STATE_FAILED,
         })
     }
+}
 
+export const CloseTutorial = () => async dispatch => {
+
+    dispatch({
+        type: AuthActionTypes.CHANGE_TUTORIAL_STATE_SUCCESS,
+        payload: true
+    })
 
 }
