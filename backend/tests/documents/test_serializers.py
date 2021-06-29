@@ -44,8 +44,13 @@ class PageSerializerTest(TransactionTestCase):
         self.assertTrue(xml_meta)
 
         for key, values in d_meta.items():
+
+            # TODO what to do with labels. Do we also want that in the DC XML?
+            # Currently the labels do not have to be added to the XML.
+            if key == self.label.name:
+                continue
+
             with self.subTest(f'Values {key}'):
-                # TODO what to do with labels. Do we also want that in the DC XML?
                 for value in values:
                     self.assertIn(value, xml_meta, "Couldn't find metadata value in the XML.")
 

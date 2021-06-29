@@ -72,7 +72,7 @@ class TestDifferentEngines(TransactionTestCase):
 
         with self.subTest("with engine id's"):
 
-            for id in self.engine_id_generator():
+            for id in _engine_id_generator():
                 with self.subTest(f" * engine {id}"):
                     r_id = get_request_id(page_id,
                                           engine_id=id)
