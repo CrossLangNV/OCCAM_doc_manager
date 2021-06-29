@@ -67,7 +67,6 @@ const PageLeaflet = (props) => {
             }
 
             const text = textArr.join("\r\n")
-            console.log(text)
 
             setPlainText(text)
 

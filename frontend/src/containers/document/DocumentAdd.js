@@ -116,16 +116,6 @@ const DocumentAdd = (props) => {
             )
         },
         {
-            selector: '.doc-list-step-four',
-            content: () => (
-                <div>
-                    <h3>Next steps</h3>
-                    <p>With this progress bar you can see which step you are currently in.</p>
-                    <p>You can always use it to navigate back or forward.</p>
-                </div>
-            )
-        },
-        {
             selector: '.doc-list-step-five',
             content: () => (
                 <div>

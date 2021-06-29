@@ -6,40 +6,18 @@ import _ from "lodash";
 
 const PageMetadata = (props) => {
     const page = props.page
-    const pageId = page.id
-
-    // TODO
-    // page.metadata
-    // page.metadata_xml
-
     const [metadata, setMetadata] = useState([]);
 
     React.useEffect(() => {
-        fetchMetadataForPage(pageId)
-    }, [])
-
-    const fetchMetadataForPage = async (pageId) => {
-
-        const config = {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem("access")}`
-            }
-        }
-
-        const res = await axios.get(`${baseUrl}/documents/api/labels?pageId=${pageId}`,
-            config)
-
-        console.log(res)
-
         const labels = []
 
-        res.data.forEach(label => {
-            labels.push({status: `${label.name}`, date: label.value})
+        const metadata = Object.entries(page.metadata)
+        metadata.forEach(label => {
+            labels.push({status: `${label[0]}`, date: label[1].join(", ")})
         })
 
         setMetadata(labels)
-
-    }
+    }, [])
 
     return (
         <div>
