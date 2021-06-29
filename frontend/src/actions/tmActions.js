@@ -12,12 +12,15 @@ export const UploadTMX = (tmx) => async dispatch => {
         const formData = new FormData();
         formData.append("tmx", tmx);
 
-        await axios.post(`${baseUrl}/documents/api/tmx/upload`, formData, {
+        const config = {
             headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`,
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
-        }).then((res) => {
+        }
+
+        await axios.post(`${baseUrl}/documents/api/tmx/upload`, formData, config
+        ).then((res) => {
             dispatch({
                 type: TmActionTypes.TM_TMX_UPLOAD_SUCCESS,
                 payload: res.data
@@ -36,7 +39,13 @@ export const GetTmStats = () => async dispatch => {
             type: TmActionTypes.TM_STATS_LOADING
         });
 
-        const res = await axios.get(`${baseUrl}/documents/api/tm/stats`)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/tm/stats`, config)
 
         dispatch({
             type: TmActionTypes.TM_STATS_SUCCESS,
