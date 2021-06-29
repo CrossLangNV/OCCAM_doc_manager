@@ -15,6 +15,7 @@ export const UploadTMX = (tmx) => async dispatch => {
         await axios.post(`${baseUrl}/documents/api/tmx/upload`, formData, {
             headers: {
                 'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }).then((res) => {
             dispatch({

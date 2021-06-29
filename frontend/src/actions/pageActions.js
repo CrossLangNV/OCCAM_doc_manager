@@ -11,9 +11,16 @@ export const GetPageList = (rows, page, doc_id, checkedTM) => async dispatch => 
             type: PageActionTypes.PAGE_LIST_LOADING
         });
 
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            },
+            params: {document: doc_id}
+        }
+
         const offset = (page * rows) - rows;
         const res = await axios.get(`${baseUrl}/documents/api/pages?rows=${rows}&offset=${offset}`,
-            {params: {document: doc_id}})
+            config)
 
         dispatch({
             type: PageActionTypes.PAGE_LIST_SUCCESS,
@@ -34,7 +41,13 @@ export const GetPage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_MULTIPLE_LOADING
         });
 
-        const res = await axios.get(`${baseUrl}/documents/api/page/${id}`)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/page/${id}`, config)
 
         dispatch({
             type: PageActionTypes.PAGE_MULTIPLE_SUCCESS,
@@ -54,7 +67,13 @@ export const DeletePage = (id) => async dispatch => {
             type: PageActionTypes.PAGE_DELETE_LOADING
         });
 
-        await axios.delete(`${baseUrl}/documents/api/page/${id}`)
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        await axios.delete(`${baseUrl}/documents/api/page/${id}`, config)
             .then((res) => {
                 dispatch({
                     type: PageActionTypes.PAGE_DELETE_SUCCESS,
@@ -79,11 +98,15 @@ export const AddPage = (documentId, files) => async dispatch => {
             formData.append("document", documentId)
             formData.append("file", file)
 
-            axios.post(`${baseUrl}/documents/api/pages`, formData, {
+            const config = {
                 headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("access")}`,
                     'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
                 }
-            }).then((res) => {
+            }
+
+            axios.post(`${baseUrl}/documents/api/pages`, formData, config
+            ).then((res) => {
                 dispatch({
                     type: PageActionTypes.PAGE_ADD_SUCCESS,
                     payload: res.data
@@ -103,11 +126,17 @@ export const OcrPage = (id, user) => async dispatch => {
             type: PageActionTypes.PAGE_OCR_LOADING
         });
 
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
         await axios.post(`${baseUrl}/documents/api/pages/launch_ocr`,
             {
                 page: id,
                 user: user
-            })
+            }, config)
             .then((res) => {
                 dispatch({
                     type: PageActionTypes.PAGE_OCR_SUCCESS,
