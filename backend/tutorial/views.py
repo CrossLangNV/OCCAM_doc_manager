@@ -2,6 +2,7 @@ import os
 
 from atlassian import Confluence
 from django.contrib.auth.models import User
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
@@ -29,6 +30,8 @@ class UserTutorialAPIView(APIView):
 
 class HelpPageAPIView(APIView):
 
+    permission_classes = [permissions.AllowAny]
+
     def get(self, request):
         confluence = Confluence(
             url=os.environ['CONFLUENCE_URL'],
@@ -39,6 +42,6 @@ class HelpPageAPIView(APIView):
                                             expand='body.storage')
 
         page_id = page['id']
-        content = page['body']['storage']
+        content = page['body']['storage']['value']
 
         return Response(content, HTTP_200_OK)
