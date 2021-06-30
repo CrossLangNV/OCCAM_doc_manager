@@ -8,6 +8,11 @@ API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 PERO_OCR_API = 'https://pero-ocr.fit.vutbr.cz/api/'
 
+KEY_ENGINES = 'engines'
+KEY_STATUS = 'status'
+KEY_DESCRIPTION = 'description'
+VALUE_STATUS = 'success'
+
 
 def get_request_id(page_id: str,
                    engine_id=1) -> str:
@@ -114,10 +119,6 @@ def get_engines() -> dict:
     Returns a dictionary: {name_engine : info_engine, ...}.
     info_engine contains another dictionary with additional info.
     """
-
-    KEY_ENGINES = 'engines'
-    KEY_STATUS = 'status'
-    VALUE_STATUS = 'success'
 
     response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
                                     headers={'api-key': API_KEY_PERO_OCR})

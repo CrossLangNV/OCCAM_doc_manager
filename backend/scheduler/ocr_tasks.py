@@ -120,15 +120,15 @@ def ocr_page(page_id,
         overlay.update_xml(f)
 
 
-def xml_lang_detect(xml_file):
+def xml_lang_detect(xml_file) -> str:
     a = PageXML(xml_file)
 
     l_reg = list(filter(lambda s: s, a.get_regions_text()))
+
+    # Join all the pieces of text
     s_all = ' '.join(l_reg)
-
+    # Convert to uppercase language representation, e.g. EN.
     lang = detect(s_all).upper()
-
-    # l = list(map(detect, l_reg))
 
     return lang
 
