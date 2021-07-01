@@ -193,12 +193,8 @@ class LayoutAnalysisModelTest(TransactionTestCase):
             with self.subTest('Config'):
                 item = LayoutAnalysisModel.objects.get(name=engine_name)
 
-                b = 1
-                if b:
-                    self.assertDictContainsSubset(engine_info, item.config)
-                else:
-                    self.assertEqual({**item.config, **engine_info},
-                                     item.config)
+                self.assertLessEqual(engine_info.items(),
+                                     item.config.items())
 
     def test_OCR_for_each_engine(self) -> None:
         """
