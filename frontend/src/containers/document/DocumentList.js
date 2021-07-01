@@ -11,6 +11,7 @@ import {confirmPopup} from "primereact/confirmpopup";
 import DocumentState from "./DocumentState";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
+import DocumentPreview from "./DocumentPreview";
 
 
 const DocumentList = () => {
@@ -45,7 +46,9 @@ const DocumentList = () => {
                 <>
                     {documentList.data.map(item => {
                         return <tr key={item.id}>
-                            <td className='w-10'/>
+                            <td className='w-10'>
+                                <DocumentPreview document={item} />
+                            </td>
                             <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td>
                                 <DocumentState state={item.state} />

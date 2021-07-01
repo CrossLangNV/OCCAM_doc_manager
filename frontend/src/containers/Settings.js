@@ -14,15 +14,21 @@ const Settings = () => {
     const dispatch = useDispatch();
     const tmStats = useSelector(state => state.tmStats);
     const auth = useSelector(state => state.auth);
+    const hasCompletedTutorial = auth.hasCompletedTutorial;
 
     const toast = useRef(null);
     const uploadRef = useRef(null);
-    const [checkedTutorial, setCheckedTutorial] = useState(!auth.hasCompletedTutorial);
+    const [checkedTutorial, setCheckedTutorial] = useState(false);
 
 
     React.useEffect(() => {
         fetchTmStats();
-    }, []);
+        if (hasCompletedTutorial === false) {
+            setCheckedTutorial(true)
+        } else {
+            setCheckedTutorial(false)
+        }
+    }, [hasCompletedTutorial]);
 
     const fetchTmStats = () => {
         dispatch(GetTmStats());
