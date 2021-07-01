@@ -12,11 +12,13 @@ import DocumentState from "./DocumentState";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import DocumentPreview from "./DocumentPreview";
+import {useTranslation} from "react-i18next";
 
 
 const DocumentList = () => {
     const dispatch = useDispatch();
     let history = useHistory();
+    const {t} = useTranslation();
 
     // Redux states
     const documentList = useSelector(state => state.documentList);
@@ -34,7 +36,7 @@ const DocumentList = () => {
     const confirmDeleteDoc = (event) => {
         confirmPopup({
             target: event.currentTarget,
-            message: 'Are you sure you want to delete this document and all its pages?',
+            message: t("document-list.Are you sure you want to delete this document and all its pages?"),
             icon: 'pi pi-exclamation-triangle',
             accept: () => dispatch(DeleteDocument(event)),
         });
@@ -123,7 +125,7 @@ const DocumentList = () => {
 
 
             <Button onClick={() => history.push("/document-add")}
-                    label="New document"
+                    label={t("document-list.New document")}
                     icon="pi pi-plus"
                     className="doc-list-step-three"
             />
@@ -131,17 +133,17 @@ const DocumentList = () => {
             <Row className="justify-content-between">
                 <Col/>
                 <Col md="mr-auto">
-                    <p className="occ-table-result-count">Document(s) found: {documentList.count}</p>
+                    <p className="occ-table-result-count">{t("document-list.Document(s) found:")} {documentList.count}</p>
                 </Col>
             </Row>
             <Table striped borderless hover>
                 <thead>
                 <tr>
-                    <th width="2rem">Preview</th>
-                    <th>Title</th>
-                    <th>State</th>
-                    <th>Created at</th>
-                    <th>Actions</th>
+                    <th width="2rem">{t("ui.preview")}</th>
+                    <th>{t("ui.title")}</th>
+                    <th>{t("ui.state")}</th>
+                    <th>{t("ui.created-at")}</th>
+                    <th>{t("ui.actions")}</th>
                 </tr>
                 </thead>
                 <tbody>
