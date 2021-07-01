@@ -23,9 +23,12 @@ const HelpComponent = () => {
         }
 
         // Get available models/engines
-        const res = await axios.get(`${baseUrl}/tutorial/api/help_page`, config)
-
-        setManualHtml(res.data)
+        try {
+            const res = await axios.get(`${baseUrl}/tutorial/api/help_page`, config)
+            setManualHtml(res.data)
+        } catch (e) {
+            setManualHtml("Cannot connect to Confluence. ")
+        }
 
     }
 
