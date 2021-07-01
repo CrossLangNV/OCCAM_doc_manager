@@ -17,7 +17,7 @@ class LayoutAnalysisModel(models.Model):
 
     # To save the configs of a model.
     config = models.JSONField(blank=True,
-                              default=dict()
+                              default=dict
                               )
 
     class Meta:
