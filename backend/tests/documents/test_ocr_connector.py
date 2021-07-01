@@ -1,11 +1,6 @@
 from django.test import TransactionTestCase
 
-from documents.ocr_connector import get_engines, get_request_id
-
-KEY_ENGINE_ID = 'id'
-KEY_MODELS = 'models'
-KEY_MODEL_ID = 'id'
-KEY_MODEL_NAME = 'name'
+from documents.ocr_connector import get_engines, get_request_id, KEY_ENGINE_ID, KEY_MODELS, KEY_MODEL_ID, KEY_MODEL_NAME
 
 
 class TestGetEngines(TransactionTestCase):
@@ -25,7 +20,7 @@ class TestGetEngines(TransactionTestCase):
 
         for key_description in ['description',
                                 'engine_version',
-                                'id',
+                                KEY_ENGINE_ID,
                                 ]:
 
             with self.subTest(f'Engine {key_description}'):
@@ -75,7 +70,7 @@ class TestDifferentEngines(TransactionTestCase):
             for id in _engine_id_generator():
                 with self.subTest(f" * engine {id}"):
                     r_id = get_request_id(page_id,
-                                          engine_id=id)
+                                          pero_engine_id=id)
 
                     self.assertTrue(r_id)
 
@@ -85,7 +80,7 @@ class TestDifferentEngines(TransactionTestCase):
                 for id in _model_id_generator():
                     with self.subTest(f" * model {id}"):
                         r_id = get_request_id(page_id,
-                                              engine_id=id)
+                                              pero_engine_id=id)
 
                         self.assertTrue(r_id)
 
@@ -105,7 +100,7 @@ class TestDifferentEngines(TransactionTestCase):
                 ):
                     with self.subTest(f" * id: {id}"):
                         r_id = get_request_id(page_id,
-                                              engine_id=id)
+                                              pero_engine_id=id)
 
                         self.assertTrue(r_id)
 

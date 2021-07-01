@@ -10,8 +10,9 @@ from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
 from celery import shared_task
-from documents.models import Page, Overlay, Label
+from documents.models import Page, Overlay, Label, LayoutAnalysisModel
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
+from documents.ocr_engines import get_PERO_OCR_engine_id
 
 logger = logging.getLogger(__name__)
 
@@ -19,16 +20,16 @@ DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
 
 @shared_task
-def ocr_page(page_id,
-             user=None,
-             engine_id=1
+def ocr_page(page_id: Page.id,
+             engine_pk: LayoutAnalysisModel.pk,
+             user: User.email = None,
              ):
     """
 
     Args:
-        page_id:
-        user:
-        engine_id: # TODO to get this information from layout_analysis_model
+        page_id: ID of a Page object.
+        engine_pk: primary key of a LayoutAnalysisModel object
+        user: (Optionala) email of a User object.
 
     Returns:
 
@@ -65,8 +66,12 @@ def ocr_page(page_id,
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
+
+    layout_analysis_model = LayoutAnalysisModel.objects.get(pk=engine_pk)
+    logger.info("Used engine: %s", layout_analysis_model)
+    pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
     request_id = get_request_id(page_id,
-                                engine_id=engine_id)
+                                pero_engine_id=pero_engine_id)
     logger.info("Sent request to per ocr: %s", request_id)
 
     # POST to Pero OCR /upload_image/{request_id}/{page_id}

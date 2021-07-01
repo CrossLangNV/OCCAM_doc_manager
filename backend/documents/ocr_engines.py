@@ -1,5 +1,7 @@
+import warnings
+
 from documents.models import LayoutAnalysisModel
-from documents.ocr_connector import get_engines, KEY_DESCRIPTION
+from documents.ocr_connector import get_engines, KEY_DESCRIPTION, KEY_ENGINE_ID
 
 KEY_LINK = 'link'
 PERO_OCR_ENGINE = 'https://pero-ocr.fit.vutbr.cz/'
@@ -34,3 +36,11 @@ def init_engines() -> None:
                                                      )
 
     return
+
+
+def get_PERO_OCR_engine_id(ocr_engine: LayoutAnalysisModel):
+    if ocr_engine.config.get(KEY_LINK) != PERO_OCR_ENGINE:
+        warnings.warn("Expected conformation that this is a PERO-OCR engine.", UserWarning)
+
+    pero_engine_id = ocr_engine.config[KEY_ENGINE_ID]
+    return pero_engine_id
