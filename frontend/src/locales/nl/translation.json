@@ -1,9 +1,18 @@
 {
   "nav.documents": "Documenten",
-  "nav.activitylogs": "Activiteit Logboek",
+  "nav.activity-logs": "Activiteit Logboek",
   "nav.help": "Help",
   "nav.settings": "Instellingen",
-  "nav.searchdocument": "Zoek een document",
+  "nav.search-document": "Zoek een document",
   "nav.search": "Zoeken",
-  "nav.logout": "Uitloggen"
+  "nav.logout": "Uitloggen",
+  "settings.translation-memory": "Vertaalgeheugen",
+  "settings.language-pair": "Talenpaar",
+  "settings.amount-of-tus": "Aantal segmenten",
+  "settings.upload-tmx": "Upload TMX",
+  "settings.product-tour": "Rondleiding",
+  "settings.show-product-tour": "Toon rondleiding",
+  "settings.language": "Taal",
+  "settings.select-language": "Selecteer een taal",
+  "ui.refresh": "Ververs"
 }

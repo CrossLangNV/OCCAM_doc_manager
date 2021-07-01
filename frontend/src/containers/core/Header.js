@@ -48,7 +48,7 @@ const Header = () => {
             {(location.pathname !== "/login") &&
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to="/">{t("nav.documents")}</Nav.Link>
-                    <Nav.Link as={Link} to="/activity">{t("nav.activitylogs")}</Nav.Link>
+                    <Nav.Link as={Link} to="/activity">{t("nav.activity-logs")}</Nav.Link>
                     <Nav.Link as={Link} to="/help">{t("nav.help")}</Nav.Link>
                     <Nav.Link as={Link} to="/settings">{t("nav.settings")}</Nav.Link>
 
@@ -65,7 +65,7 @@ const Header = () => {
                 <Form inline>
                     <FormControl
                         type="text"
-                        placeholder={t("nav.searchdocument")}
+                        placeholder={t("nav.search-document")}
                         className="mr-sm-2"
                         value={uiStates.documentQuery}
                         onChange={(e) => {

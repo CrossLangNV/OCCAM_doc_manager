@@ -1,9 +1,18 @@
 {
   "nav.documents": "Documents",
-  "nav.activitylogs": "Journaux d'activité",
+  "nav.activity-logs": "Journaux d'activité",
   "nav.help": "Aide",
   "nav.settings": "Paramètres",
-  "nav.searchdocument": "Rechercher un document",
+  "nav.search-document": "Rechercher un document",
   "nav.search": "Recherche",
-  "nav.logout": "Se déconnecter"
+  "nav.logout": "Se déconnecter",
+  "settings.translation-memory": "Mémoire de traduction",
+  "settings.language-pair": "Paire de langues",
+  "settings.amount-of-tus": "Montant des segments",
+  "settings.upload-tmx": "Télécharge TMX",
+  "settings.product-tour": "Visite guidée",
+  "settings.show-product-tour": "Montrez visite guidée",
+  "settings.language": "Langue",
+  "settings.select-language": "Choisir une langue",
+  "ui.refresh": "Rafraîchir"
 }

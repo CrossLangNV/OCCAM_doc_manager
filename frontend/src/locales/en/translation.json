@@ -1,9 +1,18 @@
 {
   "nav.documents": "Documents",
-  "nav.activitylogs": "Activity Logs",
+  "nav.activity-logs": "Activity Logs",
   "nav.help": "Help",
   "nav.settings": "Settings",
-  "nav.searchdocument": "Search document",
+  "nav.search-document": "Search document",
   "nav.search": "Search",
-  "nav.logout": "Logout"
+  "nav.logout": "Logout",
+  "settings.translation-memory": "Translation Memory",
+  "settings.language-pair": "Language pair",
+  "settings.amount-of-tus": "Amount of segments",
+  "settings.upload-tmx": "Upload TMX",
+  "settings.product-tour": "Guided tour",
+  "settings.show-product-tour": "Show guided tour",
+  "settings.language": "Language",
+  "settings.select-language": "Select a language",
+  "ui.refresh": "Refresh"
 }

@@ -7,6 +7,8 @@ import {ModifyLanguage} from "../../actions/uiActions";
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
+
     const uiStates = useSelector(state => state.uiStates);
 
     const languages = [
@@ -26,7 +28,7 @@ const LanguageSelector = () => {
         <div>
             <Dropdown value={uiStates.language} options={languages} onChange={(e) => {
                 changeLanguage(e.value)
-            }} optionLabel="name" placeholder="Select a City"
+            }} optionLabel="name" placeholder={t("settings.select-language")}
             />
         </div>
     );
