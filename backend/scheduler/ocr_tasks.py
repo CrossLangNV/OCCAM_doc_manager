@@ -29,7 +29,7 @@ def ocr_page(page_id: Page.id,
     Args:
         page_id: ID of a Page object.
         engine_pk: primary key of a LayoutAnalysisModel object
-        user: (Optionala) email of a User object.
+        user: (Optional) email of a User object.
 
     Returns:
 
