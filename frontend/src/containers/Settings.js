@@ -8,6 +8,7 @@ import {Button} from "primereact/button";
 import {Col, Row, Table} from "react-bootstrap";
 import {ChangeTutorialState} from "../actions/authActions";
 import {InputSwitch} from "primereact/inputswitch";
+import LanguageSelector from "./core/LanguageSelector";
 
 const Settings = () => {
     // Redux
@@ -58,7 +59,7 @@ const Settings = () => {
     }   
 
 
-    const showData = () => {
+    const showTranslationMemoryTable = () => {
         return (
             <div>
                 <h2>Translation Memory</h2>
@@ -96,7 +97,13 @@ const Settings = () => {
                     uploadHandler={tmxUploader}
                     chooseLabel="Upload TMX"
                 />
+            </div>
+        );
+    }
 
+    const showProductTourSetting = () => {
+        return (
+            <>
                 <h2 className="margin-top">Product tour</h2>
 
                 <div className="p-field-checkbox">
@@ -106,15 +113,28 @@ const Settings = () => {
                     }} />
                     <label htmlFor="enableTutorial">Show product tour</label>
                 </div>
+            </>
+        )
+    }
 
-                <Toast ref={toast} />
-            </div>
-        );
+    const showLanguageSetting = () => {
+        return (
+            <>
+                <h2 className="margin-top">Language</h2>
+                <LanguageSelector />
+            </>
+        )
     }
 
     return (
         <div>
-            {showData()}
+            {showTranslationMemoryTable()}
+
+            {showProductTourSetting()}
+
+            {showLanguageSetting()}
+
+            <Toast ref={toast} />
         </div>
     )
 };

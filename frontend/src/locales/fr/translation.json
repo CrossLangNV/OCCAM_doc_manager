@@ -3,5 +3,7 @@
   "nav.activitylogs": "Journaux d'activité",
   "nav.help": "Aide",
   "nav.settings": "Paramètres",
+  "nav.searchdocument": "Rechercher un document",
+  "nav.search": "Recherche",
   "nav.logout": "Se déconnecter"
 }

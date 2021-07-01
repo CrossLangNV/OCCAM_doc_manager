@@ -24,7 +24,12 @@ export const ModifySelectedEngine = (engine) => async dispatch => {
     });
 }
 
-
+export const ModifyLanguage = (language) => async dispatch => {
+    dispatch({
+        type: UiActionTypes.UI_LANGUAGE_MODIFY,
+        payload: language
+    })
+}
 
 export const GetLayoutEngines = (documentId) => async dispatch => {
 

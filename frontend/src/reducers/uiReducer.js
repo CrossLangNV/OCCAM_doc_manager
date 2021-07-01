@@ -5,7 +5,8 @@ const DefaultState = {
     documentQuery: "",
     selectedPage: "",
     layout_engines: [],
-    selected_layout_engine: ""
+    selected_layout_engine: "",
+    language: "en"
 };
 
 const UiReducer = (state = DefaultState, action) => {
@@ -32,6 +33,11 @@ const UiReducer = (state = DefaultState, action) => {
                 selected_layout_engine: action.payload.filter(p => {
                     return p.selected
                 })
+            }
+        case UiActionTypes.UI_LANGUAGE_MODIFY:
+            return {
+                ...state,
+                language: action.payload
             }
         default:
             return state

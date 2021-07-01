@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Container, Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
 
 import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,18 +7,20 @@ import {ModifyDocumentQuery} from "../../actions/uiActions";
 import {GetDocumentList} from "../../actions/documentActions";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {Logout} from "../../actions/authActions";
+import {useTranslation} from "react-i18next";
+import LanguageSelector from "./LanguageSelector";
 
 const Header = () => {
     const location = useLocation();
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
-    const uiStates = useSelector(state => state.uiStates);
-
-    // For the loading spinner
+    // Redux
     const pageList = useSelector(state => state.pageList);
     const documentList = useSelector(state => state.documentList);
     const activityList = useSelector(state => state.activityLogsList);
     const auth = useSelector(state => state.auth);
+    const uiStates = useSelector(state => state.uiStates);
 
     const searchDocuments = async (query) => {
         dispatch(ModifyDocumentQuery(query))
@@ -45,10 +47,10 @@ const Header = () => {
 
             {(location.pathname !== "/login") &&
                 <Nav className="mr-auto">
-                    <Nav.Link as={Link} to="/">Documents</Nav.Link>
-                    <Nav.Link as={Link} to="/activity">Activity logs</Nav.Link>
-                    <Nav.Link as={Link} to="/help">Help</Nav.Link>
-                    <Nav.Link as={Link} to="/settings">Settings</Nav.Link>
+                    <Nav.Link as={Link} to="/">{t("nav.documents")}</Nav.Link>
+                    <Nav.Link as={Link} to="/activity">{t("nav.activitylogs")}</Nav.Link>
+                    <Nav.Link as={Link} to="/help">{t("nav.help")}</Nav.Link>
+                    <Nav.Link as={Link} to="/settings">{t("nav.settings")}</Nav.Link>
 
                     {/* Loading spinner */}
                     {(reduxIsLoading()) && (
@@ -63,7 +65,7 @@ const Header = () => {
                 <Form inline>
                     <FormControl
                         type="text"
-                        placeholder="Search document"
+                        placeholder={t("nav.searchdocument")}
                         className="mr-sm-2"
                         value={uiStates.documentQuery}
                         onChange={(e) => {
@@ -76,7 +78,7 @@ const Header = () => {
                             }
                         }}
                     />
-                    <Button variant="outline-info">Search</Button>
+                    <Button variant="outline-info">{t("nav.search")}</Button>
                 </Form>
             }
 
@@ -86,7 +88,8 @@ const Header = () => {
                     <Nav.Link>{auth.user}</Nav.Link>
                 )}
 
-                <Nav.Link as={Link} to="/login" onClick={() => dispatch(Logout())}>Logout</Nav.Link>
+                <Nav.Link as={Link} to="/login" onClick={() => dispatch(Logout())}>{t("nav.logout")}</Nav.Link>
+
             </Nav>
             }
         </Navbar>

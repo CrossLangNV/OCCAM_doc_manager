@@ -3,5 +3,7 @@
   "nav.activitylogs": "Activiteit Logboek",
   "nav.help": "Help",
   "nav.settings": "Instellingen",
+  "nav.searchdocument": "Zoek een document",
+  "nav.search": "Zoeken",
   "nav.logout": "Uitloggen"
 }
