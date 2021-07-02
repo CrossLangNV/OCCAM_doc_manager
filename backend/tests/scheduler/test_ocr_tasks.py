@@ -6,7 +6,7 @@ import signal
 from django.test import TransactionTestCase
 
 from backend.tests.documents.create_database_mock import create
-from documents.models import Page, Overlay, LayoutAnalysisModel
+from documents.models import Page, LayoutAnalysisModel
 from documents.ocr_engines import init_engines
 from scheduler.ocr_tasks import xml_lang_detect, ocr_page
 
@@ -18,6 +18,9 @@ NL = "NL"
 FR = "FR"
 
 B_DEBUG = False
+
+LOG_STREAM = io.StringIO()
+logging.basicConfig(stream=LOG_STREAM, level=logging.INFO)
 
 
 class XMLLangDetectTest(TransactionTestCase):
@@ -45,20 +48,32 @@ class OcrPageTest(TransactionTestCase):
         init_engines()
         self.printed_engine = LayoutAnalysisModel.objects.filter(name__icontains='printed')[0]
 
-
     def test_engine_object(self):
 
         # make sure it's on a reasonable value.
-        @break_after(15)
+        @break_after(10)
         def test_ocr_page(*args, **kwargs):
             return ocr_page(*args, **kwargs)
+
+        def truncate(sio: io.StringIO):
+            """
+            Clears the stringIO
+
+            Args:
+                sio:
+
+            Returns:
+
+            """
+            sio.truncate(0)
+            sio.seek(0)
+            return sio
 
         for engine in LayoutAnalysisModel.objects.all():
 
             with self.subTest(f'Engine {engine.name}'):
 
-                log_stream = io.StringIO()
-                logging.basicConfig(stream=log_stream, level=logging.INFO)
+                truncate(LOG_STREAM)
 
                 try:
                     test_ocr_page(page_id=self.page.pk,
@@ -68,14 +83,18 @@ class OcrPageTest(TransactionTestCase):
 
                     ocr_engine_message = "Sent request to per ocr:"
 
-                    log_messages = log_stream.getvalue()
+                    log_messages = LOG_STREAM.getvalue()
                     # print(log_messages)
                     self.assertIn(ocr_engine_message, log_messages,
                                   "Couldn't find a message that indicates that a request for OCR is send.\n"
                                   "Make Sure that 1) this info is logged and "
                                   "2) that call is given enough time to get there.")
-                except Exception:
-                    self.fail("This didn't work as intended.")
+
+                    self.assertIn(engine.name, log_messages,
+                                  "Couldn't find mention of this engine.")
+
+                except Exception as e:
+                    self.fail("Method shouldn't raise any errors.\n{e}")
 
                 else:
                     # Weirdly enough this should have stopped before it was done.
@@ -96,21 +115,17 @@ class OcrPageTest(TransactionTestCase):
         try:
             ocr_page(self.page.pk, engine_pk=NO_ENGINE_PK)
         except Exception as e:
-            self.assertIn(str(NO_ENGINE_PK), str(e.args[0]),
+
+            # self.assertIn(str(NO_ENGINE_PK), str(e.args[0]),
+            #               "Exception should mention that the engine could not be found."
+            #               )
+            self.assertIn(LayoutAnalysisModel.__name__, str(e.args[0]),
                           "Exception should mention that the engine could not be found."
                           )
+
         else:
             self.fail('"{0}" was expected to throw "{1}" exception'
                       .format(ocr_page.__name__, Exception.__name__))
-
-    def assertRaisesWithMessage(self, exception_type, message, func, *args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except exception_type as e:
-            self.assertEqual(e.args[0], message)
-        else:
-            self.fail('"{0}" was expected to throw "{1}" exception'
-                      .format(func.__name__, exception_type.__name__))
 
 
 class TimeoutException(Exception):
