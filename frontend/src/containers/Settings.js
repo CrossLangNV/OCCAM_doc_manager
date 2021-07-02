@@ -72,7 +72,7 @@ const Settings = () => {
                             label=""
                             icon="pi pi-refresh"
                             className="p-button-primary margin-left"
-                            tooltip="Refresh"
+                            tooltip={t("ui.refresh")}
                             tooltipOptions={{ position: 'bottom' }}
                         />
                     </Col>

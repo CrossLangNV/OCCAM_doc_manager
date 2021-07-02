@@ -112,7 +112,7 @@ const ActivityLogs = () => {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>{t("ui.Type")}</th>
+                    <th>{t("ui.type")}</th>
                     <th>{t("ui.state")}</th>
                     <th>{t("ui.Page")}</th>
                     <th>{t("ui.Overlay")}</th>
