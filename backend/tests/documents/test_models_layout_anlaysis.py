@@ -6,6 +6,8 @@ from documents.ocr_engines import init_engines
 
 
 class LayoutAnalysisModelTest(TransactionTestCase):
+    fixtures = ["engines.json"]
+
     def test_init(self):
         name = 'OCR model 0'
         value = 'This extracts the text out of an image.'

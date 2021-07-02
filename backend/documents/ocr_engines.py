@@ -16,8 +16,11 @@ def init_engines() -> None:
 
     """
 
-    # TODO get from config files.
-    # TODO make a user-script that builds these config files.
+    LayoutAnalysisModel.objects.update_or_create(name='No OCR',
+                                                 defaults={'description': 'Skip OCR and upload your own transcription.',
+                                                           'config': {}
+                                                           }
+                                                 )
 
     for engine_name, engine_info in get_engines().items():
 
