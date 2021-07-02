@@ -6,8 +6,6 @@ from documents.ocr_engines import init_engines
 
 
 class LayoutAnalysisModelTest(TransactionTestCase):
-    fixtures = ["engines.json"]
-
     def test_init(self):
         name = 'OCR model 0'
         value = 'This extracts the text out of an image.'
@@ -197,18 +195,6 @@ class LayoutAnalysisModelTest(TransactionTestCase):
 
                 self.assertLessEqual(engine_info.items(),
                                      item.config.items())
-
-    def test_OCR_for_each_engine(self) -> None:
-        """
-        Should be possible to choose the engine based on the selected layout_analysis_model
-        Go over each engine and call the OCR. Should get different results, based on the selected engine.
-        # TODO move out, cause this test will take much longer to complete.
-
-        Returns:
-            None
-        """
-
-        self.assertEqual(0, 1)  # TODO
 
     def _engines_available(self) -> None:
         layout_anlysis_models = LayoutAnalysisModel.objects.all()
