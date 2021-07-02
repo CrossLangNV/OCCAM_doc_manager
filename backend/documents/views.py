@@ -11,12 +11,13 @@ from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
-from scheduler.ocr_tasks import ocr_page_pipeline, upload_overlay_pipeline
+from scheduler.ocr_tasks import ocr_page_pipeline, upload_overlay_pipeline, xml_lang_detect
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 logger = logging.getLogger(__name__)
+
 
 class SmallResultsSetPagination(LimitOffsetPagination):
     default_limit = 5
@@ -108,11 +109,12 @@ class OverlayListAPIView(ListCreateAPIView):
         print("page_id: ", page_id)
         print("file: ", file)
 
-        # response = super(OverlayListAPIView, self).post(request, *args, **kwargs)
-
         page = Page.objects.get(pk=page_id)
+        source_lang = xml_lang_detect(file)  # TODO check if this works...
+        print(source_lang)
         overlay, _ = Overlay.objects.update_or_create(page=page,
-                                                      defaults={'file': file}
+                                                      defaults={'file': file,
+                                                                'source_lang': source_lang}
                                                       )
 
         overlay.create_geojson()

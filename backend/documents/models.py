@@ -196,9 +196,16 @@ class Overlay(models.Model):
                 geojson = pagexml2geojson.main(f, target=target)
                 # logger.info(geojson)
 
-        geojson_object = Geojson.objects.create(
-            overlay=self, original=(target is None), lang=self.source_lang if (target is None) else target
-        )
+        original = target is None
+        if original:  # Original file
+            geojson_object, _ = Geojson.objects.update_or_create(
+                overlay=self, original=original,
+                defaults={'lang': self.source_lang}
+            )
+        else:
+            geojson_object, _ = Geojson.objects.update_or_create(
+                overlay=self, original=original, lang=target,
+            )
 
         basename, _ = os.path.splitext(self.file.name)
         with io.BytesIO(json.dumps(geojson).encode("utf-8")) as f:

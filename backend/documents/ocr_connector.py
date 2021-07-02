@@ -9,6 +9,8 @@ API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 
 def get_request_id(page_id: str):
+    page_id = str(page_id)
+
     data = {
         "engine": 1,
         "images": {

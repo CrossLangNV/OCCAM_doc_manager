@@ -60,13 +60,11 @@ def upload_overlay_pipeline(page_id,
     activity_log.save()
     logger.info("Classified page")
 
-    overlay = Overlay.objects.filter(page=page).latest("created_at")
-    logger.info("overlay: ", overlay)
-
-    with overlay.file.open('rb') as f:
-        overlay_xml = f.read()
-
-    create_overlay_with_language(page, overlay_xml, activity_log=activity_log)
+    # overlay = Overlay.objects.filter(page=page).latest("created_at")
+    # logger.info("overlay: ", overlay)
+    # with overlay.file.open('rb') as f:
+    #     overlay_xml = f.read()
+    # create_overlay_with_language(page, overlay_xml, activity_log=activity_log)
 
 
 def get_activity_log(page: Page,
@@ -139,16 +137,14 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
 
     # Create Overlay object in Djang
     # TODO should we update if already exists?
-    if 0:
-        source_lang = "EN"
-    else:
-        # TODO perhaps no need to first convert to file
-        try:
-            with io.BytesIO(overlay_xml) as f:
-                source_lang = xml_lang_detect(f)
-        except Exception as e:
-            activity_log.state = ActivityLogState.FAILED
-            print("Langdetect failed for page id: ", page_id)
+
+    # TODO perhaps no need to first convert to file
+    try:
+        with io.BytesIO(overlay_xml) as f:
+            source_lang = xml_lang_detect(f)
+    except Exception as e:
+        activity_log.state = ActivityLogState.FAILED
+        print("Langdetect failed for page id: ", page_id)
 
     overlay = Overlay.objects.create(page=page, source_lang=source_lang)
     logger.info("OCR overlay: %s", overlay)
