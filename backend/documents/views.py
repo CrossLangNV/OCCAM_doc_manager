@@ -1,4 +1,4 @@
-import logging as logger
+import logging
 import os
 
 from rest_framework import status
@@ -11,11 +11,12 @@ from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
-from scheduler.ocr_tasks import ocr_page
+from scheduler.ocr_tasks import ocr_page_pipeline, upload_overlay_pipeline
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
+logger = logging.getLogger(__name__)
 
 class SmallResultsSetPagination(LimitOffsetPagination):
     default_limit = 5
@@ -100,6 +101,25 @@ class OverlayListAPIView(ListCreateAPIView):
 
         return q
 
+    def post(self, request, *args, **kwargs):
+        page_id = request.POST["page"]
+        file = request.FILES["file"]
+
+        print("page_id: ", page_id)
+        print("file: ", file)
+
+        # response = super(OverlayListAPIView, self).post(request, *args, **kwargs)
+
+        page = Page.objects.get(pk=page_id)
+        overlay, _ = Overlay.objects.update_or_create(page=page,
+                                                      defaults={'file': file}
+                                                      )
+
+        overlay.create_geojson()
+
+        upload_overlay_pipeline.delay(page_id)
+        return Response("Uploaded.", status=status.HTTP_201_CREATED)
+
 
 class LayoutAnalysisModelsAPIView(ListCreateAPIView):
     queryset = LayoutAnalysisModel.objects.all()
@@ -138,7 +158,7 @@ class PageLaunchOCRAPIView(APIView):
         page_id = request.data["page"]
         user = request.data["user"]
 
-        ocr_page.delay(page_id, user=user)
+        ocr_page_pipeline.delay(page_id, user=user)
 
         logger.info("Starting celery task for translation")
 

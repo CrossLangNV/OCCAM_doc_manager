@@ -13,7 +13,6 @@ class CurrentUserAPIView(APIView):
     serializer_class = UserSerializer
 
     def get(self, request):
-        print(request.user)
         try:
             queryset = User.objects.get(username=request.user)
             serializer = UserSerializer(queryset, many=False)

@@ -19,12 +19,58 @@ DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
 
 @shared_task
-def ocr_page(page_id, user=None):
+def ocr_page_pipeline(page_id: Page.id,
+                      user=None,
+                      activity_log: ActivityLog = None):
     page = Page.objects.get(pk=page_id)
-
     logger.info("Started OCR for page: %s", page)
-    logger.info("user: %s", user)
 
+    if activity_log is None:
+        activity_log = get_activity_log(page,
+                                        user=user)
+
+    classify_document(page)
+    activity_log.state = ActivityLogState.CLASSIFIED
+    activity_log.save()
+    logger.info("Classified page")
+
+    overlay_xml = get_overlay_from_pero_ocr(page,
+                                            activity_log=activity_log)
+
+    create_overlay_with_language(page, overlay_xml, activity_log=activity_log)
+
+
+@shared_task
+def upload_overlay_pipeline(page_id,
+                            user=None,
+                            activity_log: ActivityLog = None):
+    logger.info("Started processing for a manually uploaded document")
+
+    logger.info("page: %s", page_id)
+
+    page = Page.objects.get(pk=page_id)
+    logger.info("Started upload for page: %s", page)
+
+    if activity_log is None:
+        activity_log = get_activity_log(page,
+                                        user=user)
+
+    classify_document(page)
+    activity_log.state = ActivityLogState.CLASSIFIED
+    activity_log.save()
+    logger.info("Classified page")
+
+    overlay = Overlay.objects.filter(page=page).latest("created_at")
+    logger.info("overlay: ", overlay)
+
+    with overlay.file.open('rb') as f:
+        overlay_xml = f.read()
+
+    create_overlay_with_language(page, overlay_xml, activity_log=activity_log)
+
+
+def get_activity_log(page: Page,
+                     user: User.email = None):
     activity_log = ActivityLog.objects.create(page=page,
                                               type=ActivityLogType.OCR)
     if user:
@@ -32,23 +78,17 @@ def ocr_page(page_id, user=None):
         activity_log.user = user_obj
         activity_log.save()
 
-    logger.info("Created activity log")
+    return activity_log
 
-    page_id = str(page.id)
-    basename, _ = os.path.splitext(page.file.name)
 
-    logger.info("Page name: %s", basename)
+def get_overlay_from_pero_ocr(page: Page,
+                              user=None,
+                              activity_log: ActivityLog = None):
+    if activity_log is None:
+        activity_log = get_activity_log(page,
+                                        user=user)
 
-    # POST to Document Classifier
-    classification_results = get_document_classification(page)
-
-    if classification_results:
-        for label, value in classification_results.items():
-            Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
-            print("created label: ", label)
-
-        activity_log.state = ActivityLogState.CLASSIFIED
-        activity_log.save()
+    page_id = page.id
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -71,16 +111,31 @@ def ocr_page(page_id, user=None):
     while True:
         if check_state(request_id,
                        page_id, activity_log):
+            logger.info("Document is processed!")
             break
         else:  # 'PROCESSED'
             time.sleep(1)
-    logger.info("Document is processed!")
 
     # GET to Pero OCR /download_results/{request_id}/{page_id}/{format}
     # Download results
     overlay_xml = get_result(request_id,
                              page_id)
     logger.info("OCR overlay xml: %s", overlay_xml)
+
+    return overlay_xml
+
+
+def create_overlay_with_language(page: Page, overlay_xml: bytes,
+                                 user=None,
+                                 activity_log=None):
+    if activity_log is None:
+        activity_log = get_activity_log(page,
+                                        user=user)
+
+    page_id = page.id
+
+    basename, _ = os.path.splitext(page.file.name)
+    logger.info("Page name: %s", basename)
 
     # Create Overlay object in Djang
     # TODO should we update if already exists?
@@ -136,3 +191,13 @@ def get_document_classification(page):
     print("classification result: ", res)
 
     return res
+
+
+def classify_document(page):
+    # POST to Document Classifier
+    classification_results = get_document_classification(page)
+
+    if classification_results:
+        for label, value in classification_results.items():
+            Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
+            print("created label: ", label)
