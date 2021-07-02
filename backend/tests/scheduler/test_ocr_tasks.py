@@ -148,7 +148,7 @@ def break_after(seconds=10):
                 signal.alarm(0)  # Clear alarm
                 return res
             except TimeoutException as e:
-                print(u'Oops, timeout: %s sec reached.' % seconds, function.__name__, args, kwargs)
+                print(u'Timeout: %s sec reached.' % seconds, function.__name__, args, kwargs)
                 raise e
 
         return wrapper

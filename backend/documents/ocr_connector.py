@@ -70,10 +70,10 @@ def get_request_id(page_id: str,
 
     if b_info:
         engines = get_engines()
-        engine_name = next(filter(lambda engine_name: engines.get(engine_name).get(KEY_ENGINE_ID),
+        engine_name = next(filter(lambda engine_name: engines.get(engine_name).get(KEY_ENGINE_ID) == pero_engine_id,
                                   engines))
         logger.info("Using OCR engine: %s", engine_name)
-        print("Using OCR engine: %s", engine_name)
+        print("Using OCR engine: %s" % engine_name)
 
     response_request = requests.post(PERO_OCR_API + 'post_processing_request',
                                      json=data,
