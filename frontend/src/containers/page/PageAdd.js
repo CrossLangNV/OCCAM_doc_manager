@@ -9,6 +9,7 @@ import {Button} from "primereact/button";
 import {useHistory} from "react-router-dom";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
+import {useTranslation} from "react-i18next";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
@@ -16,6 +17,7 @@ const PageAdd = (props) => {
     const documentId = props.match.params.documentId
     const toast = useRef(null);
     const history = useHistory();
+    const {t} = useTranslation();
 
     const auth = useSelector(state => state.auth);
 
@@ -24,7 +26,7 @@ const PageAdd = (props) => {
 
         if (files) {
             dispatch(AddPage(documentId, files))
-            toast.current.show({severity: 'info', summary: 'Success', detail: 'Page(s) have been uploaded.'});
+            toast.current.show({severity: 'info', summary: 'Success', detail: t("page-add.Page(s) have been uploaded")});
         }
     }
 
@@ -37,7 +39,7 @@ const PageAdd = (props) => {
                     backgroundColor: 'var(--surface-b)',
                     color: 'var(--surface-d)'
                 }}/>
-                <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">Drag and drop image(s) here</span>
+                <span style={{'fontSize': '1.2em', color: 'var(--text-color-secondary)'}} className="p-my-5">{t("page-add.Drag and drop image(s) here")}</span>
             </div>
         )
     }
@@ -52,7 +54,7 @@ const PageAdd = (props) => {
             content: () => (
                 <div>
                     <h3>Upload pages</h3>
-                    <p>Press the <Button label="Choose" icon="pi pi-plus"></Button> button to select images or PDF files
+                    <p>Press the <Button label="Choose" icon="pi pi-plus"/> button to select images or PDF files
                         that you wish to add to your document. </p>
                     <p>All pages in a PDF file will automatically be converted to images.</p>
                     <p>Documents will automatically be uploaded once you selected them from your system.</p>

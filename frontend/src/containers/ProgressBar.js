@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import {Steps} from "primereact/steps";
 import {useHistory} from "react-router-dom";
+import {useTranslation} from "react-i18next";
 
 const ProgressBar = (props) => {
     const activeStep = props.activeStep - 1; // -1 because javascript starts with 0
     const documentId = props.documentId; // -1 because javascript starts with 0
     let history = useHistory();
+    const {t} = useTranslation();
 
     const steps = [
         {
-            label: 'Document Information',
+            label: t("progress.Document Information"),
             command: (event) => {
                 if (documentId !== undefined) {
                     history.push('/document-edit/' + documentId)
@@ -17,7 +19,7 @@ const ProgressBar = (props) => {
             }
         },
         {
-            label: 'Upload Pages',
+            label: t("progress.Upload Pages"),
             command: (event) => {
                 if (documentId !== undefined) {
                     history.push('/document/' + documentId + "/add-pages")
@@ -25,7 +27,7 @@ const ProgressBar = (props) => {
             }
         },
         {
-            label: 'Layout Analysis',
+            label: t("progress.Layout Analysis"),
             command: (event) => {
                 if (documentId !== undefined) {
                     history.push(`/document-edit/${documentId}/layout_model`)
@@ -33,7 +35,7 @@ const ProgressBar = (props) => {
             }
         },
         {
-            label: 'Results',
+            label: t("progress.Results"),
             command: (event) => {
                 if (documentId !== undefined) {
                     history.push('/document/' + documentId)
@@ -41,7 +43,7 @@ const ProgressBar = (props) => {
             }
         },
         {
-            label: 'Publish',
+            label: t("progress.Publish"),
             command: (event) => {
                 if (documentId !== undefined) {
                     history.push('/publish/' + documentId)

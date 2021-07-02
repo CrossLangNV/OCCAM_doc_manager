@@ -14,6 +14,7 @@ import Tour from "reactour";
 import {useDispatch, useSelector} from "react-redux";
 import {ChangeTutorialState, CloseTutorial, load_user} from "../../actions/authActions";
 import {Button} from "primereact/button";
+import {useTranslation} from "react-i18next";
 
 const PageLeaflet = (props) => {
     const page = props.selectedPage
@@ -27,16 +28,17 @@ const PageLeaflet = (props) => {
     const [activeView, setActiveView] = useState(0);
     const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
     const [plainText, setPlainText] = useState("");
+    const {t} = useTranslation();
 
     // Redux
     const auth = useSelector(state => state.auth);
     const dispatch = useDispatch()
 
     const viewOptions = [
-        {label: 'Page View', icon: ''},
-        {label: 'Text View', icon: ''},
-        {label: 'Metadata', icon: ''},
-        {label: 'History', icon: ''},
+        {label: t("page-leaflet.Page View"), icon: ''},
+        {label: t("page-leaflet.Text View"), icon: ''},
+        {label: t("page-leaflet.Metadata"), icon: ''},
+        {label: t("page-leaflet.History"), icon: ''},
     ];
 
 

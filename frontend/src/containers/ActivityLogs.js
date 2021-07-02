@@ -9,11 +9,13 @@ import {Button} from "primereact/button";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPagiate from "react-paginate";
 import LoadingSpinner from "./core/LoadingSpinner";
+import {useTranslation} from "react-i18next";
 
 const ActivityLogs = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const activityList = useSelector(state => state.activityLogsList);
+    const {t} = useTranslation();
 
     React.useEffect(() => {
         fetchActivityLogs(5, 1);
@@ -65,7 +67,7 @@ const ActivityLogs = () => {
                             <td className='w-10'>
                                 <Button
                                     label=""
-                                    tooltip="View document"
+                                    tooltip={t("activity-logs.View document")}
                                     tooltipOptions={{position: 'bottom'}}
                                     icon="pi pi-search"
                                     onClick={() => history.push(`/document/${!_.isEmpty(item.page) ? item.page.document.id : item.overlay.page.document}`)}
@@ -79,7 +81,7 @@ const ActivityLogs = () => {
         }
 
         if (activityList.loading) {
-            return <p>Loading...</p>
+            return <p>{t("ui.loading")}...</p>
         }
 
         if (activityList.errorMsg !== "") {
@@ -98,25 +100,25 @@ const ActivityLogs = () => {
                         label=""
                         icon="pi pi-refresh"
                         className="p-button-primary margin-left"
-                        tooltip="Refresh"
+                        tooltip={t("ui.refresh")}
                         tooltipOptions={{position: 'bottom'}}
                     />
                 </Col>
                 <Col md="mr-auto">
-                    <p className="occ-table-result-count">Activity logs found: {activityList.count}</p>
+                    <p className="occ-table-result-count">{t("activity-logs.Activity logs found")}: {activityList.count}</p>
                 </Col>
             </Row>
             <Table striped borderless hover>
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Type</th>
-                    <th>State</th>
-                    <th>Page</th>
-                    <th>Overlay</th>
-                    <th>Created at</th>
-                    <th>Last updated</th>
-                    <th>Actions</th>
+                    <th>{t("ui.Type")}</th>
+                    <th>{t("ui.state")}</th>
+                    <th>{t("ui.Page")}</th>
+                    <th>{t("ui.Overlay")}</th>
+                    <th>{t("ui.created-at")}</th>
+                    <th>{t("ui.last-updated")}</th>
+                    <th>{t("ui.actions")}</th>
                 </tr>
                 </thead>
                 <tbody>

@@ -3,12 +3,14 @@ import axios from "axios";
 import {baseUrl} from "../constants/axiosConf";
 
 import ReactHtmlParser from 'react-html-parser';
+import {useTranslation} from "react-i18next";
 
 
 
 const HelpComponent = () => {
 
     const [manualHtml, setManualHtml] = useState("");
+    const {t} = useTranslation()
 
 
     React.useEffect(() => {
@@ -27,7 +29,7 @@ const HelpComponent = () => {
             const res = await axios.get(`${baseUrl}/tutorial/api/help_page`, config)
             setManualHtml(res.data)
         } catch (e) {
-            setManualHtml("Cannot connect to Confluence. ")
+            setManualHtml(t("help.Cannot connect to Confluence"))
         }
 
     }
