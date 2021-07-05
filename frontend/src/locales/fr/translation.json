@@ -46,7 +46,7 @@
   "document-layout-analysis.Choose a layout analysis engine": "Choisir un moteur d'analyse de mise en page",
   "document-list.Are you sure you want to delete this document and all its pages?": "Etes-vous sûr de vouloir supprimer ce document et toutes ses pages ?",
   "document-list.New document": "Nouveau document",
-  "document-list.Document(s) found:": "document-list.Document(s) trouvé(s) : ",
+  "document-list.Document(s) found": "Document(s) trouvé(s) : ",
   "overlay-add.Overlay has been uploaded": "La superposition a été téléchargée.",
   "page-add.Page(s) have been uploaded": "La ou les pages ont été téléchargées.",
   "page-add.Drag and drop image(s) here": "Glissez et déposez l'image (s) ici",

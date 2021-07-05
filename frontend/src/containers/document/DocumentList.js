@@ -138,7 +138,7 @@ const DocumentList = () => {
             <Row className="justify-content-between">
                 <Col/>
                 <Col md="mr-auto">
-                    <p className="occ-table-result-count">{t("document-list.Document(s) found:")} {documentList.count}</p>
+                    <p className="occ-table-result-count">{t("document-list.Document(s) found")} {documentList.count}</p>
                 </Col>
             </Row>
             <Table striped borderless hover>
