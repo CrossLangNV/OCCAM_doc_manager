@@ -175,17 +175,17 @@ const PageList = (props) => {
             selector: '.document-step-one',
             content: () => (
                 <div>
-                    <h3>Document Actions</h3>
-                    <p>These buttons have actions on the document level.</p>
+                    <h3>{t("page-list.Document Actions")}</h3>
+                    <p>{t("page-list.These buttons have actions on the document level")}</p>
                     <ul>
                         <li>
-                            <b>Refresh:</b> refreshes the states of the document and its pages.
+                            <b>{(t("ui.refresh"))}:</b> {t("page-list.refreshes the states of the document and its pages")}
                         </li>
                         <li>
-                            <b>OCR all pages:</b> starts the layout engine analysis for all the pages of the document.
+                            <b>{t("document.OCR all pages")}:</b> {t("page-list.starts the layout engine analysis for all the pages of the document")}
                         </li>
                         <li>
-                            <b>Delete document: </b> deletes the document with all its pages.
+                            <b>{t("document.Delete document")}: </b> {t("page-list.deletes the document with all its pages")}
                         </li>
                     </ul>
                 </div>
@@ -195,12 +195,12 @@ const PageList = (props) => {
             selector: '.document-step-two',
             content: () => (
                 <div>
-                    <h3>Page List</h3>
-                    <p>All the pages that you have uploaded will appear here. </p>
-                    <p>You can scroll down the list if you have more than two pages. </p>
+                    <h3>{t("page-list.Page List")}</h3>
+                    <p>{t("page-list.All the pages that you have uploaded will appear here")}</p>
+                    <p>{t("page-list.You can scroll down the list if you have more than two pages")}</p>
                     <br/>
                     <div>
-                        <Message severity="info" text="Click on a page to view your page and all its information. "/>
+                        <Message severity="info" text={t("page-list.Click on a page to view your page and all its information")}/>
                     </div>
                 </div>
             )

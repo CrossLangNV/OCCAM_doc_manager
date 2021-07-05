@@ -65,10 +65,11 @@ const DocumentLayoutAnalysis = (props) => {
             selector: '.document-layout-step-one',
             content: () => (
                 <div>
-                    <h3>Layout Analysis Engine</h3>
-                    <p>In this step you can select which model you wish to use for the layout analysis (OCR).</p>
-                    <p>Depending on your documents and the selected engine, the layout analysis results might be
-                        different.</p>
+                    <h3>{t("layout.Layout Analysis Engine")}</h3>
+                    <p>{t("layout.In this step you can select which model you wish to use for the layout analysis (OCR)")} </p>
+                    <p>
+                        {t("layout.Depending on your documents and the selected engine, the layout analysis results might be different")}
+                    </p>
                     <br/>
                     <Button label={t("ui.dont-show-me-again")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))

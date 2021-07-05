@@ -53,11 +53,13 @@ const PageAdd = (props) => {
             selector: '.upload-pages-step-one',
             content: () => (
                 <div>
-                    <h3>Upload pages</h3>
-                    <p>Press the <Button label="Choose" icon="pi pi-plus"/> button to select images or PDF files
-                        that you wish to add to your document. </p>
-                    <p>All pages in a PDF file will automatically be converted to images.</p>
-                    <p>Documents will automatically be uploaded once you selected them from your system.</p>
+                    <h3>{t("page-add.Upload pages")}</h3>
+                    <p>
+                        {("page-add.Press the")} <Button label={t("ui.choose")} icon="pi pi-plus"/>
+                        {("page-add.button to select images or PDF files that you wish to add to your document")}
+                    </p>
+                    <p>{t("page-add.All pages in a PDF file will automatically be converted to images")}</p>
+                    <p>{t("page-add.Documents will automatically be uploaded once you selected them from your system")}</p>
                     <br/>
                     <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
@@ -69,8 +71,8 @@ const PageAdd = (props) => {
             selector: '.upload-pages-step-two',
             content: () => (
                 <div>
-                    <h3>Next</h3>
-                    <p>When you have selected all your pages, you can press this button to proceed to the next step.</p>
+                    <h3>{t("ui.next")}</h3>
+                    <p>{t("page-add.When you have selected all your pages, you can press this button to proceed to the next step")}</p>
                 </div>
             )
         },

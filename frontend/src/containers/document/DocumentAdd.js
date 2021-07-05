@@ -104,9 +104,9 @@ const DocumentAdd = (props) => {
             selector: '.add-doc-step-one',
             content: () => (
                 <div>
-                    <h3>Document Title</h3>
-                    <p>A document is a collection of pages/images.</p>
-                    <p>Here you can fill in a title for your new document.</p>
+                    <h3>{t("document-add.Document Title")}</h3>
+                    <p>{t("document-add.A document is a collection of pages/images")}</p>
+                    <p>{t("document-add.Here you can fill in a title for your new document")}</p>
                     <br/>
                     <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
@@ -118,8 +118,8 @@ const DocumentAdd = (props) => {
             selector: '.add-doc-step-two',
             content: () => (
                 <div>
-                    <h3>Summary</h3>
-                    <p><b>Optional</b>: A summary of your document, for your own reference. </p>
+                    <h3>{t("document-add.Summary")}</h3>
+                    <p><b>{t("document-add.Optional")}</b>: {t("document-add.A summary of your document, for your own reference")}</p>
                 </div>
             )
         },
@@ -127,9 +127,10 @@ const DocumentAdd = (props) => {
             selector: '.doc-list-step-five',
             content: () => (
                 <div>
-                    <h3>Next button</h3>
-                    <p>When you have filled in the information of your document, you can press this button to proceed to
-                        the next step.</p>
+                    <h3>{t("document-add.Next button")}</h3>
+                    <p>
+                        {t("document-add.When you have filled in the information of your document, you can press this button to proceed to the next step")}
+                    </p>
                 </div>
             )
         }

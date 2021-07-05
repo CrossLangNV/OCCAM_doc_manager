@@ -186,14 +186,15 @@ const PageLeaflet = (props) => {
             selector: '.document-step-four',
             content: () => (
                 <div>
-                    <h3>Page View</h3>
-                    <p>In this interactive view your selected page will be presented.</p>
+                    <h3>{t("page-leaflet.Page View")}</h3>
+                    <p>{t("page-leaflet.In this interactive view your selected page will be presented")}</p>
 
-                    <p>When the layout analysis has completed, you can see blue boxes around the text in the page.</p>
-                    <p>By hovering these boxes, a popup will appear which contains the plain text that has been
-                        recognized by the OCR. </p>
-                    <p>By clicking on these, it will automatically zoom in to your text. </p>
-                    <p>You can zoom in or out with your scroll wheel, and drag the screen to move in your page. </p>
+                    <p>{t("page-leaflet.When the layout analysis has completed, you can see blue boxes around the text in the page")}</p>
+                    <p>
+                        {t("page-leaflet.By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR")}
+                    </p>
+                    <p>{t("page-leaflet.By clicking on these, it will automatically zoom in to your text")}</p>
+                    <p>{t("page-leaflet.You can zoom in or out with your scroll wheel, and drag the screen to move in your page")}</p>
                 </div>
             )
         },
@@ -201,21 +202,20 @@ const PageLeaflet = (props) => {
             selector: '.document-step-five',
             content: () => (
                 <div>
-                    <h3>View switch</h3>
-                    <p>You can click on the tabs to change the view and see other kinds of information about your
-                        page.</p>
+                    <h3>{t("page-leaflet.View switch")}</h3>
+                    <p>{t("page-leaflet.You can click on the tabs to change the view and see other kinds of information about your page")}</p>
                     <ul>
                         <li>
-                            <b>Page View:</b> interactive view of your page.
+                            <b>{t("page-leaflet.Page View")}:</b> {t("page-leaflet.interactive view of your page")}
                         </li>
                         <li>
-                            <b>Text View: </b> Text view of your page. Only works after layout analysis.
+                            <b>{t("page-leaflet.Text View")}</b> {t("page-leaflet.Text view of your page. Only works after layout analysis")}.
                         </li>
                         <li>
-                            <b>Metadata: </b> Metadata of your page from the document classifier.
+                            <b>{t("page-leaflet.Metadata")}: </b> {t("page-leaflet.Metadata of your page from the document classifier")}
                         </li>
                         <li>
-                            <b>History: </b> History of actions done on your page.
+                            <b>{t("page-leaflet.History")}: </b> {t("page-leaflet.History of actions done on your page")}
                         </li>
                     </ul>
                 </div>
@@ -225,9 +225,9 @@ const PageLeaflet = (props) => {
             selector: '.document-step-six',
             content: () => (
                 <div>
-                    <h3>Language Switch</h3>
-                    <p>Switch between the available languages of your page. </p>
-                    <p>If the desired language is not present, use the context menu to translate your page. </p>
+                    <h3>{t("page-leaflet.Language Switch")}</h3>
+                    <p>{t("page-leaflet.Switch between the available languages of your page")}</p>
+                    <p>{t("page-leaflet.If the desired language is not present, use the context menu to translate your page")}</p>
                     <br/>
                     <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
