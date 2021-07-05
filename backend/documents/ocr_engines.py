@@ -23,17 +23,18 @@ def init_engines() -> None:
                                                  )
 
     for engine_name, engine_info in get_engines().items():
-
         engine_info[KEY_LINK] = PERO_OCR_ENGINE
 
         description = engine_info.get(KEY_DESCRIPTION)
+
         if description is None:
-            # Always have a description to guide the user.
-            description = str(engine_info)
+            # Would be nice to always have a description to guide the user.
+            # e.g. str(engine_info)
+            description = ''
 
         # Check if LayoutAnalysisModel already exist:
-        LayoutAnalysisModel.objects.update_or_create(name=engine_name,
-                                                     defaults={'description': description,
+        LayoutAnalysisModel.objects.update_or_create(name=_nice_string(engine_name),
+                                                     defaults={'description': _nice_string(description),
                                                                'config': engine_info
                                                                }
                                                      )
@@ -47,3 +48,24 @@ def get_PERO_OCR_engine_id(ocr_engine: LayoutAnalysisModel):
 
     pero_engine_id = ocr_engine.config[KEY_ENGINE_ID]
     return pero_engine_id
+
+
+def _nice_string(engine_name: str):
+    """
+    Cleanup a sentence by
+    * removing underscores
+    * Capitalizing the first letter.
+
+    Args:
+        engine_name:
+
+    Returns:
+
+    """
+
+    engine_name = engine_name.replace('_', ' ')
+
+    # Only make sure that the first character of the string is in upper case
+    engine_name = engine_name[:1].upper() + engine_name[1:]
+
+    return engine_name

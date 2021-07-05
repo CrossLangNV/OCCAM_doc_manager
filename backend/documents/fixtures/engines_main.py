@@ -22,7 +22,7 @@ def main():
     model = f"{LayoutAnalysisModel.__module__.split('.', 1)[0]}." \
             f"{LayoutAnalysisModel.__name__.lower()}"
 
-    engines = LayoutAnalysisModel.objects.all()
+    engines = LayoutAnalysisModel.objects.all().order_by("pk")
     json_engines = []
 
     for engine in engines:

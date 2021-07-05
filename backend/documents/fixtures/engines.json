@@ -1,10 +1,19 @@
 [
   {
     "model": "documents.layoutanalysismodel",
+    "pk": 1,
+    "fields": {
+      "name": "No OCR",
+      "description": "Skip OCR and upload your own transcription.",
+      "config": {}
+    }
+  },
+  {
+    "model": "documents.layoutanalysismodel",
     "pk": 2,
     "fields": {
-      "name": "arabic_handwritten",
-      "description": "{'description': None, 'engine_version': '2021-02-04', 'id': 3, 'models': [{'id': 21, 'name': 'arabic_handwritten_experimental2_2021-01-26'}, {'id': 18, 'name': 'layout_complex_printed_and_handwritten_2021-01-26'}, {'id': 22, 'name': 'lm_arabic_wikipedia_2020-11-25'}], 'link': 'https://pero-ocr.fit.vutbr.cz/'}",
+      "name": "Arabic handwritten",
+      "description": "",
       "config": {
         "id": 3,
         "link": "https://pero-ocr.fit.vutbr.cz/",
@@ -31,8 +40,8 @@
     "model": "documents.layoutanalysismodel",
     "pk": 3,
     "fields": {
-      "name": "czech_old_handwritten",
-      "description": "{'description': None, 'engine_version': '2021-01-26', 'id': 2, 'models': [{'id': 20, 'name': 'czech_handwritten_2021-01-26'}, {'id': 18, 'name': 'layout_complex_printed_and_handwritten_2021-01-26'}], 'link': 'https://pero-ocr.fit.vutbr.cz/'}",
+      "name": "Czech old handwritten",
+      "description": "",
       "config": {
         "id": 2,
         "link": "https://pero-ocr.fit.vutbr.cz/",
@@ -55,7 +64,7 @@
     "model": "documents.layoutanalysismodel",
     "pk": 4,
     "fields": {
-      "name": "czech_old_printed",
+      "name": "Czech old printed",
       "description": "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.",
       "config": {
         "id": 1,
@@ -73,15 +82,6 @@
         "description": "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.",
         "engine_version": "2021-01-26"
       }
-    }
-  },
-  {
-    "model": "documents.layoutanalysismodel",
-    "pk": 1,
-    "fields": {
-      "name": "No OCR",
-      "description": "Skip OCR and upload your own transcription.",
-      "config": {}
     }
   }
 ]
