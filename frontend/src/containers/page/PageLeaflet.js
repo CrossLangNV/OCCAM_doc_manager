@@ -229,7 +229,7 @@ const PageLeaflet = (props) => {
                     <p>Switch between the available languages of your page. </p>
                     <p>If the desired language is not present, use the context menu to translate your page. </p>
                     <br/>
-                    <Button label="Don't show me again" onClick={() => {
+                    <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>

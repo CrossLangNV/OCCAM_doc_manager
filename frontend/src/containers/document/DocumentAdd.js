@@ -108,7 +108,7 @@ const DocumentAdd = (props) => {
                     <p>A document is a collection of pages/images.</p>
                     <p>Here you can fill in a title for your new document.</p>
                     <br/>
-                    <Button label="Don't show me again" onClick={() => {
+                    <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>

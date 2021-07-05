@@ -59,7 +59,7 @@ const PageAdd = (props) => {
                     <p>All pages in a PDF file will automatically be converted to images.</p>
                     <p>Documents will automatically be uploaded once you selected them from your system.</p>
                     <br/>
-                    <Button label="Don't show me again" onClick={() => {
+                    <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>
