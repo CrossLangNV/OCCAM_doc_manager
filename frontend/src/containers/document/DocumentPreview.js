@@ -1,18 +1,20 @@
 import React from 'react';
 
-const DocumentPreview = (props) => {
-    const document = props.document;
-
-    const getImage = () => {
-        if (document.document_page.length > 0) {
-            return document.document_page[0].file
-        } else {
-            return "/document-logo.png"
-        }
-    }
+const DocumentPreview = ({document}) => {
 
     return (
-        <img src={getImage()} width="100"/>
+        <>
+            {document.document_page.length > 0 ?
+                <img src={document.document_page[0].file} width="100"/>
+                :
+                <i className="pi pi-image p-mt-3 p-p-2" style={{
+                    'fontSize': '5em',
+                    borderRadius: '10%',
+                    backgroundColor: 'var(--surface-b)',
+                    color: 'var(--surface-d)'
+                }}/>
+            }
+        </>
     );
 };
 
