@@ -66,6 +66,9 @@ def check_state(request_id: str, page_id: str, activity_log) -> bool:
 
     return: True if finished, else False
     """
+
+    page_id = str(page_id)
+
     response_status = requests.get(
         f'https://pero-ocr.fit.vutbr.cz/api/request_status/{request_id}',
         headers={'api-key': API_KEY_PERO_OCR,

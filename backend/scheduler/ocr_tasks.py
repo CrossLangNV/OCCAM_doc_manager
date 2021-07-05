@@ -135,9 +135,7 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
     basename, _ = os.path.splitext(page.file.name)
     logger.info("Page name: %s", basename)
 
-    # Create Overlay object in Djang
-    # TODO should we update if already exists?
-
+    # Create Overlay object in Django
     # TODO perhaps no need to first convert to file
     try:
         with io.BytesIO(overlay_xml) as f:
@@ -146,7 +144,9 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
         activity_log.state = ActivityLogState.FAILED
         print("Langdetect failed for page id: ", page_id)
 
-    overlay = Overlay.objects.create(page=page, source_lang=source_lang)
+    overlay, _ = Overlay.objects.update_or_create(page=page,
+                                                  defaults={'source_lang': source_lang}
+                                                  )
     logger.info("OCR overlay: %s", overlay)
 
     activity_log.overlay = overlay
