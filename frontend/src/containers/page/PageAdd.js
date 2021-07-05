@@ -55,8 +55,8 @@ const PageAdd = (props) => {
                 <div>
                     <h3>{t("page-add.Upload pages")}</h3>
                     <p>
-                        {("page-add.Press the")} <Button label={t("ui.choose")} icon="pi pi-plus"/>
-                        {("page-add.button to select images or PDF files that you wish to add to your document")}
+                        {t("page-add.Press the")} <Button label={t("ui.choose")} icon="pi pi-plus"/>
+                        {t("page-add.button to select images or PDF files that you wish to add to your document")}
                     </p>
                     <p>{t("page-add.All pages in a PDF file will automatically be converted to images")}</p>
                     <p>{t("page-add.Documents will automatically be uploaded once you selected them from your system")}</p>

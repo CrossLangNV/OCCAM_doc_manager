@@ -123,6 +123,7 @@
   "document-add.A summary of your document, for your own reference": "A summary of your document, for your own reference",
   "document-add.Next button": "Next button",
   "document-add.When you have filled in the information of your document, you can press this button to proceed to the next step": "When you have filled in the information of your document, you can press this button to proceed to the next step.",
+  "document-add.Optional": "Optional",
   "layout.Layout Analysis Engine": "layout.Layout Analysis Engine",
   "layout.In this step you can select which model you wish to use for the layout analysis (OCR)": "layout.In this step you can select which model you wish to use for the layout analysis (OCR)",
   "layout.Depending on your documents and the selected engine, the layout analysis results might be different": "layout.Depending on your documents and the selected engine, the layout analysis results might be different",
@@ -144,5 +145,7 @@
   "page-leaflet.History of actions done on your page": "History of actions done on your page.",
   "page-leaflet.Language Switch": "Language Switch",
   "page-leaflet.Switch between the available languages of your page": "Switch between the available languages of your page.",
-  "page-leaflet.If the desired language is not present, use the context menu to translate your page": "If the desired language is not present, use the context menu to translate your page."
+  "page-leaflet.If the desired language is not present, use the context menu to translate your page": "If the desired language is not present, use the context menu to translate your page.",
+  "page-leaflet.View switch": "View Switch"
+
 }
