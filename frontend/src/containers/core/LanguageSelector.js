@@ -13,15 +13,15 @@ const LanguageSelector = ({inline}) => {
     const uiStates = useSelector(state => state.uiStates);
 
     const languagesForTabmenu = [
-        { label: 'English', value: 'en' },
-        { label: 'Dutch', value: 'nl' },
-        { label: 'French', value: 'fr' },
+        { label: t("language.en"), value: 'en' },
+        { label: t("language.nl"), value: 'nl' },
+        { label: t("language.fr"), value: 'fr' },
     ];
 
     const languagesForDropdown = [
-        { name: 'English', value: 'en' },
-        { name: 'Dutch', value: 'nl' },
-        { name: 'French', value: 'fr' },
+        { name: t("language.en"), value: 'en' },
+        { name: t("language.nl"), value: 'nl' },
+        { name: t("language.fr"), value: 'fr' },
     ];
 
 

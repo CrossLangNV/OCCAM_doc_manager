@@ -124,7 +124,9 @@ const DocumentList = () => {
             <Tour
                 steps={steps}
                 isOpen={!auth.hasCompletedTutorial}
-                onRequestClose={() => dispatch(CloseTutorial())} />
+                onRequestClose={() => dispatch(CloseTutorial())}
+                className={"occ-tour-lg"}
+            />
 
 
             <Button onClick={() => history.push("/document-add")}

@@ -210,3 +210,7 @@ a {
   color: #2196F3;
   cursor: pointer;
 }
+
+.occ-tour-lg {
+  max-width: 362px !important;
+}
