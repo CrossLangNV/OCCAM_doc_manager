@@ -41,7 +41,7 @@
     "Page": "Page",
     "Overlay": "Superposition",
     "last-updated": "Dernière mise à jour",
-    "choose": "Choose"
+    "choose": "Choisir"
   },
 
   "document": {
@@ -99,15 +99,15 @@
     "Replace overlay": "Remplacer la superposition",
     "Upload overlay": "Télécharger la superposition",
 
-    "Document Actions": "Document Actions",
-    "These buttons have actions on the document level": "These buttons have actions on the document level",
-    "refreshes the states of the document and its pages": "refreshes the states of the document and its pages",
-    "starts the layout engine analysis for all the pages of the document": "starts the layout engine analysis for all the pages of the document",
-    "deletes the document with all its pages": "deletes the document with all its pages",
-    "Page List": "Page List",
-    "All the pages that you have uploaded will appear here": "All the pages that you have uploaded will appear here",
-    "You can scroll down the list if you have more than two pages": "You can scroll down the list if you have more than two pages",
-    "Click on a page to view your page and all its information": "Click on a page to view your page and all its information. "
+    "Document Actions": "Actions du document",
+    "These buttons have actions on the document level": "Ces boutons ont des actions au niveau du document",
+    "refreshes the states of the document and its pages": "rafraîchit les états du document et de ses pages",
+    "starts the layout engine analysis for all the pages of the document": "démarre l'analyse du moteur de mise en page pour toutes les pages du document",
+    "deletes the document with all its pages": "supprime le document avec toutes ses pages",
+    "Page List": "Page Liste",
+    "All the pages that you have uploaded will appear here": "Toutes les pages que vous avez téléchargées apparaîtront ici",
+    "You can scroll down the list if you have more than two pages": "Vous pouvez faire défiler la liste si vous avez plus de deux pages",
+    "Click on a page to view your page and all its information": "Cliquez sur une page pour afficher votre page et toutes ses informations. "
   },
 
   "page-metadata.No metadata available": "Aucune métadonnée disponible.",
@@ -140,51 +140,51 @@
   },
 
   "document-add": {
-    "Document Title": "Document Title",
-    "A document is a collection of pages/images": "A document is a collection of pages/images",
-    "Here you can fill in a title for your new document": "Here you can fill in a title for your new document",
-    "Summary": "Summary",
-    "A summary of your document, for your own reference": "A summary of your document, for your own reference",
-    "Next button": "Next button",
-    "When you have filled in the information of your document, you can press this button to proceed to the next step": "When you have filled in the information of your document, you can press this button to proceed to the next step.",
-    "Optional": "Optional",
+    "Document Title": "Titre du document",
+    "A document is a collection of pages/images": "Un document est une collection de pages/images",
+    "Here you can fill in a title for your new document": "Vous pouvez saisir ici un titre pour votre nouveau document",
+    "Summary": "Résumé",
+    "A summary of your document, for your own reference": "Un résumé de votre document, pour votre propre référence",
+    "Next button": "Bouton Suivant",
+    "When you have filled in the information of your document, you can press this button to proceed to the next step": "Quand vous avoir renseigné les informations de votre document, vous pouvez appuyer sur ce bouton pour passer à l'étape suivante.",
+    "Optional": "Facultatif",
     "Document information saved.": "Les informations du document sont sauvegardées.",
     "Add new document": "Ajouter un nouveau document",
-    "Document information": "Informations sur le document"
+    "Document information": "Informations sur les documents"
   },
 
   "layout": {
-    "Layout Analysis Engine": "Layout Analysis Engine",
-    "In this step you can select which model you wish to use for the layout analysis (OCR)": "In this step you can select which model you wish to use for the layout analysis (OCR)",
-    "Depending on your documents and the selected engine, the layout analysis results might be different": "Depending on your documents and the selected engine, the layout analysis results might be different"
+    "Layout Analysis Engine": "Moteur d'analyse de mise en page",
+    "In this step you can select which model you wish to use for the layout analysis (OCR)": "Dans cette étape, vous pouvez sélectionner le modèle que vous souhaitez utiliser pour l'analyse de la mise en page (OCR).",
+    "Depending on your documents and the selected engine, the layout analysis results might be different": "En fonction de vos documents et du moteur sélectionné, les résultats de l'analyse de la mise en page peuvent être différents."
   },
 
   "page-add": {
-    "Upload pages": "Upload pages",
-    "Press the": "Press the",
-    "button to select images or PDF files that you wish to add to your document": "button to select images or PDF files that you wish to add to your document.",
-    "All pages in a PDF file will automatically be converted to images": "All pages in a PDF file will automatically be converted to images.",
-    "Documents will automatically be uploaded once you selected them from your system": "Documents will automatically be uploaded once you selected them from your system.",
-    "When you have selected all your pages, you can press this button to proceed to the next step": "When you have selected all your pages, you can press this button to proceed to the next step.",
+    "Upload pages": "Télécharger des pages",
+    "Press the": "Appuyez sur le",
+    "button to select images or PDF files that you wish to add to your document": "bouton pour sélectionner les images ou les fichiers PDF que vous souhaitez ajouter à votre document.",
+    "All pages in a PDF file will automatically be converted to images": "Toutes les pages d'un fichier PDF seront automatiquement converties en images.",
+    "Documents will automatically be uploaded once you selected them from your system": "Les documents seront automatiquement téléchargés une fois que vous avez sélectionné à partir de votre système.",
+    "When you have selected all your pages, you can press this button to proceed to the next step": "Lorsque vous avez sélectionné toutes vos pages, vous pouvez appuyer sur ce bouton pour passer à l'étape suivante.",
     "Page(s) have been uploaded": "La ou les pages ont été téléchargées.",
     "Drag and drop image(s) here": "Glissez et déposez l'image (s) ici"
   },
 
   "page-leaflet": {
-    "In this interactive view your selected page will be presented": "In this interactive view your selected page will be presented.",
-    "When the layout analysis has completed, you can see blue boxes around the text in the page": "When the layout analysis has completed, you can see blue boxes around the text in the page.",
-    "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR": "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR.",
-    "By clicking on these, it will automatically zoom in to your text": "By clicking on these, it will automatically zoom in to your text.",
-    "You can zoom in or out with your scroll wheel, and drag the screen to move in your page": "You can zoom in or out with your scroll wheel, and drag the screen to move in your page.",
-    "You can click on the tabs to change the view and see other kinds of information about your page": "You can click on the tabs to change the view and see other kinds of information about your page.",
-    "interactive view of your page": "interactive view of your page.",
-    "Text view of your page. Only works after layout analysis": "Text view of your page. Only works after layout analysis.",
-    "Metadata of your page from the document classifier": "Metadata of your page from the document classifier.",
-    "History of actions done on your page": "History of actions done on your page.",
-    "Language Switch": "Language Switch",
-    "Switch between the available languages of your page": "Switch between the available languages of your page.",
-    "If the desired language is not present, use the context menu to translate your page": "If the desired language is not present, use the context menu to translate your page.",
-    "View switch": "View Switch",
+    "In this interactive view your selected page will be presented": "Dans cette vue interactive, votre page sélectionnée sera présentée.",
+    "When the layout analysis has completed, you can see blue boxes around the text in the page": "Lorsque l'analyse de la mise en page est terminée, vous pouvez voir des cases bleues autour du texte de la page.",
+    "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR": "En survolant ces cases, une fenêtre contextuelle apparaîtra contenant le texte brut qui a été reconnu par l'OCR.",
+    "By clicking on these, it will automatically zoom in to your text": "En cliquant dessus, il zoomera automatiquement sur votre texte.",
+    "You can zoom in or out with your scroll wheel, and drag the screen to move in your page": "Vous pouvez zoomer ou dézoomer avec votre molette de défilement, et faites glisser l'écran pour vous déplacer dans votre page.",
+    "You can click on the tabs to change the view and see other kinds of information about your page": "Vous pouvez cliquez sur les onglets pour changer la vue et voir d'autres types d'informations sur votre page.",
+    "interactive view of your page": "vue interactive de votre page.",
+    "Text view of your page. Only works after layout analysis": "Vue texte de votre page. Ne fonctionne qu'après analyse de la mise en page.",
+    "Metadata of your page from the document classifier": "Métadonnées de votre page issues du classificateur de documents.",
+    "History of actions done on your page": "Historique des actions effectuées sur votre page.",
+    "Language Switch": "Changement de langue",
+    "Switch between the available languages of your page": "Changez les langues disponibles sur votre page",
+    "If the desired language is not present, use the context menu to translate your page": "Si la langue souhaitée n'est pas présente, utilisez le menu contextuel pour traduire votre page",
+    "View switch": "Changement de vue",
     "Page View": "Vue de la page",
     "Text View": "Vue du texte",
     "Metadata": "Métadonnées",
