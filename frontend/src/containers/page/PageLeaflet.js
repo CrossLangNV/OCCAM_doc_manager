@@ -246,7 +246,7 @@ const PageLeaflet = (props) => {
             />
 
             <Row className="justify-content-between">
-                <Col md={4}>
+                <Col md="auto">
                     <TabMenu className="document-step-five" model={viewOptions} activeIndex={activeView}
                              onTabChange={(e) => {
                                  setActiveView(e.index);
