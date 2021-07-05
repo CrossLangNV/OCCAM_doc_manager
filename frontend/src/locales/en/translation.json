@@ -92,5 +92,12 @@
   "help.Cannot connect to Confluence": "Cannot connect to Confluence. ",
   "tour.welcome": "Welcome",
   "tour.skip": "Skip product tour",
-  "tour.Let's take a quick tour on how to use the application": "Let's take a quick tour on how to use the application."
+  "tour.Let's take a quick tour on how to use the application": "Let's take a quick tour on how to use the application.",
+  "tour.Document List": "Document List",
+  "tour.This is a table with all your documents": "This is a table with all your documents",
+  "tour.At the first glance, it should look pretty empty": "tour.At the first glance, it should look pretty empty",
+  "tour.When you created documents, you can always navigate to them by clicking on the titles": "When you created documents, you can always navigate to them by clicking on the titles",
+  "tour.The table is paginated, and a search button in the header allows you to search for documents": "The table is paginated, and a search button in the header allows you to search for documents",
+  "tour.Add new document": "Add new document",
+  "tour.By pressing this button you can create a new document": "By pressing this button you can create a new document"
 }

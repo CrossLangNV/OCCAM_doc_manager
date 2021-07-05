@@ -92,5 +92,12 @@
   "help.Cannot connect to Confluence": "Impossible de se connecter à Confluence. ",
   "tour.welcome": "Bienvenue",
   "tour.skip": "Ignorer la visite guidée",
-  "tour.Let's take a quick tour on how to use the application": "Voyons brièvement comment utiliser l'application."
+  "tour.Let's take a quick tour on how to use the application": "Voyons brièvement comment utiliser l'application.",
+  "tour.Document List": "Liste des documents",
+  "tour.This is a table with all your documents": "Voici un tableau avec tous vos documents.",
+  "tour.At the first glance, it should look pretty empty": "Au premier coup d'oeil, il devrait sembler assez vide.",
+  "tour.When you created documents, you can always navigate to them by clicking on the titles": "Lorsque vous avez créé des documents, vous pouvez toujours y accéder en cliquant sur les titres.",
+  "tour.The table is paginated, and a search button in the header allows you to search for documents": "Le tableau est paginé, et un bouton de recherche dans la navigation vous permet de rechercher des documents",
+  "tour.Add new document": "Ajouter un nouveau document",
+  "tour.By pressing this button you can create a new document": "En appuyant sur ce bouton, vous pouvez créer un nouveau document."
 }

@@ -92,5 +92,12 @@
   "help.Cannot connect to Confluence": "Kan geen verbinding maken met Confluence. ",
   "tour.welcome": "Welkom",
   "tour.skip": "Rondleiding overslaan",
-  "tour.Let's take a quick tour on how to use the application": "Laten we een korte rondleiding houden over hoe de applicatie werkt."
+  "tour.Let's take a quick tour on how to use the application": "Laten we een korte rondleiding houden over hoe de applicatie werkt.",
+  "tour.Document List": "Documenten Lijst",
+  "tour.This is a table with all your documents": "Dit is een tabel waar al uw beschikbare documenten zichtbaar zijn.",
+  "tour.At the first glance, it should look pretty empty": "Op het eerste zicht, ziet het er vrij leeg uit",
+  "tour.When you created documents, you can always navigate to them by clicking on the titles": "Wanneer u documenten hebt gecreëerd, kunt u er altijd naar navigeren door op de titels te klikken.",
+  "tour.The table is paginated, and a search button in the header allows you to search for documents": "Deze tabel is gepagineerd, en met een zoekknop in de navigatiebalk kunt u naar documenten zoeken",
+  "tour.Add new document": "Nieuw document toevoegen",
+  "tour.By pressing this button you can create a new document": "Door op deze knop te drukken kunt u een nieuw document toevoegen"
 }

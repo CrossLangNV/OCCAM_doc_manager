@@ -10,8 +10,6 @@ const LanguageSelector = ({inline}) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
-    const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
-
     const uiStates = useSelector(state => state.uiStates);
 
     const languagesForTabmenu = [
@@ -37,9 +35,10 @@ const LanguageSelector = ({inline}) => {
         <div>
         {inline ? (
 
-                    <TabMenu activeIndex={activeLanguageIndex} model={languagesForTabmenu} onTabChange={(e) => {
+                    <TabMenu activeIndex={languagesForTabmenu.findIndex(p =>
+                        p.value === uiStates.language
+                    )} model={languagesForTabmenu} onTabChange={(e) => {
                         changeLanguage(e.value.value)
-                        setActiveLanguageIndex(e.index)
                     }} optionLabel="name" placeholder={t("settings.select-language")}
                     />
 

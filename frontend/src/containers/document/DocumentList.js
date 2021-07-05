@@ -100,11 +100,11 @@ const DocumentList = () => {
             selector: '.doc-list-step-two',
             content: () => (
                 <div>
-                    <h3>Document List</h3>
-                    <p>This is a table with all your documents.</p>
-                    <p>At the first glance, it should look pretty empty...</p>
-                    <p>When you created documents, you can always navigate to them by clicking on the titles.</p>
-                    <p>The table is paginated, and a search button in the header allows you to search for documents.</p>
+                    <h3>{t("tour.Document List")}</h3>
+                    <p>{t("tour.This is a table with all your documents")}</p>
+                    <p>{t("tour.At the first glance, it should look pretty empty")}</p>
+                    <p>{t("tour.When you created documents, you can always navigate to them by clicking on the titles")}</p>
+                    <p>{t("tour.The table is paginated, and a search button in the header allows you to search for documents")}</p>
                 </div>
             )
         },
@@ -112,8 +112,8 @@ const DocumentList = () => {
             selector: '.doc-list-step-three',
             content: () => (
                 <div>
-                    <h3>Add new document</h3>
-                    <p>By pressing this button you can create a new document.</p>
+                    <h3>{t("tour.Add new document")}</h3>
+                    <p>{t("tour.By pressing this button you can create a new document")}</p>
                 </div>
             )
         }
