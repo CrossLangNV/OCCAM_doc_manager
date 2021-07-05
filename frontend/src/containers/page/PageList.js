@@ -11,7 +11,6 @@ import _ from 'lodash'
 import PageLeaflet from "./PageLeaflet";
 import {ModifySelectedPage} from "../../actions/uiActions";
 import {OverlayPanel} from "primereact/overlaypanel";
-import {languageSelectItems} from "../../constants/language-selections";
 import {Dropdown} from "primereact/dropdown";
 import LoadingSpinner from "../core/LoadingSpinner";
 import {Dialog} from "primereact/dialog";
@@ -50,6 +49,15 @@ const PageList = (props) => {
     const [tourOpened, setTourOpened] = useState(false);
 
     const cm = useRef(null);
+
+    const languageSelectItems = [
+        {label: t("translated-languages.original"), value: 'ORIGINAL'},
+        {label: t("translated-languages.english"), value: 'EN'},
+        {label: t("translated-languages.dutch"), value: 'NL'},
+        {label: t("translated-languages.french"), value: 'FR'},
+        {label: t("translated-languages.german"), value: 'DE'},
+        {label: t("translated-languages.czech"), value: 'CS'},
+    ];
 
     // Load pages initially
     useEffect(() => {

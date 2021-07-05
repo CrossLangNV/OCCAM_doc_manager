@@ -93,7 +93,7 @@
     "Use translation memory": "Vertaalgeheugen gebruiken",
     "Click": "Klik op",
     "here": "hier",
-    "to see translation memory configuration": "om de configuratie van het vertaalgeheugen te zien.",
+    "to see translation memory configuration": "om de configuratie van het vertaalgeheugen te veranderen.",
     "No pages are uploaded yet": "Er zijn nog geen pagina's geupload.",
     "No page selected": "Geen pagina geselecteerd",
     "Replace overlay": "Vervangen overlay",
@@ -189,5 +189,14 @@
     "Text View": "Tekst Weergave",
     "Metadata": "Metadata",
     "History": "Geschiedenis"
+  },
+
+  "translated-languages": {
+    "original": "Origineel",
+    "english": "Engels",
+    "dutch": "Nederlands",
+    "french": "Frans",
+    "czech": "Tsjechisch",
+    "german": "Duits"
   }
 }

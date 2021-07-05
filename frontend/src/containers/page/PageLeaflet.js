@@ -4,7 +4,6 @@ import {CRS} from "leaflet/dist/leaflet-src.esm";
 import {hw} from "../../constants/leafletFunctions";
 import {Col, Row} from "react-bootstrap";
 import axios from "axios";
-import {languageSelectItems} from "../../constants/language-selections"
 import _ from 'lodash';
 import {TabMenu} from "primereact/tabmenu";
 import PageMetadata from "./PageMetadata";
@@ -41,7 +40,14 @@ const PageLeaflet = (props) => {
         {label: t("page-leaflet.History"), icon: ''},
     ];
 
-
+    const languageSelectItems = [
+        {label: t("translated-languages.original"), value: 'ORIGINAL'},
+        {label: t("translated-languages.english"), value: 'EN'},
+        {label: t("translated-languages.dutch"), value: 'NL'},
+        {label: t("translated-languages.french"), value: 'FR'},
+        {label: t("translated-languages.german"), value: 'DE'},
+        {label: t("translated-languages.czech"), value: 'CS'},
+    ];
 
     React.useEffect(() => {
         dispatch(load_user())

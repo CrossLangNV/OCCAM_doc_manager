@@ -189,5 +189,14 @@
     "Text View": "Text View",
     "Metadata": "Metadata",
     "History": "History"
+  },
+
+  "translated-languages": {
+    "original": "Original",
+    "english": "English",
+    "dutch": "Dutch",
+    "french": "French",
+    "czech": "Czech",
+    "german": "German"
   }
 }
