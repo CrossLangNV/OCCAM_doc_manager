@@ -19,9 +19,10 @@ class MetadataDjango(metadata.Metadata):
 
         try:
             source = page.page_overlay.all()[0].source_lang
-        except:
-            print('No source language found')
+        except Exception as err:
+            print('No source language found.')
             source = None
+            print(err)
 
         document_name = page.document.name
 

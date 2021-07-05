@@ -106,12 +106,8 @@ class OverlayListAPIView(ListCreateAPIView):
         page_id = request.POST["page"]
         file = request.FILES["file"]
 
-        print("page_id: ", page_id)
-        print("file: ", file)
-
         page = Page.objects.get(pk=page_id)
         source_lang = xml_lang_detect(file)  # TODO check if this works...
-        print(source_lang)
         overlay, _ = Overlay.objects.update_or_create(page=page,
                                                       defaults={'file': file,
                                                                 'source_lang': source_lang}
