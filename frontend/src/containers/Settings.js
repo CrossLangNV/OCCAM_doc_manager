@@ -123,7 +123,7 @@ const Settings = () => {
         return (
             <>
                 <h2 className="margin-top">{t("settings.language")}</h2>
-                <LanguageSelector/>
+                <LanguageSelector inline={false}/>
             </>
         )
     }

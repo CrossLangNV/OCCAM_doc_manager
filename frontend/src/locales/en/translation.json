@@ -89,8 +89,8 @@
   "page-plaintext.No plain text available": "No plain text available. ",
   "activity-logs.View document": "View document",
   "activity-logs.Activity logs found": "Activity logs found",
-  "help.Cannot connect to Confluence": "Cannot connect to Confluence. "
-
-
-
+  "help.Cannot connect to Confluence": "Cannot connect to Confluence. ",
+  "tour.welcome": "Welcome",
+  "tour.skip": "Skip product tour",
+  "tour.Let's take a quick tour on how to use the application": "Let's take a quick tour on how to use the application."
 }

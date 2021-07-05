@@ -13,6 +13,7 @@ import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import DocumentPreview from "./DocumentPreview";
 import {useTranslation} from "react-i18next";
+import LanguageSelector from "../core/LanguageSelector";
 
 
 const DocumentList = () => {
@@ -83,10 +84,12 @@ const DocumentList = () => {
         {
             content: () => (
                 <div>
-                    <h3>Welcome</h3>
-                    <p>Let's take a quick tour on how to use the application.</p>
+                    <h3>{t("tour.welcome")}</h3>
+                    <p>{t("tour.Let's take a quick tour on how to use the application")}</p>
                     <br/>
-                    <Button label="Skip product tour" onClick={() => {
+                    <LanguageSelector inline={true}/>
+                    <br />
+                    <Button label={t("tour.skip")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>

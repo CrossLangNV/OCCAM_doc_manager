@@ -1,17 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {Dropdown} from "primereact/dropdown";
 import {useDispatch, useSelector} from "react-redux";
 import {ModifyLanguage} from "../../actions/uiActions";
+import {TabMenu} from "primereact/tabmenu";
 
-const LanguageSelector = () => {
+const LanguageSelector = ({inline}) => {
     const { i18n } = useTranslation();
     const dispatch = useDispatch();
     const {t} = useTranslation();
 
+    const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
+
     const uiStates = useSelector(state => state.uiStates);
 
-    const languages = [
+    const languagesForTabmenu = [
+        { label: 'English', value: 'en' },
+        { label: 'Dutch', value: 'nl' },
+        { label: 'French', value: 'fr' },
+    ];
+
+    const languagesForDropdown = [
         { name: 'English', value: 'en' },
         { name: 'Dutch', value: 'nl' },
         { name: 'French', value: 'fr' },
@@ -26,11 +35,22 @@ const LanguageSelector = () => {
 
     return (
         <div>
-            <Dropdown value={uiStates.language} options={languages} onChange={(e) => {
-                changeLanguage(e.value)
-            }} optionLabel="name" placeholder={t("settings.select-language")}
-            />
+        {inline ? (
+
+                    <TabMenu activeIndex={activeLanguageIndex} model={languagesForTabmenu} onTabChange={(e) => {
+                        changeLanguage(e.value.value)
+                        setActiveLanguageIndex(e.index)
+                    }} optionLabel="name" placeholder={t("settings.select-language")}
+                    />
+
+            ): (
+                    <Dropdown value={uiStates.language} options={languagesForDropdown} onChange={(e) => {
+                        changeLanguage(e.value)
+                    }} optionLabel="name" placeholder={t("settings.select-language")}
+                    />
+            )}
         </div>
+
     );
 };
 

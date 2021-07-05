@@ -8,7 +8,6 @@ import {GetDocumentList} from "../../actions/documentActions";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {Logout} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
-import LanguageSelector from "./LanguageSelector";
 
 const Header = () => {
     const location = useLocation();

@@ -89,5 +89,8 @@
   "page-plaintext.No plain text available": "Aucun texte brut disponible. ",
   "activity-logs.View document": "Afficher le document",
   "activity-logs.Activity logs found": "Journaux d'activité trouvés",
-  "help.Cannot connect to Confluence": "Impossible de se connecter à Confluence. "
+  "help.Cannot connect to Confluence": "Impossible de se connecter à Confluence. ",
+  "tour.welcome": "Bienvenue",
+  "tour.skip": "Ignorer la visite guidée",
+  "tour.Let's take a quick tour on how to use the application": "Voyons brièvement comment utiliser l'application."
 }
