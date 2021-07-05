@@ -64,7 +64,6 @@
   "overlay-add.Overlay has been uploaded": "Overlay has been uploaded.",
   "page-history.No history available": "No history available.",
 
-
   "progress": {
     "Document Information": "Document Information",
     "Upload Pages": "Upload Pages",
@@ -191,5 +190,4 @@
     "Metadata": "Metadata",
     "History": "History"
   }
-
 }

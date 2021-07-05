@@ -9,7 +9,6 @@
     "logout": "Déconnexion"
   },
 
-
   "settings": {
     "translation-memory": "Mémoire de traduction",
     "language-pair": "Paire de langues",
@@ -45,7 +44,6 @@
     "choose": "Choose"
   },
 
-
   "document": {
     "Are you sure you want to delete this document?": "Êtes-vous sûr de vouloir supprimer ce document ?",
     "Do you want to start the OCR process for all the pages of this document?": "Voulez-vous lancer le processus d'OCR pour toutes les pages de ce document ?",
@@ -64,7 +62,6 @@
   },
 
   "overlay-add.Overlay has been uploaded": "La superposition a été téléchargée.",
-
   "page-history.No history available": "Aucun historique disponible.",
 
   "progress": {
@@ -114,7 +111,6 @@
   },
 
   "page-metadata.No metadata available": "Aucune métadonnée disponible.",
-
   "page-plaintext.No plain text available": "Aucun texte brut disponible. ",
 
   "activity-logs": {
