@@ -4,9 +4,11 @@ import {Timeline} from "primereact/timeline";
 import moment from "moment";
 import {baseUrl} from "../../constants/axiosConf";
 import _ from "lodash";
+import {useTranslation} from "react-i18next";
 
 const PageHistory = (props) => {
     const pageId = props.pageId
+    const {t} = useTranslation();
 
 
     const [history, setHistory] = useState([]);
@@ -39,7 +41,7 @@ const PageHistory = (props) => {
     return (
         <div>
             {(_.isEmpty(history) &&
-                <p>No history available.</p>
+                <p>{t("page-history.No history available")}</p>
             )}
             <Timeline value={history} opposite={(item) => item.status}
                       content={(item) => <small className="p-text-secondary">{item.date}</small>}/>

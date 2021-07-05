@@ -3,6 +3,7 @@ import {FileUpload} from "primereact/fileupload";
 import {useDispatch} from "react-redux";
 import {Toast} from "primereact/toast";
 import {AddOverlay} from "../../actions/overlayActions";
+import {useTranslation} from "react-i18next";
 
 const OverlayAdd = (props) => {
     const dispatch = useDispatch();
@@ -10,13 +11,14 @@ const OverlayAdd = (props) => {
     const pageId = props.pageId
     const toast = useRef(null);
     const label = props.label
+    const {t} = useTranslation();
 
     const overlayUploader = async (event) => {
         const files = event.files
 
         if (files) {
             dispatch(AddOverlay(pageId, files))
-            toast.current.show({severity: 'success', summary: 'Success', detail: 'Overlay have been uploaded.'});
+            toast.current.show({severity: 'success', summary: 'Success', detail: t("overlay-add.Overlay has been uploaded")});
         }
     }
 

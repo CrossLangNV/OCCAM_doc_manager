@@ -3,10 +3,12 @@ import axios from "axios";
 import {Timeline} from "primereact/timeline";
 import {baseUrl} from "../../constants/axiosConf";
 import _ from "lodash";
+import {useTranslation} from "react-i18next";
 
 const PageMetadata = (props) => {
     const page = props.page
     const [metadata, setMetadata] = useState([]);
+    const {t} = useTranslation();
 
     React.useEffect(() => {
         const labels = []
@@ -22,7 +24,7 @@ const PageMetadata = (props) => {
     return (
         <div>
             {(_.isEmpty(metadata) &&
-                <p>No metadata available.</p>
+                <p>{t("page-metadata.No metadata available")}</p>
             )}
 
             <Timeline value={metadata} opposite={(item) => item.status}

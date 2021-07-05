@@ -1,7 +1,9 @@
 import React from 'react';
 import {Tag} from "primereact/tag";
+import {useTranslation} from "react-i18next";
 
 const DocumentState = (props) => {
+    const {t} = useTranslation();
 
     const getStateIcon = (state) => {
 
@@ -9,13 +11,13 @@ const DocumentState = (props) => {
         const failStates = ["Failed"]
 
         if (successStates.includes(state)) {
-            return <Tag value={state} icon="pi pi-check" severity="success"/>
+            return <Tag value={t(state)} icon="pi pi-check" severity="success"/>
         } else if (failStates.includes(state)) {
-            return <Tag value={state} icon="pi pi-times" severity="danger"/>
+            return <Tag value={t(state)} icon="pi pi-times" severity="danger"/>
         } else if (!state) {
-            return <Tag value="Not started"/>
+            return <Tag value={t("ui.not-started")}/>
         } else {
-            return <Tag value={state}/>
+            return <Tag value={t(state)}/>
         }
     }
 

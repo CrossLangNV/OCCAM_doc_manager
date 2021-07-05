@@ -12,6 +12,7 @@ import {Col, Row} from "react-bootstrap";
 import {Toast} from "primereact/toast";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
+import {useTranslation} from "react-i18next";
 
 
 const DocumentAdd = (props) => {
@@ -20,6 +21,7 @@ const DocumentAdd = (props) => {
     let history = useHistory();
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
+    const {t} = useTranslation();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -83,7 +85,7 @@ const DocumentAdd = (props) => {
         if (title !== "") {
             await axios.put(`${baseUrl}/documents/api/document/${documentId}`, data, config
             ).then((res) => {
-                toast.current.show({severity: 'success', summary: 'Success', detail: 'Document information saved.'});
+                toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("document-add.Document information saved.")});
             });
         }
     }
@@ -91,7 +93,7 @@ const DocumentAdd = (props) => {
     const footer =
         <span>
             <Button
-                label="Cancel"
+                label={t("ui.cancel")}
                 icon="pi pi-times"
                 onClick={() => history.push("/")}
                 className="p-button-secondary"/>
@@ -148,7 +150,7 @@ const DocumentAdd = (props) => {
             <Row className="margin-top">
                 <Col md={5} />
                 <Col md={6}>
-                    <h3>Add new document</h3>
+                    <h3>{t("document-add.Add new document")}</h3>
                 </Col>
 
             </Row>
@@ -157,7 +159,7 @@ const DocumentAdd = (props) => {
                 <Col md={3} />
                 <Col md={6}>
                     <Card footer={footer}>
-                        <h5>Document information</h5>
+                        <h5>{t("document-add.Document information")}</h5>
                         <br/>
                         <span className="p-float-label add-doc-step-one">
                             <InputText
@@ -168,7 +170,7 @@ const DocumentAdd = (props) => {
                                 autoFocus={true}
                                 className='occ-full-width'
                             />
-                            <label htmlFor="title">Title</label>
+                            <label htmlFor="title">{t("ui.title")}</label>
                         </span>
 
                         <br/>
@@ -182,7 +184,7 @@ const DocumentAdd = (props) => {
                         onChange={(e) => setContent(e.target.value)}
                         className='occ-full-width occ-summary-field add-doc-step-two'
                     />
-                    <label htmlFor="content">Summary</label>
+                    <label htmlFor="content">{t("ui.summary")}</label>
                 </span>
                     </Card>
                 </Col>

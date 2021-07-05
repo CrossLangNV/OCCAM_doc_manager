@@ -8,6 +8,8 @@ import {Button} from "primereact/button";
 import {Col, Row, Table} from "react-bootstrap";
 import {ChangeTutorialState} from "../actions/authActions";
 import {InputSwitch} from "primereact/inputswitch";
+import LanguageSelector from "./core/LanguageSelector";
+import {useTranslation} from "react-i18next";
 
 const Settings = () => {
     // Redux
@@ -15,6 +17,7 @@ const Settings = () => {
     const tmStats = useSelector(state => state.tmStats);
     const auth = useSelector(state => state.auth);
     const hasCompletedTutorial = auth.hasCompletedTutorial;
+    const {t} = useTranslation();
 
     const toast = useRef(null);
     const uploadRef = useRef(null);
@@ -58,10 +61,10 @@ const Settings = () => {
     }   
 
 
-    const showData = () => {
+    const showTranslationMemoryTable = () => {
         return (
             <div>
-                <h2>Translation Memory</h2>
+                <h2>{t("settings.translation-memory")}</h2>
                 <Row className="justify-content-between">
                     <Col>
                         <Button
@@ -69,7 +72,7 @@ const Settings = () => {
                             label=""
                             icon="pi pi-refresh"
                             className="p-button-primary margin-left"
-                            tooltip="Refresh"
+                            tooltip={t("ui.refresh")}
                             tooltipOptions={{ position: 'bottom' }}
                         />
                     </Col>
@@ -77,8 +80,8 @@ const Settings = () => {
                 <Table striped borderless hover>
                     <thead>
                         <tr>
-                            <th>Language pair</th>
-                            <th>Amount of TUs</th>
+                            <th>{t("settings.language-pair")}</th>
+                            <th>{t("settings.amount-of-tus")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,27 +97,46 @@ const Settings = () => {
                     auto={true}
                     customUpload
                     uploadHandler={tmxUploader}
-                    chooseLabel="Upload TMX"
+                    chooseLabel={t("settings.upload-tmx")}
                 />
+            </div>
+        );
+    }
 
-                <h2 className="margin-top">Product tour</h2>
+    const showProductTourSetting = () => {
+        return (
+            <>
+                <h2 className="margin-top">{t("settings.product-tour")}</h2>
 
                 <div className="p-field-checkbox">
                     <InputSwitch inputId="enableTutorial" checked={checkedTutorial} onChange={e => {
                         setCheckedTutorial(e.value)
                         dispatch(ChangeTutorialState(auth.user, !e.value))
                     }} />
-                    <label htmlFor="enableTutorial">Show product tour</label>
+                    <label htmlFor="enableTutorial">{t("settings.show-product-tour")}</label>
                 </div>
+            </>
+        )
+    }
 
-                <Toast ref={toast} />
-            </div>
-        );
+    const showLanguageSetting = () => {
+        return (
+            <>
+                <h2 className="margin-top">{t("settings.language")}</h2>
+                <LanguageSelector/>
+            </>
+        )
     }
 
     return (
         <div>
-            {showData()}
+            {showTranslationMemoryTable()}
+
+            {showProductTourSetting()}
+
+            {showLanguageSetting()}
+
+            <Toast ref={toast} />
         </div>
     )
 };

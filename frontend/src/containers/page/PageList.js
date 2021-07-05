@@ -23,7 +23,8 @@ import {useHistory} from "react-router-dom";
 import {InputSwitch} from "primereact/inputswitch";
 import Tour from "reactour";
 import {Message} from "primereact/message";
-import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
+import {CloseTutorial} from "../../actions/authActions";
+import {useTranslation} from "react-i18next";
 
 
 const PageList = (props) => {
@@ -31,6 +32,7 @@ const PageList = (props) => {
     const dispatch = useDispatch();
     const toast = useRef(null);
     const history = useHistory();
+    const {t} = useTranslation();
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
@@ -62,11 +64,11 @@ const PageList = (props) => {
     const confirmDeletePage = (event) => {
         confirmPopup({
             target: event.currentTarget,
-            message: 'Are you sure you want to delete this page?',
+            message: t("page-list.Are you sure you want to delete this page?"),
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 dispatch(DeletePage(event));
-                toast.current.show({severity: 'success', summary: 'Success', detail: 'Page has been deleted'});
+                toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("page-list.Page has been deleted")});
             },
         });
     }
@@ -75,8 +77,8 @@ const PageList = (props) => {
         dispatch(OcrPage(pageId, auth.user));
         toast.current.show({
             severity: 'success',
-            summary: 'Success',
-            detail: 'OCR task has been started for the selected page'
+            summary: t("ui.success"),
+            detail: t("page-list.OCR task has been started for the selected page")
         });
         dispatch(GetPageList(100, 1, documentId))
     }
@@ -86,13 +88,13 @@ const PageList = (props) => {
             dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
             toast.current.show({
                 severity: 'success',
-                summary: 'Success',
-                detail: 'Translation task has been started for the selected page'
+                summary: t("ui.success"),
+                detail: t("page-list.Translation task has been started for the selected page")
             });
             translationSelectionOverlay.current.hide(e);
             dispatch(GetPageList(100, 1, documentId, checkedTM))
         } else {
-            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Target language cannot be the same as the source language'});
+            toast.current.show({severity: 'error', summary: t("ui.failed"), detail: t("page-list.Target language cannot be the same as the source language")});
         }
 
     }
@@ -108,7 +110,7 @@ const PageList = (props) => {
             // Toggle the menu
             translationSelectionOverlay.current.toggle(e);
         } else {
-            toast.current.show({severity: 'error', summary: 'Failed', detail: 'Translation is not possible when no overlay is available. Upload an overlay or OCR the page.'});
+            toast.current.show({severity: 'error', summary: t("ui.failed"), detail: t("page-list.Translation is not possible when no overlay is available. Upload an overlay or OCR the page")});
         }
 
     }
@@ -127,34 +129,34 @@ const PageList = (props) => {
             e.preventDefault();
             window.open(page.page_overlay[page.page_overlay.length - 1].file, '_blank');
         } else {
-            toast.current.show({severity: 'error', summary: 'Failed', detail: 'No overlay available. Upload an overlay or OCR the page first.'});
+            toast.current.show({severity: 'error', summary: t("ui.failed"), detail: t("page-list.No overlay available. Upload an overlay or OCR the page first")});
         }
 
     }
 
     const contextMenuItems = [
         {
-            label: 'Start OCR',
+            label: t("page-list.Start OCR"),
             icon: 'pi pi-play',
             command: () => startOcrForPage(contextMenuPage.id)
         },
         {
-            label: 'Translate...',
+            label: t("page-list.Translate..."),
             icon: 'pi pi-globe',
             command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
         },
         {
-            label: 'Upload overlay...',
+            label: t("page-list.Upload overlay..."),
             icon: 'pi pi-upload',
             command: () => setDisplayUploadOverlayDialog(true)
         },
         {
-            label: 'View page overlay',
+            label: t('page-list.View page overlay'),
             icon: 'pi pi-fw pi-file',
             command: (event) => downloadOverlay(event.originalEvent, contextMenuPage)
         },
         {
-            label: 'View full-size page',
+            label: t("page-list.View full-size page"),
             icon: 'pi pi-fw pi-file',
             command: () => window.open(contextMenuPage.file, '_blank')
         },
@@ -162,7 +164,7 @@ const PageList = (props) => {
             separator: true
         },
         {
-            label: 'Delete page',
+            label: t("page-list.Delete page"),
             icon: 'pi pi-trash',
             command: () => confirmDeletePage(contextMenuPage.id)
         },
@@ -271,7 +273,7 @@ const PageList = (props) => {
                                                     {(!_.isEmpty(page.latest_translation_state) &&
                                                         <Row className="margin-top-lesser">
                                                             <Col md={5}>
-                                                                Latest translation:
+                                                                {t("page-list.Latest translation")}:
                                                             </Col>
                                                             <Col md="auto">
                                                                 <DocumentState state={page.latest_translation_state[0].state} />
@@ -290,10 +292,10 @@ const PageList = (props) => {
 
                                         {/* Translation Overlay Panel */}
                                         <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
-                                            <h6>Translate page</h6>
+                                            <h6>{t("page-list.Translate page")}</h6>
                                             <Row>
                                                 <Col md={2}>
-                                                    To
+                                                    {t("page-list.To")}
                                                 </Col>
                                                 <Col>
                                                     <Dropdown
@@ -301,7 +303,7 @@ const PageList = (props) => {
                                                         value={targetLanguage}
                                                         options={languageSelectItems}
                                                         onChange={(e) => setTargetLanguage(e.value)}
-                                                        placeholder="Select a language"
+                                                        placeholder={t("page-list.Select a language")}
                                                     />
                                                 </Col>
 
@@ -312,9 +314,9 @@ const PageList = (props) => {
                                                 <Col>
                                                     <div className="p-field-checkbox">
                                                         <InputSwitch inputId="useTM" checked={checkedTM} onChange={e => setCheckedTM(e.value)} />
-                                                        <label htmlFor="useTM">Use translation memory</label>
+                                                        <label htmlFor="useTM">{t("page-list.Use translation memory")}</label>
                                                     </div>
-                                                    Click <a className="occ-link" onClick={() => history.push("/settings")} >here</a> to see translation memory configuration.
+                                                    {t("page-list.Click")} <a className="occ-link" onClick={() => history.push("/settings")} >{t("page-list.here")}</a> {t("page-list.to see translation memory configuration")}
                                                 </Col>
                                             </Row>
                                             <br/>
@@ -339,7 +341,7 @@ const PageList = (props) => {
                         </ScrollPanel>
                     )}
 
-                    <NotSelectedMessage context={pageList.data} message="No pages are uploaded yet." />
+                    <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")} />
 
                 </Col>
 
@@ -357,7 +359,7 @@ const PageList = (props) => {
                         )}
 
                         {/* No page selected message */}
-                        <NotSelectedMessage context={uiStates.selectedPage} message="No page selected" />
+                        <NotSelectedMessage context={uiStates.selectedPage} message={t("page-list.No page selected")} />
 
                     </Col>
                 )}
@@ -366,7 +368,7 @@ const PageList = (props) => {
             <Dialog visible={displayUploadOverlayDialog} onHide={() => setDisplayUploadOverlayDialog(false)}>
                     <OverlayAdd
                         pageId={contextMenuPage.id}
-                        label={!_.isEmpty(contextMenuPage.page_overlay) ? 'Replace overlay' : 'Upload overlay'}
+                        label={!_.isEmpty(contextMenuPage.page_overlay) ? t("page-list.Replace overlay") : t("page-list.Upload overlay")}
                     />
 
             </Dialog>

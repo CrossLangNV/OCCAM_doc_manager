@@ -13,12 +13,14 @@ import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash"
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
+import {useTranslation} from "react-i18next";
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
     let history = useHistory();
     const toast = useRef(null);
     const dispatch = useDispatch();
+    const {t} = useTranslation();
 
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
@@ -68,7 +70,7 @@ const DocumentLayoutAnalysis = (props) => {
                     <p>Depending on your documents and the selected engine, the layout analysis results might be
                         different.</p>
                     <br/>
-                    <Button label="Don't show me again" onClick={() => {
+                    <Button label={t("ui.dont-show-me-again")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>
@@ -92,7 +94,7 @@ const DocumentLayoutAnalysis = (props) => {
                 <Col md={3}/>
                 <Col md={6}>
                     <Card className="document-layout-step-one">
-                        <h5>Choose a layout analysis engine</h5>
+                        <h5>{t("document-layout-analysis.Choose a layout analysis engine")}</h5>
                         <br/>
                         {
                             uiStates.layout_engines && uiStates.layout_engines.map((option) => {
@@ -126,7 +128,7 @@ const DocumentLayoutAnalysis = (props) => {
             <Row className="margin-top">
                 <Col md={6} />
                 <Col md="auto">
-                    <Button onClick={handleSubmit} label="Next" />
+                    <Button onClick={handleSubmit} label={t("ui.next")} />
                 </Col>
             </Row>
 

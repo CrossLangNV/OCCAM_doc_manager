@@ -1,9 +1,11 @@
 import React from 'react';
 import ProgressBar from "../ProgressBar";
 import {Col, Row} from "react-bootstrap";
+import {useTranslation} from "react-i18next";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId
+    const {t} = useTranslation();
 
     return (
         <>
@@ -13,7 +15,7 @@ const DocumentPublish = (props) => {
 
             <Row className="margin-top">
                 <Col>
-                    <h3>Publish</h3>
+                    <h3>{t("ui.publish")}</h3>
                 </Col>
             </Row>
         </>
