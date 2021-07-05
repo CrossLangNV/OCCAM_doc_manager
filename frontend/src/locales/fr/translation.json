@@ -69,7 +69,7 @@
   "page-list.No overlay available. Upload an overlay or OCR the page first": "Aucune superposition disponible. Téléchargez une superposition ou effectuez une reconnaissance optique de la page en premier.",
   "page-list.Start OCR": "Lancer l'OCR",
   "page-list.Translate...": "Traduire...",
-  "page-list.Upload overlay...": "Télécharger la superposition...",
+  "page-list.Upload overlay...": "Télécharger une transcription...",
   "page-list.View page overlay": "Afficher la superposition de la page",
   "page-list.View full-size page": "Afficher la page en taille réelle",
   "page-list.Delete page": "Supprimer la page",
