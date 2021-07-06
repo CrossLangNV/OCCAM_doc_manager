@@ -155,7 +155,7 @@ const PageList = (props) => {
             command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
         },
         {
-            label: t("page-list.Upload overlay..."),
+            label: t("page-list.Upload transcription..."),
             icon: 'pi pi-upload',
             command: () => setDisplayUploadOverlayDialog(true)
         },
