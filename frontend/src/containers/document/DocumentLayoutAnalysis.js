@@ -104,9 +104,7 @@ const DocumentLayoutAnalysis = (props) => {
 
                                         {(!_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
-                                                <RadioButton inputId={option.value} name="layout_model" value={option}
-                                                             onChange={(e) => changeSelected(e.value)}
-                                                             checked={uiStates.selected_layout_engine[0].value === option.value}/>
+                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].name === option.name} />
                                                 <label htmlFor={option.value}>{option.name}</label>
                                             </>
                                         )}

@@ -4,14 +4,15 @@ import os
 import time
 
 import requests
-from celery import shared_task
 from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
-from documents.models import Page, Overlay, Label
+from celery import shared_task
+from documents.models import Page, Overlay, Label, LayoutAnalysisModel
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
+from documents.ocr_engines import get_PERO_OCR_engine_id
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,20 @@ DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
 
 @shared_task
+def ocr_page(page_id: Page.id,
+             engine_pk: LayoutAnalysisModel.pk,
+             user: User.email = None,
+             ):
+    """
+
+    Args:
+        page_id: ID of a Page object.
+        engine_pk: primary key of a LayoutAnalysisModel object
+        user: (Optional) email of a User object.
+
+    Returns:
+
+    """
 def ocr_page_pipeline(page_id: Page.id,
                       user=None,
                       activity_log: ActivityLog = None):
@@ -90,7 +105,12 @@ def get_overlay_from_pero_ocr(page: Page,
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
-    request_id = get_request_id(page_id)
+
+    layout_analysis_model = LayoutAnalysisModel.objects.get(pk=engine_pk)
+    logger.info("Used engine: %s", layout_analysis_model)
+    pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
+    request_id = get_request_id(page_id,
+                                pero_engine_id=pero_engine_id)
     logger.info("Sent request to per ocr: %s", request_id)
 
     # POST to Pero OCR /upload_image/{request_id}/{page_id}
@@ -143,6 +163,16 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
     except Exception as e:
         activity_log.state = ActivityLogState.FAILED
         print("Langdetect failed for page id: ", page_id)
+    # Create Overlay object in Django
+    # TODO should we update if already exists?
+
+    try:
+        # TODO perhaps no need to first convert to file
+        with io.BytesIO(overlay_xml) as f:
+            source_lang = xml_lang_detect(f)
+    except Exception as e:
+        activity_log.state = ActivityLogState.FAILED
+        print("Langdetect failed for page id: ", page_id)
 
     overlay, _ = Overlay.objects.update_or_create(page=page,
                                                   defaults={'source_lang': source_lang}
@@ -159,15 +189,15 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
         overlay.update_xml(f)
 
 
-def xml_lang_detect(xml_file):
+def xml_lang_detect(xml_file) -> str:
     a = PageXML(xml_file)
 
     l_reg = list(filter(lambda s: s, a.get_regions_text()))
+
+    # Join all the pieces of text
     s_all = ' '.join(l_reg)
-
+    # Convert to uppercase language representation, e.g. EN.
     lang = detect(s_all).upper()
-
-    # l = list(map(detect, l_reg))
 
     return lang
 
