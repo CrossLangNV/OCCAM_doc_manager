@@ -4,12 +4,12 @@ import os
 import time
 
 import requests
+from celery import shared_task
 from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
-from celery import shared_task
 from documents.models import Page, Overlay, Label, LayoutAnalysisModel
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 from documents.ocr_engines import get_PERO_OCR_engine_id
@@ -34,7 +34,11 @@ def ocr_page(page_id: Page.id,
     Returns:
 
     """
+
+
+@shared_task
 def ocr_page_pipeline(page_id: Page.id,
+                      engine_pk: LayoutAnalysisModel.pk,
                       user=None,
                       activity_log: ActivityLog = None):
     page = Page.objects.get(pk=page_id)
@@ -50,6 +54,7 @@ def ocr_page_pipeline(page_id: Page.id,
     logger.info("Classified page")
 
     overlay_xml = get_overlay_from_pero_ocr(page,
+                                            int(engine_pk),
                                             activity_log=activity_log)
 
     create_overlay_with_language(page, overlay_xml, activity_log=activity_log)
@@ -95,13 +100,14 @@ def get_activity_log(page: Page,
 
 
 def get_overlay_from_pero_ocr(page: Page,
+                              engine_pk: LayoutAnalysisModel.pk,
                               user=None,
                               activity_log: ActivityLog = None):
     if activity_log is None:
         activity_log = get_activity_log(page,
                                         user=user)
 
-    page_id = page.id
+    page_id = str(page.id)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -110,7 +116,7 @@ def get_overlay_from_pero_ocr(page: Page,
     logger.info("Used engine: %s", layout_analysis_model)
     pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
     request_id = get_request_id(page_id,
-                                pero_engine_id=pero_engine_id)
+                                pero_engine_id=int(pero_engine_id))
     logger.info("Sent request to per ocr: %s", request_id)
 
     # POST to Pero OCR /upload_image/{request_id}/{page_id}

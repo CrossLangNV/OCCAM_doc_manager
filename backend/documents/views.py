@@ -155,8 +155,9 @@ class PageLaunchOCRAPIView(APIView):
     def post(self, request, format=None, *args, **kwargs):
         page_id = request.data["page"]
         user = request.data["user"]
+        engine_pk = request.data["engine_pk"]
 
-        ocr_page_pipeline.delay(page_id, user=user)
+        ocr_page_pipeline.delay(page_id, str(engine_pk), user=user)
 
         logger.info("Starting celery task for translation")
 

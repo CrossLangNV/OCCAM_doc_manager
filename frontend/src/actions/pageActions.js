@@ -120,7 +120,7 @@ export const AddPage = (documentId, files) => async dispatch => {
     }
 }
 
-export const OcrPage = (id, user) => async dispatch => {
+export const OcrPage = (id, engine_pk, user) => async dispatch => {
     try {
         dispatch({
             type: PageActionTypes.PAGE_OCR_LOADING
@@ -135,6 +135,7 @@ export const OcrPage = (id, user) => async dispatch => {
         await axios.post(`${baseUrl}/documents/api/pages/launch_ocr`,
             {
                 page: id,
+                engine_pk: engine_pk,
                 user: user
             }, config)
             .then((res) => {

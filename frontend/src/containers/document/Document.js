@@ -53,7 +53,7 @@ const Document = (props) => {
                     const documentData = documentState.data[documentId]
                     if (!_.isEmpty(documentData.document_page)) {
                         documentData.document_page.forEach(page => {
-                            dispatch(OcrPage(page.id, auth.user))
+                            dispatch(OcrPage(page.id, documentData.layout_analysis_model, auth.user))
                         })
                         dispatch(GetPageList(100, 1, documentId))
                     }

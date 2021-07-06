@@ -37,6 +37,7 @@ const PageList = (props) => {
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
+    const documentState = useSelector(state => state.document)
 
     // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
@@ -82,7 +83,7 @@ const PageList = (props) => {
     }
 
     const startOcrForPage = (pageId) => {
-        dispatch(OcrPage(pageId, auth.user));
+        dispatch(OcrPage(pageId, documentState.data[documentId].layout_analysis_model, auth.user));
         toast.current.show({
             severity: 'success',
             summary: t("ui.success"),
