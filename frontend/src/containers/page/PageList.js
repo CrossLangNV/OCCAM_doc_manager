@@ -155,7 +155,7 @@ const PageList = (props) => {
             command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
         },
         {
-            label: t("page-list.Upload transcription..."),
+            label: t("page-list.Upload transcription")+"...",
             icon: 'pi pi-upload',
             command: () => setDisplayUploadOverlayDialog(true)
         },
@@ -377,7 +377,7 @@ const PageList = (props) => {
             <Dialog visible={displayUploadOverlayDialog} onHide={() => setDisplayUploadOverlayDialog(false)}>
                     <OverlayAdd
                         pageId={contextMenuPage.id}
-                        label={!_.isEmpty(contextMenuPage.page_overlay) ? t("page-list.Replace overlay") : t("page-list.Upload overlay")}
+                        label={!_.isEmpty(contextMenuPage.page_overlay) ? t("page-list.Replace transcription") : t("page-list.Upload transcription")}
                     />
 
             </Dialog>
