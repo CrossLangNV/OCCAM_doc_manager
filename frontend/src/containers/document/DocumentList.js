@@ -4,7 +4,7 @@ import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
 import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
-import ReactPagiate from "react-paginate"
+import ReactPaginate from "react-paginate"
 import {Button} from "primereact/button";
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
@@ -158,7 +158,7 @@ const DocumentList = () => {
 
             {/* Pagination for the table */}
             {!_.isEmpty(documentList.data) && (
-                <ReactPagiate
+                <ReactPaginate
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}

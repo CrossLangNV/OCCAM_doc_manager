@@ -10,6 +10,7 @@ import {ChangeTutorialState} from "../actions/authActions";
 import {InputSwitch} from "primereact/inputswitch";
 import LanguageSelector from "./core/LanguageSelector";
 import {useTranslation} from "react-i18next";
+import ReactPaginate from "react-paginate";
 
 const Settings = () => {
     // Redux
@@ -22,6 +23,9 @@ const Settings = () => {
     const toast = useRef(null);
     const uploadRef = useRef(null);
     const [checkedTutorial, setCheckedTutorial] = useState(false);
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const [perPage] = useState(5);
 
 
     React.useEffect(() => {
@@ -37,6 +41,10 @@ const Settings = () => {
         dispatch(GetTmStats());
     }
 
+    const offset = currentPage * perPage;
+    const paginatedTmStats = tmStats.data.slice(offset, offset + perPage)
+    const pageCount = Math.ceil(tmStats.data.length / perPage);
+
     const tmxUploader = async (event) => {
         const files = event.files
 
@@ -48,17 +56,22 @@ const Settings = () => {
     }
 
     const loadTableRows = () => {
-        if (!_.isEmpty(tmStats.data)) {
+        if (!_.isEmpty(paginatedTmStats)) {
             return (
-                Object.keys(tmStats.data).map((key, index) => (
-                    <tr key={index}>
-                        <td className='w-10'>{key}</td>
-                        <td>{tmStats.data[key]}</td>
+                paginatedTmStats.map(d => (
+                    <tr>
+                        <td className='w-10'>{d['langpair']}</td>
+                        <td>{d['amount']}</td>
                     </tr>
                 ))
             )
         }
-    }   
+    }
+
+    function handlePageClick({ selected: selectedPage}) {
+        setCurrentPage(selectedPage);
+        loadTableRows();
+    }
 
 
     const showTranslationMemoryTable = () => {
@@ -88,10 +101,23 @@ const Settings = () => {
                         {loadTableRows()}
                     </tbody>
                 </Table>
+                {/* Pagination for the table */}
+                {!_.isEmpty(paginatedTmStats) && (
+                    <ReactPaginate
+                        pageCount={pageCount}
+                        pageRangeDisplayed={2}
+                        pageMarginDisplayed={1}
+                        onPageChange={handlePageClick}
+                        containerClassName={"pagination"}
+                        activeClassName={'active'}
+                        breakClassName={'page-item'}
+                    />
+                )}
+                <br/>
                 <FileUpload
                     ref={uploadRef}
                     name="tmx"
-                    maxFileSize={1000000}
+                    maxFileSize={10000000}
                     accept={".tmx"}
                     mode="basic"
                     auto={true}

@@ -181,10 +181,13 @@ class TmStatsAPIView(APIView):
     def get(self, request, format=None, *args, **kwargs):
         conn = MouseTmConnector()
         langpairs = conn.get_available_langpairs("")
-        results = {}
+        results = []
 
         for langpair in langpairs:
             amount_tus = conn.get_tu_amount("", langpair)
-            results[langpair] = amount_tus
+            results.append({
+                'langpair': langpair,
+                'amount': amount_tus
+            })
 
         return Response(results)
