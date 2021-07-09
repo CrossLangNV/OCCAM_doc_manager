@@ -3,7 +3,7 @@ import { TmActionTypes } from "../constants/tm-action-types";
 
 const DefaultState = {
     loading: false,
-    data: {},
+    data: [],
     errorMsg: "",
 };
 
