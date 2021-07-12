@@ -49,12 +49,12 @@
     "Are you sure you want to delete this document?": "Êtes-vous sûr de vouloir supprimer ce document ?",
     "Do you want to start the OCR process for all the pages of this document?": "Voulez-vous lancer le processus d'OCR pour toutes les pages de ce document ?",
     "OCR all pages": "OCR toutes les pages",
-    "Starts layout analysis for every page": "Lance l'analyse de la mise en page pour chaque page",
+    "Starts layout analysis for every page": "Lance l'OCR pour chaque page",
     "Delete document": "Supprimer le document",
     "Error fetching document": "Erreur de récupération du document"
   },
 
-  "document-layout-analysis.Choose a layout analysis engine": "Choisir un moteur d'analyse de mise en page",
+  "document-layout-analysis.Choose a layout analysis engine": "Choisir un model pour l'OCR",
 
   "document-list": {
     "Are you sure you want to delete this document and all its pages?": "Etes-vous sûr de vouloir supprimer ce document et toutes ses pages ?",
@@ -68,7 +68,7 @@
   "progress": {
     "Document Information": "Informations sur le document",
     "Upload Pages": "Télécharger des pages",
-    "Layout Analysis": "Analyse de la mise en page",
+    "Layout Analysis": "OCR",
     "Results": "Résultats",
     "Publish": "Publier"
   },
@@ -103,7 +103,7 @@
     "Document Actions": "Actions du document",
     "These buttons have actions on the document level": "Ces boutons ont des actions au niveau du document",
     "refreshes the states of the document and its pages": "rafraîchit les états du document et de ses pages",
-    "starts the layout engine analysis for all the pages of the document": "démarre l'analyse du moteur de mise en page pour toutes les pages du document",
+    "starts the layout engine analysis for all the pages of the document": "démarre l'OCR de mise en page pour toutes les pages du document",
     "deletes the document with all its pages": "supprime le document avec toutes ses pages",
     "Page List": "Page Liste",
     "All the pages that you have uploaded will appear here": "Toutes les pages que vous avez téléchargées apparaîtront ici",
@@ -157,8 +157,8 @@
 
   "layout": {
     "Layout Analysis Engine": "Moteur d'analyse de mise en page",
-    "In this step you can select which model you wish to use for the layout analysis (OCR)": "Dans cette étape, vous pouvez sélectionner le modèle que vous souhaitez utiliser pour l'analyse de la mise en page (OCR).",
-    "Depending on your documents and the selected engine, the layout analysis results might be different": "En fonction de vos documents et du moteur sélectionné, les résultats de l'analyse de la mise en page peuvent être différents."
+    "In this step you can select which model you wish to use for the layout analysis (OCR)": "Dans cette étape, vous pouvez sélectionner le modèle que vous souhaitez utiliser pour l'OCR de la mise en page (OCR).",
+    "Depending on your documents and the selected engine, the layout analysis results might be different": "En fonction de vos documents et du moteur sélectionné, les résultats de l'OCR de la mise en page peuvent être différents."
   },
 
   "page-add": {
@@ -174,13 +174,13 @@
 
   "page-leaflet": {
     "In this interactive view your selected page will be presented": "Dans cette vue interactive, votre page sélectionnée sera présentée.",
-    "When the layout analysis has completed, you can see blue boxes around the text in the page": "Lorsque l'analyse de la mise en page est terminée, vous pouvez voir des cases bleues autour du texte de la page.",
+    "When the layout analysis has completed, you can see blue boxes around the text in the page": "Lorsque l'OCR est terminée, vous pouvez voir des cases bleues autour du texte de la page.",
     "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR": "En survolant ces cases, une fenêtre contextuelle apparaîtra contenant le texte brut qui a été reconnu par l'OCR.",
     "By clicking on these, it will automatically zoom in to your text": "En cliquant dessus, il zoomera automatiquement sur votre texte.",
     "You can zoom in or out with your scroll wheel, and drag the screen to move in your page": "Vous pouvez zoomer ou dézoomer avec votre molette de défilement, et faites glisser l'écran pour vous déplacer dans votre page.",
     "You can click on the tabs to change the view and see other kinds of information about your page": "Vous pouvez cliquez sur les onglets pour changer la vue et voir d'autres types d'informations sur votre page.",
     "interactive view of your page": "vue interactive de votre page.",
-    "Text view of your page. Only works after layout analysis": "Vue texte de votre page. Ne fonctionne qu'après analyse de la mise en page.",
+    "Text view of your page. Only works after layout analysis": "Vue texte de votre page. Ne fonctionne qu'après OCR.",
     "Metadata of your page from the document classifier": "Métadonnées de votre page issues du classificateur de documents.",
     "History of actions done on your page": "Historique des actions effectuées sur votre page.",
     "Language Switch": "Changement de langue",
