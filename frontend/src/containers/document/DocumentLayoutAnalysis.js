@@ -14,6 +14,7 @@ import _ from "lodash"
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
+import {Message} from "primereact/message";
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
@@ -105,7 +106,17 @@ const DocumentLayoutAnalysis = (props) => {
                                         {(!_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
                                                 <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].name === option.name} />
-                                                <label htmlFor={option.value}>{option.name}</label>
+                                                <Col md={4}>
+                                                    <label htmlFor={option.value}>{option.name}</label>
+                                                </Col>
+
+                                                <Col md={8}>
+                                                    {(option.value !== "" && uiStates.selected_layout_engine[0].name === option.name) && (
+                                                        <Message className="margin-left" severity="info" text={option.value} />
+                                                    )}
+
+                                                </Col>
+
                                             </>
                                         )}
 
