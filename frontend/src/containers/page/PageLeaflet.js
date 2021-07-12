@@ -235,7 +235,7 @@ const PageLeaflet = (props) => {
                     <p>{t("page-leaflet.Switch between the available languages of your page")}</p>
                     <p>{t("page-leaflet.If the desired language is not present, use the context menu to translate your page")}</p>
                     <br/>
-                    <Button label={t("tour.skip")} onClick={() => {
+                    <Button label={t("tour.complete")} onClick={() => {
                         dispatch(ChangeTutorialState(auth.user, true))
                     }}/>
                 </div>

@@ -129,6 +129,7 @@
   "tour": {
     "welcome": "Bienvenue",
     "skip": "Ignorer la visite guidée",
+    "complete": "Terminer la visite guidée",
     "Let's take a quick tour on how to use the application": "Voyons brièvement comment utiliser l'application.",
     "Document List": "Liste des documents",
     "This is a table with all your documents": "Voici un tableau avec tous vos documents.",

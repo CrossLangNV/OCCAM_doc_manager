@@ -129,6 +129,7 @@
   "tour": {
     "welcome": "Welcome",
     "skip": "Skip product tour",
+    "complete": "Finish product tour",
     "Let's take a quick tour on how to use the application": "Let's take a quick tour on how to use the application.",
     "Document List": "Document List",
     "This is a table with all your documents": "This is a table with all your documents",

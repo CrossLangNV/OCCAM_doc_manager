@@ -30,6 +30,8 @@ const PageAdd = (props) => {
         }
     }
 
+    const chooseOptions = {label: t("ui.choose"), icon: 'pi pi-fw pi-plus'}
+
     const emptyTemplate = () => {
         return (
             <div className="p-d-flex p-ai-center p-dir-col">
@@ -78,8 +80,6 @@ const PageAdd = (props) => {
         },
     ]
 
-
-
     return (
         <Col>
             <Tour
@@ -103,6 +103,7 @@ const PageAdd = (props) => {
                 emptyTemplate={emptyTemplate}
                 className="margin-top upload-pages-step-one"
                 auto={true}
+                chooseOptions={chooseOptions}
             />
             <Toast ref={toast} />
 
