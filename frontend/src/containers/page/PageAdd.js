@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";

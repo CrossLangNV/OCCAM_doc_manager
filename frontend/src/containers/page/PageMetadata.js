@@ -1,7 +1,5 @@
 import React, {useState} from 'react';
-import axios from "axios";
 import {Timeline} from "primereact/timeline";
-import {baseUrl} from "../../constants/axiosConf";
 import _ from "lodash";
 import {useTranslation} from "react-i18next";
 

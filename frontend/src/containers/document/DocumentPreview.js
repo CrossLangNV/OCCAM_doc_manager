@@ -5,7 +5,7 @@ const DocumentPreview = ({document}) => {
     return (
         <>
             {document.document_page.length > 0 ?
-                <img src={document.document_page[0].file} width="100"/>
+                <img src={document.document_page[0].file} width="100" alt="Document preview"/>
                 :
                 <i className="pi pi-image p-mt-3 p-p-2" style={{
                     'fontSize': '5em',

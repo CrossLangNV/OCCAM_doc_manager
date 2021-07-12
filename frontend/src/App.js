@@ -1,4 +1,4 @@
-import {Route, Switch, useHistory, useLocation} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import DocumentList from "./containers/document/DocumentList";
 import Document from "./containers/document/Document";
 import Header from "./containers/core/Header";
@@ -7,7 +7,6 @@ import 'primeflex/primeflex.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css'
-import {Button} from "primereact/button";
 import ActivityLogs from "./containers/ActivityLogs";
 import GoogleLoginPage from "./containers/core/GoogleLoginPage";
 import PrivateRoute from "./containers/core/PrivateRoute";
@@ -23,26 +22,16 @@ import HelpComponent from "./containers/HelpComponent";
 import DocumentPublish from "./containers/document/DocumentPublish";
 
 function App() {
-    const location = useLocation();
-    let history = useHistory();
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(load_user())
     })
-
-    const NO_BACK_BUTTON = ["/", "/login", "/document-add", "/document"]
 
     return (
         <div className="App">
             <Header/>
             <div className="space">
                 <div className="container-fluid">
-                    {/*{(!NO_BACK_BUTTON.includes(location.pathname) &&*/}
-                    {/*    <>*/}
-                    {/*        <Button onClick={() => history.goBack()} className='margin-bottom'>Back</Button>*/}
-                    {/*    </>*/}
-                    {/*)}*/}
                     <Switch>
                         <PrivateRoute path={"/"} exact component={DocumentList}/>
                         <PrivateRoute path={"/document/:documentId"} exact component={Document}/>

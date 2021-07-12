@@ -1,4 +1,3 @@
-import React from 'react';
 import {PageActionTypes} from "../constants/page-action-types";
 import {OverlayActionTypes} from "../constants/overlay-action-types";
 
