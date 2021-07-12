@@ -11,6 +11,7 @@ import {InputSwitch} from "primereact/inputswitch";
 import LanguageSelector from "./core/LanguageSelector";
 import {useTranslation} from "react-i18next";
 import ReactPaginate from "react-paginate";
+import LoadingSpinner from "./core/LoadingSpinner";
 
 const Settings = () => {
     // Redux
@@ -98,6 +99,14 @@ const Settings = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {tmStats.loading && (
+                            <div>
+                                <LoadingSpinner />
+                                <span className="margin-left">
+                                    {t("ui.loading")}...
+                                </span>
+                            </div>
+                        )}
                         {loadTableRows()}
                     </tbody>
                 </Table>
