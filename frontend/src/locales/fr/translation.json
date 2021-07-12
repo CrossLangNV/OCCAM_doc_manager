@@ -41,7 +41,8 @@
     "Page": "Page",
     "Overlay": "Superposition",
     "last-updated": "Dernière mise à jour",
-    "choose": "Choisir"
+    "choose": "Choisir",
+    "ocr": "OCR"
   },
 
   "document": {
