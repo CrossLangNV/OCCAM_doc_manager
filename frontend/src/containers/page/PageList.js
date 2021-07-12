@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, OcrPage, TranslatePage} from "../../actions/pageActions";
+import {DeletePage, GetPageList, UpdatePageState, OcrPage, TranslatePage} from "../../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -89,6 +89,7 @@ const PageList = (props) => {
             summary: t("ui.success"),
             detail: t("page-list.OCR task has been started for the selected page")
         });
+        dispatch(UpdatePageState(pageId))
         dispatch(GetPageList(100, 1, documentId))
     }
 

@@ -181,3 +181,33 @@ export const TranslatePage = (id, target, user) => async dispatch => {
         });
     }
 }
+
+export const UpdatePageState = (pageId) => async dispatch => {
+    try {
+        dispatch({
+            type: PageActionTypes.PAGE_UPDATE_STATE_LOADING
+        });
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/activitylogs/api/activitylogs?rows=5&offset=0&page=${pageId}&overlay=&type=&&onlyLatest=false`, config)
+            .then((res) => {
+                dispatch({
+                    type: PageActionTypes.PAGE_UPDATE_STATE_SUCCESS,
+                    pageId: pageId,
+                    payload: res.data
+                });
+            })
+    } catch (e) {
+        dispatch({
+            type: PageActionTypes.PAGE_UPDATE_STATE_FAILED,
+            errorMsg: e
+        });
+    }
+
+
+}

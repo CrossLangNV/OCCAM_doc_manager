@@ -75,6 +75,15 @@ const PageListReducer = (state = DefaultState, action) => {
                 rows: state.rows
             }
 
+        case PageActionTypes.PAGE_UPDATE_STATE_SUCCESS:
+            return {
+                ...state,
+                data: state.data.map(
+                    (page, i) => page.id === action.pageId ? {...page, latest_ocr_state: [action.payload]}
+                        : page
+                ),
+            }
+
         default:
             return state
 

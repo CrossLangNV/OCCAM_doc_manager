@@ -100,7 +100,7 @@ const DocumentLayoutAnalysis = (props) => {
                         {
                             uiStates.layout_engines && uiStates.layout_engines.map((option) => {
                                 return (
-                                    <div key={option.value} className="p-field-radiobutton">
+                                    <div key={option.name} className="p-field-radiobutton">
 
                                         {(!_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
