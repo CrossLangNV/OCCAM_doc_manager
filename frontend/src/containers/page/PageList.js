@@ -270,9 +270,10 @@ const PageList = (props) => {
                                                         </Col>
 
                                                         <Col md="auto">
-                                                            <DocumentState state={page.latest_ocr_state.state}/>
+                                                            <DocumentState state={(!_.isEmpty(page.latest_ocr_state) && 
+                                                                page.latest_ocr_state.state)}/>
 
-                                                            {((page.latest_ocr_state.state === "Processing") &&
+                                                            {(!_.isEmpty(page.latest_ocr_state && page.latest_ocr_state.state === "Processing") &&
                                                                 <LoadingSpinner/>
                                                             )}
                                                         </Col>

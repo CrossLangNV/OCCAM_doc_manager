@@ -13,7 +13,7 @@ import {useTranslation} from "react-i18next";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
-    const ACCEPTED_FILE_TYPES = "image/*"
+    const ACCEPTED_FILE_TYPES = "image/*,.pdf"
     const documentId = props.match.params.documentId
     const toast = useRef(null);
     const history = useHistory();
