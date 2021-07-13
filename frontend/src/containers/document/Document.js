@@ -8,7 +8,7 @@ import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import PageList from "../page/PageList";
 import {ModifySelectedPage} from "../../actions/uiActions";
-import {GetPageList, OcrPage} from "../../actions/pageActions";
+import {GetPageList, OcrPage, UpdatePageState} from "../../actions/pageActions";
 import ProgressBar from "../ProgressBar";
 import {useTranslation} from "react-i18next";
 
@@ -53,9 +53,11 @@ const Document = (props) => {
                     const documentData = documentState.data[documentId]
                     if (!_.isEmpty(documentData.document_page)) {
                         documentData.document_page.forEach(page => {
-                            dispatch(OcrPage(page.id, auth.user))
+                            dispatch(OcrPage(page.id, documentData.layout_analysis_model, auth.user))
+                            dispatch(UpdatePageState(page.id))
+                            dispatch(GetPageList(100, 1, documentId))
                         })
-                        dispatch(GetPageList(100, 1, documentId))
+
                     }
                 }
             },

@@ -1,4 +1,3 @@
-import React from 'react';
 import {PageActionTypes} from "../constants/page-action-types";
 import {OverlayActionTypes} from "../constants/overlay-action-types";
 
@@ -74,6 +73,15 @@ const PageListReducer = (state = DefaultState, action) => {
                 errorMsg: "",
                 count: state.count,
                 rows: state.rows
+            }
+
+        case PageActionTypes.PAGE_UPDATE_STATE_SUCCESS:
+            return {
+                ...state,
+                data: state.data.map(
+                    (page, i) => page.id === action.pageId ? {...page, latest_ocr_state: [action.payload]}
+                        : page
+                ),
             }
 
         default:

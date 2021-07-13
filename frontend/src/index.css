@@ -7,7 +7,7 @@ a {
 }
 
 .pagination {
-  width: 500px;
+  width: 700px;
   display: flex;
   margin: auto;
   list-style: none;
@@ -213,4 +213,8 @@ a {
 
 .occ-tour-lg {
   max-width: 362px !important;
+}
+
+.occ-doc-list-td {
+  vertical-align: middle !important;
 }

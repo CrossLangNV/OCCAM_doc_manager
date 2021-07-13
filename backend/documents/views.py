@@ -214,8 +214,9 @@ class PageLaunchOCRAPIView(APIView):
     def post(self, request, format=None, *args, **kwargs):
         page_id = request.data["page"]
         user = request.data["user"]
+        engine_pk = request.data["engine_pk"]
 
-        ocr_page_pipeline.delay(page_id, user=user)
+        ocr_page_pipeline.delay(page_id, str(engine_pk), user=user)
 
         logger.info("Starting celery task for translation")
 
@@ -239,10 +240,13 @@ class TmStatsAPIView(APIView):
     def get(self, request, format=None, *args, **kwargs):
         conn = MouseTmConnector()
         langpairs = conn.get_available_langpairs("")
-        results = {}
+        results = []
 
         for langpair in langpairs:
             amount_tus = conn.get_tu_amount("", langpair)
-            results[langpair] = amount_tus
+            results.append({
+                'langpair': langpair,
+                'amount': amount_tus
+            })
 
         return Response(results)

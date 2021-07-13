@@ -41,19 +41,20 @@
     "Page": "Page",
     "Overlay": "Overlay",
     "last-updated": "Last updated",
-    "choose": "Choose"
+    "choose": "Choose",
+    "ocr": "OCR"
   },
 
   "document": {
     "Are you sure you want to delete this document?": "Are you sure you want to delete this document?",
     "Do you want to start the OCR process for all the pages of this document?": "Do you want to start the OCR process for all the pages of this document?",
     "OCR all pages": "OCR all pages",
-    "Starts layout analysis for every page": "Starts layout analysis for every page",
+    "Starts layout analysis for every page": "Starts OCR task for every page",
     "Delete document": "Delete document",
     "Error fetching document": "Error fetching document"
   },
 
-  "document-layout-analysis.Choose a layout analysis engine": "Choose a layout analysis engine",
+  "document-layout-analysis.Choose a layout analysis engine": "Choose a OCR model",
 
   "document-list": {
     "Are you sure you want to delete this document and all its pages?": "Are you sure you want to delete this document and all its pages?",
@@ -67,7 +68,7 @@
   "progress": {
     "Document Information": "Document Information",
     "Upload Pages": "Upload Pages",
-    "Layout Analysis": "Layout Analysis",
+    "Layout Analysis": "OCR Model",
     "Results": "Results",
     "Publish": "Publish"
   },
@@ -82,7 +83,7 @@
     "No overlay available. Upload an overlay or OCR the page first": "No overlay available. Upload an overlay or OCR the page first.",
     "Start OCR": "Start OCR",
     "Translate...": "Translate...",
-    "Upload overlay...": "Upload transcription...",
+    "Upload transcription...": "Upload transcription...",
     "View page overlay": "View page overlay",
     "View full-size page": "View full-size page",
     "Delete page": "Delete page",
@@ -96,13 +97,13 @@
     "to see translation memory configuration": "to see translation memory configuration.",
     "No pages are uploaded yet": "No pages are uploaded yet.",
     "No page selected": "No page selected",
-    "Replace overlay": "Replace overlay",
-    "Upload overlay": "Upload overlay",
+    "Replace transcription": "Replace transcription",
+    "Upload transcription": "Upload transcription",
 
     "Document Actions": "Document Actions",
     "These buttons have actions on the document level": "These buttons have actions on the document level",
     "refreshes the states of the document and its pages": "refreshes the states of the document and its pages",
-    "starts the layout engine analysis for all the pages of the document": "starts the layout engine analysis for all the pages of the document",
+    "starts the layout engine analysis for all the pages of the document": "starts a OCR task for all the pages of the document",
     "deletes the document with all its pages": "deletes the document with all its pages",
     "Page List": "Page List",
     "All the pages that you have uploaded will appear here": "All the pages that you have uploaded will appear here",
@@ -129,6 +130,7 @@
   "tour": {
     "welcome": "Welcome",
     "skip": "Skip product tour",
+    "complete": "Finish product tour",
     "Let's take a quick tour on how to use the application": "Let's take a quick tour on how to use the application.",
     "Document List": "Document List",
     "This is a table with all your documents": "This is a table with all your documents",
@@ -154,9 +156,9 @@
   },
 
   "layout": {
-    "Layout Analysis Engine": "Layout Analysis Engine",
-    "In this step you can select which model you wish to use for the layout analysis (OCR)": "In this step you can select which model you wish to use for the layout analysis (OCR).",
-    "Depending on your documents and the selected engine, the layout analysis results might be different": "Depending on your documents and the selected engine, the layout analysis results might be different."
+    "Layout Analysis Engine": "OCR model",
+    "In this step you can select which model you wish to use for the layout analysis (OCR)": "In this step you can select which model you wish to use for the OCR task.",
+    "Depending on your documents and the selected engine, the layout analysis results might be different": "Depending on your documents and the selected engine, the OCR results might be different."
   },
 
   "page-add": {
@@ -172,13 +174,13 @@
 
   "page-leaflet": {
     "In this interactive view your selected page will be presented": "In this interactive view your selected page will be presented.",
-    "When the layout analysis has completed, you can see blue boxes around the text in the page": "When the layout analysis has completed, you can see blue boxes around the text in the page.",
+    "When the layout analysis has completed, you can see blue boxes around the text in the page": "When the OCR task has completed, you can see blue boxes around the text in the page.",
     "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR": "By hovering these boxes, a popup will appear which contains the plain text that has been recognized by the OCR.",
     "By clicking on these, it will automatically zoom in to your text": "By clicking on these, it will automatically zoom in to your text.",
     "You can zoom in or out with your scroll wheel, and drag the screen to move in your page": "You can zoom in or out with your scroll wheel, and drag the screen to move in your page.",
     "You can click on the tabs to change the view and see other kinds of information about your page": "You can click on the tabs to change the view and see other kinds of information about your page.",
     "interactive view of your page": "interactive view of your page.",
-    "Text view of your page. Only works after layout analysis": "Text view of your page. Only works after layout analysis.",
+    "Text view of your page. Only works after layout analysis": "Text view of your page. Only works after OCR.",
     "Metadata of your page from the document classifier": "Metadata of your page from the document classifier.",
     "History of actions done on your page": "History of actions done on your page.",
     "Language Switch": "Language Switch",
@@ -198,5 +200,12 @@
     "french": "French",
     "czech": "Czech",
     "german": "German"
-  }
+  },
+
+  "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.": "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.",
+  "Skip OCR and upload your own transcription.": "Skip OCR and upload your own transcription.",
+  "Arabic handwritten": "Arabic handwritten",
+  "Czech old handwritten": "Czech old handwritten",
+  "Czech old printed": "Czech old printed",
+  "No OCR": "No OCR"
 }

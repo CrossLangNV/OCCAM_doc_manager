@@ -15,8 +15,6 @@ const DocumentListReducer = (state = DefaultState, action) => {
                 ...state,
                 loading: true,
                 errorMsg: "",
-                count: 0,
-                rows: 0
             }
         case DocumentActionTypes.DOCUMENT_LIST_FAIL:
             return {

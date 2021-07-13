@@ -120,7 +120,7 @@ export const AddPage = (documentId, files) => async dispatch => {
     }
 }
 
-export const OcrPage = (id, user) => async dispatch => {
+export const OcrPage = (id, engine_pk, user) => async dispatch => {
     try {
         dispatch({
             type: PageActionTypes.PAGE_OCR_LOADING
@@ -135,6 +135,7 @@ export const OcrPage = (id, user) => async dispatch => {
         await axios.post(`${baseUrl}/documents/api/pages/launch_ocr`,
             {
                 page: id,
+                engine_pk: engine_pk,
                 user: user
             }, config)
             .then((res) => {
@@ -179,4 +180,34 @@ export const TranslatePage = (id, target, user) => async dispatch => {
             type: PageActionTypes.PAGE_TRANSLATION_FAIL
         });
     }
+}
+
+export const UpdatePageState = (pageId) => async dispatch => {
+    try {
+        dispatch({
+            type: PageActionTypes.PAGE_UPDATE_STATE_LOADING
+        });
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/activitylogs/api/activitylogs?rows=5&offset=0&page=${pageId}&overlay=&type=&&onlyLatest=false`, config)
+            .then((res) => {
+                dispatch({
+                    type: PageActionTypes.PAGE_UPDATE_STATE_SUCCESS,
+                    pageId: pageId,
+                    payload: res.data
+                });
+            })
+    } catch (e) {
+        dispatch({
+            type: PageActionTypes.PAGE_UPDATE_STATE_FAILED,
+            errorMsg: e
+        });
+    }
+
+
 }

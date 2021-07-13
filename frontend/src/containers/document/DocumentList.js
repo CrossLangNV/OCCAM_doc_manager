@@ -4,7 +4,7 @@ import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
 import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
-import ReactPagiate from "react-paginate"
+import ReactPaginate from "react-paginate"
 import {Button} from "primereact/button";
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
@@ -49,17 +49,17 @@ const DocumentList = () => {
                 <>
                     {documentList.data.map(item => {
                         return <tr key={item.id}>
-                            <td className='w-10'>
+                            <td className='w-10 occ-doc-list-td'>
                                 <DocumentPreview document={item} />
                             </td>
-                            <td className='w-50'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
-                            <td>
+                            <td className='w-50 occ-doc-list-td'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
+                            <td className="occ-doc-list-td">
                                 <DocumentState state={item.state} />
                             </td>
-                            <td className='w-10'>
+                            <td className='w-10 occ-doc-list-td'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
                             </td>
-                            <td className='w-10'>
+                            <td className='w-10 occ-doc-list-td'>
                                 <Button
                                     onClick={() => confirmDeleteDoc(item.id)}
                                     label=""
@@ -158,7 +158,7 @@ const DocumentList = () => {
 
             {/* Pagination for the table */}
             {!_.isEmpty(documentList.data) && (
-                <ReactPagiate
+                <ReactPaginate
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}

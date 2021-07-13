@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import GoogleLogin from "react-google-login";
 import {useDispatch, useSelector} from "react-redux";
-import {GoogleAuthenticate, load_user} from "../../actions/authActions";
+import {GoogleAuthenticate} from "../../actions/authActions";
 import {useHistory} from "react-router-dom";
 import {Toast} from "primereact/toast";
 import {Card} from "primereact/card";

@@ -7,7 +7,7 @@ import DocumentState from "./document/DocumentState";
 import Moment from "react-moment";
 import {Button} from "primereact/button";
 import {Col, Row, Table} from "react-bootstrap";
-import ReactPagiate from "react-paginate";
+import ReactPaginate from "react-paginate";
 import LoadingSpinner from "./core/LoadingSpinner";
 import {useTranslation} from "react-i18next";
 
@@ -128,7 +128,7 @@ const ActivityLogs = () => {
 
             {/* Pagination for the table */}
             {!_.isEmpty(activityList.data) && (
-                <ReactPagiate
+                <ReactPaginate
                     pageCount={Math.ceil(activityList.count / activityList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}

@@ -13,7 +13,12 @@ from documents import pagexml2geojson
 
 class LayoutAnalysisModel(models.Model):
     name = models.CharField(default="", max_length=1000)
-    value = models.TextField(default="", blank=True)
+    description = models.TextField(default="", blank=True)
+
+    # To save the configs of a model.
+    config = models.JSONField(blank=True,
+                              default=dict
+                              )
 
     class Meta:
         ordering = ["name"]

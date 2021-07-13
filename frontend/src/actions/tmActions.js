@@ -45,7 +45,7 @@ export const GetTmStats = () => async dispatch => {
             }
         }
 
-        const res = await axios.get(`${baseUrl}/documents/api/tm/stats`, config)
+        const res = await axios.get(`${baseUrl}/documents/api/tm/stats`, config);
 
         dispatch({
             type: TmActionTypes.TM_STATS_SUCCESS,

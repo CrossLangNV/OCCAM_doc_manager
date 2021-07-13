@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, OcrPage, TranslatePage} from "../../actions/pageActions";
+import {DeletePage, GetPageList, UpdatePageState, OcrPage, TranslatePage} from "../../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -37,6 +37,7 @@ const PageList = (props) => {
     const pageList = useSelector(state => state.pageList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
+    const documentState = useSelector(state => state.document)
 
     // UI Elements
     const [targetLanguage, setTargetLanguage] = useState("");
@@ -82,12 +83,13 @@ const PageList = (props) => {
     }
 
     const startOcrForPage = (pageId) => {
-        dispatch(OcrPage(pageId, auth.user));
+        dispatch(OcrPage(pageId, documentState.data[documentId].layout_analysis_model, auth.user));
         toast.current.show({
             severity: 'success',
             summary: t("ui.success"),
             detail: t("page-list.OCR task has been started for the selected page")
         });
+        dispatch(UpdatePageState(pageId))
         dispatch(GetPageList(100, 1, documentId))
     }
 
@@ -154,7 +156,7 @@ const PageList = (props) => {
             command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
         },
         {
-            label: t("page-list.Upload overlay..."),
+            label: t("page-list.Upload transcription")+"...",
             icon: 'pi pi-upload',
             command: () => setDisplayUploadOverlayDialog(true)
         },
@@ -376,7 +378,7 @@ const PageList = (props) => {
             <Dialog visible={displayUploadOverlayDialog} onHide={() => setDisplayUploadOverlayDialog(false)}>
                     <OverlayAdd
                         pageId={contextMenuPage.id}
-                        label={!_.isEmpty(contextMenuPage.page_overlay) ? t("page-list.Replace overlay") : t("page-list.Upload overlay")}
+                        label={!_.isEmpty(contextMenuPage.page_overlay) ? t("page-list.Replace transcription") : t("page-list.Upload transcription")}
                     />
 
             </Dialog>

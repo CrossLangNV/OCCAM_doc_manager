@@ -49,7 +49,7 @@ export const GetLayoutEngines = (documentId) => async dispatch => {
         const res = await axios.get(`${baseUrl}/documents/api/layout_analysis_models`, config)
 
         res.data.forEach(model => {
-            models.push({name: model.name, value: model.name, id: model.id, selected: false})
+            models.push({name: model.name, value: model.description, id: model.id, selected: false})
         })
         // models.push({name: 'None', value: 'None'})
 

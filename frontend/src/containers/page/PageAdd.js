@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
@@ -29,6 +29,8 @@ const PageAdd = (props) => {
             toast.current.show({severity: 'info', summary: 'Success', detail: t("page-add.Page(s) have been uploaded")});
         }
     }
+
+    const chooseOptions = {label: t("ui.choose"), icon: 'pi pi-fw pi-plus'}
 
     const emptyTemplate = () => {
         return (
@@ -78,8 +80,6 @@ const PageAdd = (props) => {
         },
     ]
 
-
-
     return (
         <Col>
             <Tour
@@ -103,6 +103,7 @@ const PageAdd = (props) => {
                 emptyTemplate={emptyTemplate}
                 className="margin-top upload-pages-step-one"
                 auto={true}
+                chooseOptions={chooseOptions}
             />
             <Toast ref={toast} />
 
