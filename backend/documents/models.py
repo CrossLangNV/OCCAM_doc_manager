@@ -74,7 +74,7 @@ class Document(models.Model):
         return self.name
 
     def __repr__(self):
-        return self.name + " is added."
+        return self.name
 
 
 class Page(models.Model):

@@ -7,7 +7,7 @@ from docmanager import settings
 from docmanager.views import CurrentUserAPIView
 
 urlpatterns = [
-    path("", RedirectView.as_view(url="admin/", permanent=True)),
+    path("", RedirectView.as_view(url="/admin/", permanent=True)),
 
     path('social-auth/', include('social_django.urls', namespace='social-view')),
     path('auth/', include('rest_framework_social_oauth2.urls')),

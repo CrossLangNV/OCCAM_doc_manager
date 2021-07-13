@@ -6,3 +6,6 @@ django-cors-headers==3.7.0
 oauth2_provider==0.0
 langdetect==1.0.9
 dcxml==0.1.2
+pdf2image==1.16.0
+numpy==1.21.0
+

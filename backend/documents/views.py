@@ -1,3 +1,4 @@
+import io
 import logging
 import os
 
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
+from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
@@ -15,6 +17,9 @@ from scheduler.ocr_tasks import ocr_page_pipeline, upload_overlay_pipeline, xml_
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
+
+PDF_CONTENT_TYPE = 'application/pdf'
+DOCUMENT = "document"
 
 logger = logging.getLogger(__name__)
 
@@ -62,12 +67,66 @@ class PageListAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         q = Page.objects.all()
-        document_id = self.request.GET.get("document", "")
+        document_id = self.request.GET.get(DOCUMENT, "")
 
         if document_id:
             q = q.filter(document__id=str(document_id))
 
         return q
+
+    def post(self, request, *args, **kwargs):
+        """
+        If a PDF is uploaded, it will be converted to individual pages/images.
+
+        Args:
+            request:
+            *args:
+            **kwargs:
+
+        Returns:
+
+        """
+
+        # PDF, extract pages
+
+        FILE = 'file'
+
+        file = request.data.get(FILE)
+
+        if file:
+            if file.content_type == PDF_CONTENT_TYPE:
+
+                document_id = request.data[DOCUMENT]
+                document = Document.objects.get(pk=document_id)
+
+                page_ids = []
+
+                for i, im in enumerate(pdf_image_generator(file.read())):
+                    data_i = request.data.copy()
+                    data_i[FILE] = im  # outputIO
+
+                    outputIO = io.BytesIO()
+                    im.save(outputIO, format=im.format,
+                            quality=100)
+
+                    # needs a name in order to save it
+                    outputIO.name = os.path.splitext(os.path.split(file.name)[-1])[0] + f'_{i}.jpg'
+
+                    page = self.queryset.create(document=document)
+                    page.update_image(outputIO)
+
+                    page_ids.append(page.id)
+
+                page_queryset = self.queryset.filter(id__in=page_ids)
+                serializer = self.get_serializer(page_queryset, many=True)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LabelsListAPIView(ListCreateAPIView):

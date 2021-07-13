@@ -10,6 +10,7 @@ RUN mkdir /backend
 # Pip dependency Twisted needs gcc
 RUN apt-get update
 RUN apt-get install -y gcc
+RUN apt-get install -y poppler-utils
 RUN pip install pipenv
 
 # Set the working directory to /django

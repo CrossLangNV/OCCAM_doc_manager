@@ -7,7 +7,7 @@ First enter django docker:
 Run a small test, to get the option to delete the test database.
 
 `
-python manage.py test tests.documents.test_metadata_django
+cat <(echo "yes") - | python manage.py test tests.documents.test_models.DocumentTest
 `
 
 * ! When it complains about the folder:
