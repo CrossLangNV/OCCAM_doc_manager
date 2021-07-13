@@ -1,6 +1,6 @@
 To clear test database:
 `
-python manage.py test tests.documents.test_models
+cat <(echo "yes") - | python manage.py test tests.documents.test_models.DocumentTest
 `
 
 When it complains about the folder:
