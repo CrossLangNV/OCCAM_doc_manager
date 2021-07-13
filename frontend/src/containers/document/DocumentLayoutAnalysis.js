@@ -96,7 +96,7 @@ const DocumentLayoutAnalysis = (props) => {
                 <Col md={3}/>
                 <Col md={6}>
                     <Card className="document-layout-step-one">
-                        <h5>{t("ui.ocr")}</h5>
+                        <h5>{t("document-layout-analysis.Choose a layout analysis engine")}</h5>
                         <br/>
                         {
                             uiStates.layout_engines && uiStates.layout_engines.map((option) => {
