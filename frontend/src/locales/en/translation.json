@@ -54,7 +54,7 @@
     "Error fetching document": "Error fetching document"
   },
 
-  "document-layout-analysis.Choose a layout analysis engine": "Choose a OCR model",
+  "document-layout-analysis.Choose a layout analysis engine": "Choose an OCR model",
 
   "document-list": {
     "Are you sure you want to delete this document and all its pages?": "Are you sure you want to delete this document and all its pages?",
