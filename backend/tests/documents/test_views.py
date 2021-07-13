@@ -176,10 +176,9 @@ class GetAllOverlaysTest(TestCase):
             # files= {'xml': f}
             response = self.client_object.post(URL_OVERLAYS,
                                                data={'page': page.id,
-                                                     'xml': f,
-                                                     'source_lang': 'NL'
+                                                     'file': f,
                                                      },
-                                               # files=files
+                                               format="multipart",
                                                )
         if b_debug:
             print(response.data)
@@ -197,29 +196,30 @@ class OverlayTranslationViewTest(TestCase):
     """ Test module for GET all overlays API """
 
     def setUp(self):
-        self.client_object, self.user = login(self)
+        self.client, self.user = login(self)
         self.content_type = 'application/json'
 
-        create(client=self.client_object)
+        create(client=self.client)
 
     def test_post(self):
         # get API response
 
         overlay = Overlay.objects.exclude(file='')[0]
 
-        response = self.client_object.post(URL_TRANSLATION,
-                                           data={'overlay': overlay.id,
-                                                 'source': 'nl',
-                                                 'target': 'en'
-                                                 })
+        response = self.client.post(URL_TRANSLATION,
+                                    data={'overlay': overlay.id,
+                                          'target': 'en'
+                                          })
 
         # Get it again, to make sure it's updated.
-        overlay_after = Overlay.objects.get(id=overlay.id)
-        with overlay_after.file.open() as f:
+        overlay_after = Overlay.objects.get(pk=overlay.pk)
+        with overlay_after.translation_file.open() as f:
             b_xml = f.read()
 
         self.assertLess(response.status_code, 300)
-        self.assertEqual(response.data, b_xml)
+
+        with self.subTest('Translated overlay available'):
+            self.assertTrue(b_xml, 'Should be non-empty')
 
 
 class PageTranscriptionViewTest(TestCase):
