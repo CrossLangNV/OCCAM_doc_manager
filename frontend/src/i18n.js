@@ -11,7 +11,7 @@ i18n
     .use(LanguageDetector)
     .init({
         debug: true,
-        lng: "en",
+        lng: "nl",
         fallbackLng: "en", // use en if detected lng is not available
 
         interpolation: {
