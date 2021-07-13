@@ -6,7 +6,7 @@ const DefaultState = {
     selectedPage: "",
     layout_engines: [],
     selected_layout_engine: "",
-    language: "en"
+    language: "nl"
 };
 
 const UiReducer = (state = DefaultState, action) => {
