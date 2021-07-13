@@ -1,4 +1,4 @@
-import {Route, Switch} from 'react-router-dom'
+import {Route, Switch, useHistory, useLocation} from 'react-router-dom'
 import DocumentList from "./containers/document/DocumentList";
 import Document from "./containers/document/Document";
 import Header from "./containers/core/Header";
@@ -22,6 +22,10 @@ import HelpComponent from "./containers/HelpComponent";
 import DocumentPublish from "./containers/document/DocumentPublish";
 
 function App() {
+    // Don't remove these unused location/history variables, otherwise react tour will only open after refreshing
+    const location = useLocation();
+    let history = useHistory();
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(load_user())
