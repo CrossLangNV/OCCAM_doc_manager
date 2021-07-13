@@ -235,7 +235,10 @@ class PageTranscriptionViewTest(TestCase):
         page = next(filter(lambda x: 'jpg' in x.file.name, Page.objects.all())
                     )
 
-        data = {'page': page.id,
+        engine = page.document.layout_analysis_model
+
+        data = {'page': page.pk,
+                'engine_pk': engine.pk
                 }
 
         response = self.client_object.post(URL_TRANSCRIPTION,

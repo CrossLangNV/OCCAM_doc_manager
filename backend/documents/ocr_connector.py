@@ -45,13 +45,13 @@ def get_request_status(request_id) -> dict:
     return response_status.json()
 
 
-def get_request_id(page_id: str,
+def get_request_id(page_pk: str,
                    pero_engine_id: int,
                    b_info: bool = True) -> str:
     """
 
     Args:
-        page_id:
+        page_pk:
         pero_engine_id:
             As defined by the PERO-OCR API engines.
             Attention! Not te be confused with LayoutAnalysisModel.pk.
@@ -64,7 +64,7 @@ def get_request_id(page_id: str,
     data = {
         "engine": pero_engine_id,
         "images": {
-            page_id: None
+            page_pk: None
         }
     }
 
@@ -99,7 +99,7 @@ def get_request_id(page_id: str,
 
 def upload_file(file,
                 request_id: str,
-                page_id: str,
+                page_pk: str,
                 ) -> None:
     """
 
@@ -107,13 +107,13 @@ def upload_file(file,
         >> with page.file.open() as file:
         >>    upload_file(file,
         >>                request_id=request_id,
-        >>                page_id=page_id
+        >>                page_pk=page_pk
         >>                )
     """
 
     files = {'file': file}
 
-    response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_id}',
+    response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_pk}',
                                           files=files,
                                           headers={'api-key': API_KEY_PERO_OCR,
                                                    },
@@ -123,7 +123,7 @@ def upload_file(file,
         raise_response(response_upload_image)
 
 
-def check_state(request_id: str, page_id: str, activity_log) -> bool:
+def check_state(request_id: str, page_pk: str, activity_log) -> bool:
     """
     Check state of OCR request.
 
@@ -131,7 +131,7 @@ def check_state(request_id: str, page_id: str, activity_log) -> bool:
     """
 
     response_status = get_request_status(request_id)
-    state = response_status['request_status'][page_id]['state']
+    state = response_status['request_status'][page_pk]['state']
 
     if state == "PROCESSED":
         activity_log.state = ActivityLogState.SUCCESS
@@ -146,7 +146,7 @@ def check_state(request_id: str, page_id: str, activity_log) -> bool:
 
 
 def get_result(request_id,
-               page_id,
+               page_pk,
                result_format='page'  # alto, page, txt
                ) -> bytes:
     """
@@ -154,7 +154,7 @@ def get_result(request_id,
     """
 
     response_download_results = requests.get(
-        f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_id}/{result_format}',
+        f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_pk}/{result_format}',
         headers={'api-key': API_KEY_PERO_OCR,
                  },
     )

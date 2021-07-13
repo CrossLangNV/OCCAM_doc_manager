@@ -79,7 +79,6 @@ class PageSerializer(serializers.ModelSerializer):
         return data
 
     def get_metadata_xml(self, page):
-
         metadata = MetadataDjango.from_page(page)
 
         return metadata.to_xml()

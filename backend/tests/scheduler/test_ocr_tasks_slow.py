@@ -9,7 +9,7 @@ from django.test import TransactionTestCase
 from backend.tests.documents.create_database_mock import create
 from documents.models import Page, Overlay, LayoutAnalysisModel
 from documents.ocr_engines import init_engines
-from scheduler.ocr_tasks import ocr_page
+from scheduler.ocr_tasks import ocr_page_pipeline
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 FILENAME_IMAGE = os.path.join(ROOT, "backend/tests/examples_data/19154766-page0.jpg")
@@ -31,9 +31,9 @@ class OcrPageTest(TransactionTestCase):
     def test_pipeline(self):
         overlays_before = list(Overlay.objects.all())
 
-        ocr_page(self.page.pk,
-                 engine_pk=self.printed_engine.pk
-                 )
+        ocr_page_pipeline(self.page.pk,
+                          engine_pk=self.printed_engine.pk
+                          )
 
         overlays_new = list(filter(lambda overlay_i: overlay_i not in overlays_before, Overlay.objects.all()))
 
@@ -57,8 +57,8 @@ class OcrPageTest(TransactionTestCase):
             name = engine.name
             with self.subTest(f"engine {name}"):
 
-                ocr_page(self.page.pk,
-                         engine_pk=engine.pk)
+                ocr_page_pipeline(self.page.pk,
+                                  engine_pk=engine.pk)
 
                 # TODO check if this is a good way to evaluate:
                 overlays1 = list(filter(lambda overlay_i: overlay_i not in overlays0, Overlay.objects.all()))

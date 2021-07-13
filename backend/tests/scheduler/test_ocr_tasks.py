@@ -8,7 +8,7 @@ from django.test import TransactionTestCase
 from backend.tests.documents.create_database_mock import create
 from documents.models import Page, LayoutAnalysisModel
 from documents.ocr_engines import init_engines
-from scheduler.ocr_tasks import xml_lang_detect, ocr_page
+from scheduler.ocr_tasks import xml_lang_detect, ocr_page_pipeline
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 FILENAME_IMAGE = os.path.join(ROOT, "backend/tests/examples_data/19154766-page0.jpg")
@@ -53,7 +53,7 @@ class OcrPageTest(TransactionTestCase):
         # make sure it's on a reasonable value.
         @break_after(10)
         def test_ocr_page(*args, **kwargs):
-            return ocr_page(*args, **kwargs)
+            return ocr_page_pipeline(*args, **kwargs)
 
         def truncate(sio: io.StringIO):
             """
@@ -76,7 +76,7 @@ class OcrPageTest(TransactionTestCase):
                 truncate(LOG_STREAM)
 
                 try:
-                    test_ocr_page(page_id=self.page.pk,
+                    test_ocr_page(page_pk=self.page.pk,
                                   engine_pk=engine.pk)
                 except TimeoutException:
                     # Expected behaviour
@@ -113,7 +113,7 @@ class OcrPageTest(TransactionTestCase):
                          "Sanity check, there should be no object with this id")
 
         try:
-            ocr_page(self.page.pk, engine_pk=NO_ENGINE_PK)
+            ocr_page_pipeline(page_pk=self.page.pk, engine_pk=NO_ENGINE_PK)
         except Exception as e:
 
             # self.assertIn(str(NO_ENGINE_PK), str(e.args[0]),
@@ -125,7 +125,7 @@ class OcrPageTest(TransactionTestCase):
 
         else:
             self.fail('"{0}" was expected to throw "{1}" exception'
-                      .format(ocr_page.__name__, Exception.__name__))
+                      .format(ocr_page_pipeline.__name__, Exception.__name__))
 
 
 class TimeoutException(Exception):
