@@ -112,7 +112,7 @@ const DocumentLayoutAnalysis = (props) => {
 
                                                 <Col md={8}>
                                                     {(option.value !== "" && uiStates.selected_layout_engine[0].name === option.name) && (
-                                                        <Message className="margin-left" severity="info" text={option.value} />
+                                                        <Message className="margin-left" severity="info" text={t(option.value)} />
                                                     )}
 
                                                 </Col>
