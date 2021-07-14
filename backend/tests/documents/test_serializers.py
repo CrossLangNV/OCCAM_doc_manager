@@ -1,18 +1,20 @@
 from django.test import TransactionTestCase
 
 from backend.tests.documents.create_database_mock import create
-from documents.models import Page, Label
+from documents.models import Label, Overlay
 from documents.serializers import PageSerializer
 
 
 class PageSerializerTest(TransactionTestCase):
     def setUp(self) -> None:
-
         self.page_serializer = PageSerializer()
 
         create()
 
-        self.page0 = Page.objects.all()[0]
+        # A page with an overlay, thus having a source language
+        overlay = Overlay.objects.all()[0]
+        self.page0 = overlay.page
+
         # Add a label
         self.label = Label(name="classifier", value="Epic model", page=self.page0)
         self.label.save()

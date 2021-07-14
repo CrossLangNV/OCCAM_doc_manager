@@ -15,10 +15,10 @@ class TranslateOverlayTest(TestCase):
     """
 
     def setUp(self):
-        self.client_object, self.user = login(self)
+        self.client, self.user = login(self)
         self.content_type = 'application/json'
 
-        create(client=self.client_object)
+        create(client=self.client)
 
     def test_call(self):
         overlay = Overlay.objects.all()[0]
@@ -27,11 +27,40 @@ class TranslateOverlayTest(TestCase):
 
         source = overlay.source_lang
         target = 'EN'
-        self.assertNotEqual(source, target, 'Sanity check')
+        self.assertNotEqual(source, target, 'Sanity check. Should be translated to a different language.')
 
-        translate_overlay(overlay.id,
+        translate_overlay(overlay.pk,
                           target
                           )
+
+        with self.subTest('Translation file'):
+            self.assertTrue(overlay.translation_file, 'should add a translation.')
+
+        with self.subTest('Geojson'):
+            self.assertTrue(overlay.overlay_geojson.filter(original=False),
+                            'should add a translated geojson.')
+
+    def test_call_with_user(self):
+
+        overlay = Overlay.objects.all()[0]
+        with open(FILENAME_XML, 'rb') as f:
+            overlay.update_xml(f)
+
+        source = overlay.source_lang
+        target = 'EN'
+        self.assertNotEqual(source, target, 'Sanity check. Should be translated to a different language.')
+
+        translate_overlay(overlay.pk,
+                          target,
+                          user_pk=self.user.pk
+                          )
+
+        with self.subTest('Translation file'):
+            self.assertTrue(overlay.translation_file, 'should add a translation.')
+
+        with self.subTest('Geojson'):
+            self.assertTrue(overlay.overlay_geojson.filter(original=False),
+                            'should add a translated geojson.')
 
     def test_create_geojson(self):
         overlay = next(filter(lambda x: 'xml' in x.file.name.lower(), Overlay.objects.all()))
@@ -43,9 +72,13 @@ class TranslateOverlayTest(TestCase):
         geojson_0 = list(Geojson.objects.all())
         n_geojson_0 = len(geojson_0)
 
-        translate_overlay(overlay.id,
+        translate_overlay(overlay.pk,
                           target
                           )
+
+        with self.subTest('Geojson'):
+            self.assertTrue(overlay.overlay_geojson.filter(original=False),
+                            'should add a translated geojson.')
 
         n_geojson_1 = len(Geojson.objects.all())
         # Get the newest Geojson object.
@@ -71,7 +104,7 @@ class TranslateOverlayTest(TestCase):
         source = overlay.source_lang
 
         try:
-            translate_overlay(overlay.id,
+            translate_overlay(overlay.pk,
                               source
                               )
         except Exception as e:

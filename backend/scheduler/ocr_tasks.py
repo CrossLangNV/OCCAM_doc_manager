@@ -4,12 +4,12 @@ import os
 import time
 
 import requests
-from celery import shared_task
 from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
+from celery import shared_task
 from documents.models import Page, Overlay, Label, LayoutAnalysisModel
 from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
 from documents.ocr_engines import get_PERO_OCR_engine_id
@@ -20,33 +20,16 @@ DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 
 
 @shared_task
-def ocr_page(page_id: Page.id,
-             engine_pk: LayoutAnalysisModel.pk,
-             user: User.email = None,
-             ):
-    """
-
-    Args:
-        page_id: ID of a Page object.
-        engine_pk: primary key of a LayoutAnalysisModel object
-        user: (Optional) email of a User object.
-
-    Returns:
-
-    """
-
-
-@shared_task
-def ocr_page_pipeline(page_id: Page.id,
+def ocr_page_pipeline(page_pk: Page.pk,
                       engine_pk: LayoutAnalysisModel.pk,
-                      user=None,
+                      user_pk: User.pk = None,
                       activity_log: ActivityLog = None):
-    page = Page.objects.get(pk=page_id)
+    page = Page.objects.get(pk=page_pk)
     logger.info("Started OCR for page: %s", page)
 
     if activity_log is None:
         activity_log = get_activity_log(page,
-                                        user=user)
+                                        user_pk=user_pk)
 
     classify_document(page)
     activity_log.state = ActivityLogState.CLASSIFIED
@@ -61,19 +44,19 @@ def ocr_page_pipeline(page_id: Page.id,
 
 
 @shared_task
-def upload_overlay_pipeline(page_id,
-                            user=None,
+def upload_overlay_pipeline(page_pk,
+                            user_pk=None,
                             activity_log: ActivityLog = None):
     logger.info("Started processing for a manually uploaded document")
 
-    logger.info("page: %s", page_id)
+    logger.info("page: %s", page_pk)
 
-    page = Page.objects.get(pk=page_id)
+    page = Page.objects.get(pk=page_pk)
     logger.info("Started upload for page: %s", page)
 
     if activity_log is None:
         activity_log = get_activity_log(page,
-                                        user=user)
+                                        user_pk=user_pk)
 
     classify_document(page)
     activity_log.state = ActivityLogState.CLASSIFIED
@@ -88,11 +71,11 @@ def upload_overlay_pipeline(page_id,
 
 
 def get_activity_log(page: Page,
-                     user: User.email = None):
+                     user_pk: User.pk = None):
     activity_log = ActivityLog.objects.create(page=page,
                                               type=ActivityLogType.OCR)
-    if user:
-        user_obj = User.objects.get(email=user)
+    if user_pk:
+        user_obj = User.objects.get(pk=user_pk)
         activity_log.user = user_obj
         activity_log.save()
 
@@ -101,13 +84,13 @@ def get_activity_log(page: Page,
 
 def get_overlay_from_pero_ocr(page: Page,
                               engine_pk: LayoutAnalysisModel.pk,
-                              user=None,
+                              user_pk: User.pk = None,
                               activity_log: ActivityLog = None):
     if activity_log is None:
         activity_log = get_activity_log(page,
-                                        user=user)
+                                        user_pk=user_pk)
 
-    page_id = str(page.id)
+    page_pk = str(page.pk)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
@@ -115,16 +98,16 @@ def get_overlay_from_pero_ocr(page: Page,
     layout_analysis_model = LayoutAnalysisModel.objects.get(pk=engine_pk)
     logger.info("Used engine: %s", layout_analysis_model)
     pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
-    request_id = get_request_id(page_id,
+    request_id = get_request_id(page_pk,
                                 pero_engine_id=int(pero_engine_id))
     logger.info("Sent request to per ocr: %s", request_id)
 
-    # POST to Pero OCR /upload_image/{request_id}/{page_id}
+    # POST to Pero OCR /upload_image/{request_id}/{page_pk}
     # Uploads image to the request
     with page.file.open() as file:
         upload_file(file,
                     request_id=request_id,
-                    page_id=page_id,
+                    page_pk=page_pk,
                     )
 
     # GET to Pero OCR /request_status/{request_id}
@@ -134,29 +117,29 @@ def get_overlay_from_pero_ocr(page: Page,
     logger.info("Waiting for document to be processed....")
     while True:
         if check_state(request_id,
-                       page_id, activity_log):
+                       page_pk, activity_log):
             logger.info("Document is processed!")
             break
         else:  # 'PROCESSED'
             time.sleep(1)
 
-    # GET to Pero OCR /download_results/{request_id}/{page_id}/{format}
+    # GET to Pero OCR /download_results/{request_id}/{page_pk}/{format}
     # Download results
     overlay_xml = get_result(request_id,
-                             page_id)
+                             page_pk)
     logger.info("OCR overlay xml: %s", overlay_xml)
 
     return overlay_xml
 
 
 def create_overlay_with_language(page: Page, overlay_xml: bytes,
-                                 user=None,
+                                 user_pk=None,
                                  activity_log=None):
     if activity_log is None:
         activity_log = get_activity_log(page,
-                                        user=user)
+                                        user_pk=user_pk)
 
-    page_id = page.id
+    page_pk = page.pk
 
     basename, _ = os.path.splitext(page.file.name)
     logger.info("Page name: %s", basename)
@@ -168,7 +151,7 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
             source_lang = xml_lang_detect(f)
     except Exception as e:
         activity_log.state = ActivityLogState.FAILED
-        print("Langdetect failed for page id: ", page_id)
+        print("Langdetect failed for page id: ", page_pk)
     # Create Overlay object in Django
     # TODO should we update if already exists?
 
@@ -178,7 +161,7 @@ def create_overlay_with_language(page: Page, overlay_xml: bytes,
             source_lang = xml_lang_detect(f)
     except Exception as e:
         activity_log.state = ActivityLogState.FAILED
-        print("Langdetect failed for page id: ", page_id)
+        print("Langdetect failed for page id: ", page_pk)
 
     overlay, _ = Overlay.objects.update_or_create(page=page,
                                                   defaults={'source_lang': source_lang}

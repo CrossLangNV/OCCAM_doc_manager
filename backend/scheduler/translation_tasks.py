@@ -13,13 +13,13 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def translate_overlay(overlay_id, target, user=None):
+def translate_overlay(overlay_pk: Overlay.pk, target: str, user_pk: User.pk = None):
     """
-    overlay_id : id from Overlay model object
-    source: abbreviation of the language of the text
+    overlay_pk : id from Overlay model object
     target: abbreviation of language to translate to
+    user: User.
     """
-    overlay = Overlay.objects.get(pk=overlay_id)
+    overlay = Overlay.objects.get(pk=overlay_pk)
 
     source = overlay.source_lang
     logger.info("Translating page: %s", overlay)
@@ -36,9 +36,8 @@ def translate_overlay(overlay_id, target, user=None):
         state=ActivityLogState.PROCESSING
     )
 
-    if user:
-        user_obj = User.objects.get(email=user)
-        activity_log.user = user_obj
+    if user_pk:
+        activity_log.user = User.objects.get(pk=user_pk)
         activity_log.save()
 
     logger.info("Created activity log")

@@ -175,7 +175,10 @@ class OverlayListAPIView(ListCreateAPIView):
         overlay.create_geojson()
 
         upload_overlay_pipeline.delay(page_id)
-        return Response("Uploaded.", status=status.HTTP_201_CREATED)
+
+        serializer = self.get_serializer(overlay)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class LayoutAnalysisModelsAPIView(ListCreateAPIView):
@@ -199,11 +202,11 @@ class TranslatePageAPIView(APIView):
     def post(self, request, format=None, *args, **kwargs):
         overlay = request.data["overlay"]
         target = request.data["target"]
-        user = request.data["user"]
+        user_pk = request.user.pk
 
         logger.info("Starting celery task for translation")
 
-        translate_overlay.delay(overlay, target, user=user)
+        translate_overlay.delay(overlay, target, user_pk=user_pk)
 
         return Response("Translation task launched", status=status.HTTP_201_CREATED)
 
@@ -212,13 +215,13 @@ class PageLaunchOCRAPIView(APIView):
     queryset = Page.objects.none()
 
     def post(self, request, format=None, *args, **kwargs):
-        page_id = request.data["page"]
-        user = request.data["user"]
+        page_pk = request.data["page"]
         engine_pk = request.data["engine_pk"]
+        user_pk = request.user.pk
 
-        ocr_page_pipeline.delay(page_id, str(engine_pk), user=user)
+        ocr_page_pipeline.delay(page_pk, str(engine_pk), user_pk=user_pk)
 
-        logger.info("Starting celery task for translation")
+        logger.info("Starting celery task for OCR")
 
         return Response("OCR Task launched", status=status.HTTP_201_CREATED)
 
