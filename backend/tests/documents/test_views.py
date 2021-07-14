@@ -1,11 +1,14 @@
 import os
+import signal
+import time as time
 
 from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from backend.tests.documents.create_database_mock import create, login, FILENAME_IMAGE
-from documents.models import Document, Page, Overlay
+from documents.fixtures.engines_main import ENGINES_JSON
+from documents.models import Document, Page, Overlay, LayoutAnalysisModel
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer
 from tests.documents.test_create_database_mock import _get_base_ext
 
@@ -211,18 +214,45 @@ class OverlayTranslationViewTest(TestCase):
                                           'target': 'en'
                                           })
 
-        # Get it again, to make sure it's updated.
-        overlay_after = Overlay.objects.get(pk=overlay.pk)
-        with overlay_after.translation_file.open() as f:
-            b_xml = f.read()
-
         self.assertLess(response.status_code, 300)
 
         with self.subTest('Translated overlay available'):
+
+            # Set the parameter to the amount of seconds you want to wait
+            def _get_b_xml_with_timeout(overlay_after,
+                                        t_max=10):
+
+                # Close session
+                def handler(signum, frame):
+                    raise Exception('Action took too much time')
+
+                signal.signal(signal.SIGALRM, handler)
+                signal.alarm(t_max)
+
+                for _ in range(t_max):
+                    try:
+                        with overlay_after.translation_file.open() as f:
+                            b_xml = f.read()
+                    except:
+                        time.sleep(1)
+                    else:
+                        return b_xml
+
+            overlay_after = Overlay.objects.get(pk=overlay.pk)
+
+            b_xml = _get_b_xml_with_timeout(overlay_after)
+
+            # # Get it again, to make sure it's updated.
+            # overlay_after = Overlay.objects.get(pk=overlay.pk)
+            # with overlay_after.translation_file.open() as f:
+            #     b_xml = f.read()
+
             self.assertTrue(b_xml, 'Should be non-empty')
 
 
 class PageTranscriptionViewTest(TestCase):
+    fixtures = [ENGINES_JSON]  # Load LayoutAnalysisModel objects
+
     def setUp(self):
         self.client_object, self.user = login(self)
         self.content_type = 'application/json'
@@ -231,11 +261,9 @@ class PageTranscriptionViewTest(TestCase):
 
     def test_post(self):
         # get API response
-
         page = next(filter(lambda x: 'jpg' in x.file.name, Page.objects.all())
                     )
-
-        engine = page.document.layout_analysis_model
+        engine = LayoutAnalysisModel.objects.all()[2]
 
         data = {'page': page.pk,
                 'engine_pk': engine.pk
