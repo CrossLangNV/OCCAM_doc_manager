@@ -54,7 +54,7 @@ const DocumentList = () => {
                             </td>
                             <td className='w-50 occ-doc-list-td'><Link to={`/document/${item.id}`}>{item.name}</Link></td>
                             <td className="occ-doc-list-td">
-                                <DocumentState state={item.state} />
+                                <Moment format="DD/MM/YYYY H:mm" date={item.updated_at} />
                             </td>
                             <td className='w-10 occ-doc-list-td'>
                                 <Moment format="DD/MM/YYYY H:mm" date={item.created_at} />
@@ -146,7 +146,7 @@ const DocumentList = () => {
                 <tr>
                     <th width="2rem">{t("ui.preview")}</th>
                     <th>{t("ui.title")}</th>
-                    <th>{t("ui.state")}</th>
+                    <th>{t("ui.last-updated")}</th>
                     <th>{t("ui.created-at")}</th>
                     <th>{t("ui.actions")}</th>
                 </tr>
