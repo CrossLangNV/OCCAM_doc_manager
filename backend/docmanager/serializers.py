@@ -15,11 +15,13 @@ class UserSerializer(serializers.ModelSerializer):
     has_completed = serializers.SerializerMethodField()
 
     def get_has_completed(self, user):
-        user_tutorial = UserTutorial.objects.get(user=user)
-        if user_tutorial:
+        try:
+            user_tutorial = UserTutorial.objects.get(user=user)
             return user_tutorial.has_completed
-        else:
-            return True
+
+        except UserTutorial.DoesNotExist:
+            user_tutorial = UserTutorial.objects.create(user=user)
+            return user_tutorial.has_completed
 
     class Meta:
         model = User

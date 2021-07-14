@@ -25,7 +25,8 @@ export const load_user = () => async dispatch => {
             });
         } catch (err) {
             dispatch({
-                type: AuthActionTypes.GET_USER_FAIL
+                type: AuthActionTypes.GET_USER_FAIL,
+                payload: err
             });
         }
     } else {

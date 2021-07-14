@@ -47,12 +47,14 @@ const AuthReducer = (state = DefaultState, action) => {
                 user: action.payload.email,
                 isAuthenticated: true,
                 hasCompletedTutorial: action.payload.has_completed,
+                errorMsg: ""
             }
 
         case AuthActionTypes.GET_USER_FAIL:
             return {
                 ...state,
-                user: null
+                user: null,
+                errorMsg: action.payload
             }
         case AuthActionTypes.LOGOUT:
             localStorage.removeItem('access');
