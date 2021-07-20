@@ -151,7 +151,7 @@ export const OcrPage = (id, engine_pk, user) => async dispatch => {
     }
 }
 
-export const TranslatePage = (id, target, user) => async dispatch => {
+export const TranslatePage = (id, target, useTM, user) => async dispatch => {
     try {
         dispatch({
             type: PageActionTypes.PAGE_TRANSLATION_LOADING
@@ -167,7 +167,8 @@ export const TranslatePage = (id, target, user) => async dispatch => {
             {
                 overlay: id,
                 target: target.toUpperCase(),
-                user: user
+                user: user,
+                useTM: useTM
             }, config)
             .then((res) => {
                 dispatch({

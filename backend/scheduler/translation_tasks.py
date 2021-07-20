@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 @shared_task
-def translate_overlay(overlay_pk: Overlay.pk, target: str, user_pk: User.pk = None):
+def translate_overlay(overlay_pk: Overlay.pk, target: str, use_tm: bool, user_pk: User.pk = None):
     """
     overlay_pk : id from Overlay model object
     target: abbreviation of language to translate to
@@ -25,6 +25,7 @@ def translate_overlay(overlay_pk: Overlay.pk, target: str, user_pk: User.pk = No
     logger.info("Translating page: %s", overlay)
     logger.info("Source language: %s", source)
     logger.info("Target language: %s", target)
+    logger.info("Using TM: %s", use_tm)
 
     if source == target:
         raise ValueError(f'Target language should be different from the source language. Source = {source}')
@@ -47,7 +48,7 @@ def translate_overlay(overlay_pk: Overlay.pk, target: str, user_pk: User.pk = No
     # Blocking translation request
     try:
         with overlay.get_file().open("rb") as f:
-            xml_trans = conn.translate_xml(f, source, target)
+            xml_trans = conn.translate_xml(f, source, target, use_tm)
 
             # Save to translation in overlay object
             with io.BytesIO(xml_trans) as f:

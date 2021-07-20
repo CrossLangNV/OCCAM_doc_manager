@@ -29,7 +29,8 @@ class CEFeTranslationConnectorTest(TestCase):
         with open(FILENAME_XML, 'rb') as f:
             xml_trans = self.conn.translate_xml(f,
                                                 self.source,
-                                                self.target)
+                                                self.target,
+                                                False)
 
         self.assertTrue(xml_trans)
 
@@ -38,7 +39,8 @@ class CEFeTranslationConnectorTest(TestCase):
         with open(FILENAME_XML, 'rb') as f:
             xml_id = self.conn.translate_xml_post(f,
                                                   self.source,
-                                                  self.target)
+                                                  self.target,
+                                                  False)
 
         with self.subTest('POST response'):
             self.assertTrue(xml_id)
@@ -54,7 +56,8 @@ class CEFeTranslationConnectorTest(TestCase):
             try:
                 xml_trans = self.conn.translate_xml(f,
                                                     self.source,
-                                                    self.source)
+                                                    self.source,
+                                                    False)
             except Exception as e:
                 self.assertTrue(e, 'Should raise an error about target being equal to source language.')
 

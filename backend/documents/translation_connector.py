@@ -14,7 +14,8 @@ class TranslationConnector(abc.ABC):
     @abc.abstractmethod
     def translate_xml(self, file,
                       source: str,
-                      target: str) -> bytes:
+                      target: str,
+                      use_tm: bool) -> bytes:
         """
 
         file: opened XML file
@@ -34,11 +35,14 @@ class CEFeTranslationConnector(TranslationConnector):
     def translate_xml(self,
                       file,
                       source,
-                      target):
+                      target,
+                      use_tm):
         files = {'file': file}
 
         headers = {'source': source,
                    'target': target}
+        if use_tm:
+            headers['use-tm'] = 'True'
 
         response = requests.post(self.URL_TRANSLATE_BLOCKING,
                                  headers=headers,
@@ -53,7 +57,8 @@ class CEFeTranslationConnector(TranslationConnector):
     def translate_xml_post(self,
                            file,
                            source,
-                           target
+                           target,
+                           use_tm,
                            ) -> str:
         """
         Non-blocking, returns an ID
@@ -62,6 +67,9 @@ class CEFeTranslationConnector(TranslationConnector):
 
         headers = {'source': source,
                    'target': target}
+
+        if use_tm:
+            headers['use-tm'] = 'True'
 
         response = requests.post(self.URL_TRANSLATE_POST,
                                  headers=headers,

@@ -95,7 +95,7 @@ const PageList = (props) => {
 
     const startTranslationForPage = (e) => {
         if (translationOverlaySourceLang !== targetLanguage && targetLanguage !== "ORIGINAL") {
-            dispatch(TranslatePage(translationOverlayId, targetLanguage, auth.user));
+            dispatch(TranslatePage(translationOverlayId, targetLanguage, checkedTM, auth.user));
             toast.current.show({
                 severity: 'success',
                 summary: t("ui.success"),

@@ -202,11 +202,12 @@ class TranslatePageAPIView(APIView):
     def post(self, request, format=None, *args, **kwargs):
         overlay = request.data["overlay"]
         target = request.data["target"]
+        use_tm = request.data["useTM"]
         user_pk = request.user.pk
 
         logger.info("Starting celery task for translation")
 
-        translate_overlay.delay(overlay, target, user_pk=user_pk)
+        translate_overlay.delay(overlay, target, use_tm, user_pk=user_pk)
 
         return Response("Translation task launched", status=status.HTTP_201_CREATED)
 
