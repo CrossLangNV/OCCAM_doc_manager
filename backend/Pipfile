@@ -26,6 +26,8 @@ dcxml = "==0.1.2"
 atlassian-python-api = "*"
 pdf2image = "==1.16.0"
 numpy = "==1.21.0"
+scrapy = "==2.4.1"
+beautifulsoup4 = "==4.9.3"
 
 [requires]
 python_version = "3.9"
