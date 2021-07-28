@@ -1,3 +1,4 @@
+import io
 import json
 import os
 import re
@@ -101,7 +102,10 @@ class StaatsbladSpider(scrapy.Spider):
                             for i in range(len(images)):
                                 # Save pages as images in the pdf
 
-                                images[i].save(f'scraped_file_{i}.jpg', 'JPEG')
+                                image_name = f'scraped_file_{i}.jpg'
+                                output_io = io.BytesIO()
+                                images[i].save(output_io, 'JPEG')
+                                output_io.name = image_name
 
                                 print(images)
                                 print(images[i])
@@ -109,7 +113,7 @@ class StaatsbladSpider(scrapy.Spider):
                                 page = Page.objects.update_or_create(document=doc)
                                 if page:
                                     page = page[0]
-                                    page.update_image(images[i])
+                                    page.update_image(output_io)
 
                             # for i, im in enumerate(pdf_image_generator(f.read())):
                             #     output_io = io.BytesIO()
