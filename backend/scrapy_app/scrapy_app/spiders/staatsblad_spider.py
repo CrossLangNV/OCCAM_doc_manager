@@ -3,8 +3,13 @@ import os
 import re
 
 import lxml.html.clean
+import requests
 import scrapy
 from bs4 import BeautifulSoup
+from django.contrib.auth.models import User
+from pdf2image import convert_from_path
+
+from documents.models import Document, Page, Website
 
 EXAMPLES = {
     "crosslang": "869914707",
@@ -34,6 +39,9 @@ class StaatsbladSpider(scrapy.Spider):
 
         # BeautifulSoup HTML Parser
         soup = BeautifulSoup(response.text, "html.parser")
+
+        user = getattr(self, 'user', None)
+        website = getattr(self, 'website', None)
 
         # Iterate over all <hr> tags (documents are separated with hr tags)
         for tag in soup.findAll():
@@ -65,6 +73,57 @@ class StaatsbladSpider(scrapy.Spider):
                         print("URL  : ", url)
 
                         results.append({"title": title_str, "file": url})
+
+                        # Create Document object in Django
+                        user_obj = User.objects.get(username=user)
+                        website_obj = Website.objects.get(name=website)
+                        description = "Scraped from Belgisch Staatsblad Publicaties"
+                        document = Document.objects.update_or_create(name=title_str,
+                                                                     user=user_obj,
+                                                                     website=website_obj,
+                                                                     content=description)
+
+                        doc = document[0]
+                        print("Created document: ", doc.name)
+
+                        res = requests.get(url)
+                        # page = Page.objects.update_or_create(document=doc)
+
+                        filename = "scraped_file.pdf"
+
+                        with open(filename, 'wb+') as f:
+                            f.write(res.content)
+
+                            # page_ids = []
+
+                            images = convert_from_path(filename)
+
+                            for i in range(len(images)):
+                                # Save pages as images in the pdf
+
+                                images[i].save(f'scraped_file_{i}.jpg', 'JPEG')
+
+                                print(images)
+                                print(images[i])
+
+                                page = Page.objects.update_or_create(document=doc)
+                                if page:
+                                    page = page[0]
+                                    page.update_image(images[i])
+
+                            # for i, im in enumerate(pdf_image_generator(f.read())):
+                            #     output_io = io.BytesIO()
+                            #     im.save(output_io, format=im.format,
+                            #             quality=100)
+                            #
+                            # needs a name in order to save it
+                            # output_io.name = f'scraped_file_{i}.jpg'
+
+                            # page_ids.append(page.id)
+
+                        # os.remove(f.name)
+                        # print(page[0])
+
                         continue
                     if sib.name == "hr":
                         print("stopped, there is no link for this title")

@@ -25,6 +25,7 @@ class LaunchScraperAPIView(APIView):
         try:
             website = request.data["website"]
             company_number = request.data["company_number"]
+            user = request.data["user"]
 
             unique_id = str(uuid4())  # create a unique ID.
             settings = {
@@ -32,18 +33,21 @@ class LaunchScraperAPIView(APIView):
                 'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
             }
 
-            task = scrapyd.schedule('default', website, settings=settings, company_number=company_number)
+            task = scrapyd.schedule('default', website, settings=settings,
+                                    company_number=company_number, user=user, website=website)
 
-            # response = {
-            #     "message": f"Started scraper for company_number: {company_number} ({website})",
-            #     "task_id": task
-            # }
-            # return JsonResponse(response)
+            response = {
+                "message": "Started scraper task",
+                "task_id": task,
+                "company_number": company_number,
+                "website": website,
+                "user": user
+            }
 
-            return Response(f"Started scraper for company_number: {company_number} ({website}). ",
+            return Response(response,
                             status=status.HTTP_201_CREATED)
         except KeyError as e:
-            return Response("Invalid request format. Please specify both 'website' and 'company_number' keys.",
+            return Response("Invalid request format. Please specify both 'website', 'user' and 'company_number' keys.",
                             status=status.HTTP_400_BAD_REQUEST)
         except requests.exceptions.ConnectionError as e:
             logger.error(e)
