@@ -6,6 +6,18 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
+import sys
+
+import django
+
+# sys.path.append("/django/scraper")
+sys.path.append(os.path.dirname(os.path.abspath('')))
+os.environ['DJANGO_SETTINGS_MODULE'] = 'docmanager.settings'
+
+# This is required only if Django Version > 1.8
+
+django.setup()
 
 BOT_NAME = 'scrapy_app'
 
@@ -17,6 +29,8 @@ NEWSPIDER_MODULE = 'scrapy_app.spiders'
 
 # Obey robots.txt rules (Nope we don't)
 ROBOTSTXT_OBEY = False
+FILES_STORE = os.environ["SCRAPY_FILES_FOLDER"] + "files/"
+LOG_LEVEL = "DEBUG"
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
@@ -61,9 +75,9 @@ ROBOTSTXT_OBEY = False
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-# ITEM_PIPELINES = {
-#    'scrapy_app.pipelines.ScrapyAppPipeline': 300,
-# }
+ITEM_PIPELINES = {
+   'scrapy_app.pipelines.ScrapyAppPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

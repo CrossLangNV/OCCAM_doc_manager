@@ -1,0 +1,20 @@
+[
+  {
+    "model": "documents.Website",
+    "pk": 1,
+    "fields": {
+      "name": "Belgisch Staatsblad Publicaties",
+      "content": "Publicaties in het Belgisch Staatsblad",
+      "url": "http://www.ejustice.just.fgov.be/cgi_tsv/tsv_all.pl?DETAIL=ALL+PUB&lang=nl&btw="
+    }
+  },
+  {
+    "model": "documents.Website",
+    "pk": 2,
+    "fields": {
+      "name": "NBB",
+      "content": "Publicaties van de jaarrekeningen bij de NBB",
+      "url": "https://cri.nbb.be/bc9/web/catalog?lang=N&companyNr="
+    }
+  }
+]

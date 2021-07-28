@@ -16,8 +16,8 @@ QUERY_PARAMS = '&fromtab=TSV&sql=btw+contains+%27'
 FILE_URL = 'http://www.ejustice.just.fgov.be'
 
 
-class KboSpider(scrapy.Spider):
-    name = 'kbo'
+class StaatsbladSpider(scrapy.Spider):
+    name = 'Belgisch Staatsblad Publicaties'
 
     def start_requests(self):
         url = BASE_URL
