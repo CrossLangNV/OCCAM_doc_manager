@@ -34,7 +34,7 @@ class StaatsbladSpider(scrapy.Spider):
 
         print("Started scraping for company number: ", company_number)
         print("Publications URL: ", url)
-        yield scrapy.Request(url, self.parse_publications, meta={'donwload_timeout': 120})
+        yield scrapy.Request(url, self.parse_publications, meta={'donwload_timeout': 3600})
 
     def parse_publications(self, response):
         print("Started scrapy 'parse_publications' request")
@@ -46,6 +46,7 @@ class StaatsbladSpider(scrapy.Spider):
         user = getattr(self, 'user', None)
         website = getattr(self, 'website', None)
 
+        link_count = 0
         # Iterate over all <hr> tags (documents are separated with hr tags)
         for tag in soup.findAll():
             if tag.name == "hr":
@@ -54,9 +55,10 @@ class StaatsbladSpider(scrapy.Spider):
                 # If we found a <hr> tag, we search for the first <a> tag
                 # but if another <hr> has been found instead, then we skip this one because it does not have any files.
                 for sib in tag.next_siblings:
-
                     # A file has been found, we will do some cleanup, and add this to the results list
                     if sib.name == "a":
+                        link_count = link_count + 1
+
                         title = tag.next_sibling
                         title_str = str(title)
 
@@ -98,8 +100,6 @@ class StaatsbladSpider(scrapy.Spider):
                         with open(filename, 'wb+') as f:
                             f.write(res.content)
 
-                            # page_ids = []
-
                             images = convert_from_path(filename)
                             print("images len: ", len(images))
                             for i in range(len(images)):
@@ -124,18 +124,7 @@ class StaatsbladSpider(scrapy.Spider):
                                     page.update_image(output_io)
                                     print("Updated image: page looks like: ", page)
 
-                            # for i, im in enumerate(pdf_image_generator(f.read())):
-                            #     output_io = io.BytesIO()
-                            #     im.save(output_io, format=im.format,
-                            #             quality=100)
-                            #
-                            # needs a name in order to save it
-                            # output_io.name = f'scraped_file_{i}.jpg'
-
-                            # page_ids.append(page.id)
-
-                        # os.remove(f.name)
-                        # print(page[0])
+                        # os.remove(filename)
 
                         continue
                     if sib.name == "hr":
@@ -144,6 +133,8 @@ class StaatsbladSpider(scrapy.Spider):
 
                 with open("kbo_publications.json", "w", encoding='utf8') as f:
                     json.dump(results, f, indent=8, ensure_ascii=False)
+
+        print(f"Found {link_count} publications for this enterprise")
 
 
 def strip_html(html):
