@@ -31,6 +31,7 @@ NEWSPIDER_MODULE = 'scrapy_app.spiders'
 ROBOTSTXT_OBEY = False
 FILES_STORE = os.environ["SCRAPY_FILES_FOLDER"] + "files/"
 LOG_LEVEL = "DEBUG"
+CLOSESPIDER_TIMEOUT = 0
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32

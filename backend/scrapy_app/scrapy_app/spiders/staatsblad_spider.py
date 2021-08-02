@@ -2,6 +2,7 @@ import io
 import json
 import os
 import re
+import uuid
 
 import lxml.html.clean
 import requests
@@ -33,9 +34,10 @@ class StaatsbladSpider(scrapy.Spider):
 
         print("Started scraping for company number: ", company_number)
         print("Publications URL: ", url)
-        yield scrapy.Request(url, self.parse_publications)
+        yield scrapy.Request(url, self.parse_publications, meta={'donwload_timeout': 120})
 
     def parse_publications(self, response):
+        print("Started scrapy 'parse_publications' request")
         results = []
 
         # BeautifulSoup HTML Parser
@@ -86,6 +88,7 @@ class StaatsbladSpider(scrapy.Spider):
 
                         doc = document[0]
                         print("Created document: ", doc.name)
+                        print("id: ", doc.id)
 
                         res = requests.get(url)
                         # page = Page.objects.update_or_create(document=doc)
@@ -98,7 +101,7 @@ class StaatsbladSpider(scrapy.Spider):
                             # page_ids = []
 
                             images = convert_from_path(filename)
-
+                            print("images len: ", len(images))
                             for i in range(len(images)):
                                 # Save pages as images in the pdf
 
@@ -106,14 +109,20 @@ class StaatsbladSpider(scrapy.Spider):
                                 output_io = io.BytesIO()
                                 images[i].save(output_io, 'JPEG')
                                 output_io.name = image_name
+                                image_hash = uuid.uuid4()
 
-                                print(images)
-                                print(images[i])
+                                print("image_name: ", image_name)
+                                print("output_io: ", output_io)
+                                print("output_io.name: ", output_io.name)
+                                print("images: ", images)
+                                print("image_hash: ", image_hash)
 
-                                page = Page.objects.update_or_create(document=doc)
+                                page = Page.objects.update_or_create(image_hash=image_hash, defaults={'document': doc})
                                 if page:
                                     page = page[0]
+                                    print("Created page: ", page)
                                     page.update_image(output_io)
+                                    print("Updated image: page looks like: ", page)
 
                             # for i, im in enumerate(pdf_image_generator(f.read())):
                             #     output_io = io.BytesIO()

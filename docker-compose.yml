@@ -75,6 +75,18 @@ services:
     ports:
       - "5672:5672"
 
+#  scrapyd:
+#    build: ./backend/scrapy_app
+#    ports:
+#      - "6800:6800"
+#    env_file:
+#      - ./secrets/django-docker.env
+#    volumes:
+#      - ./backend/scrapy_app:/backend/scrapy_app
+#    depends_on:
+#      - django
+#    command: scrapyd
+
 
 volumes:
   occ_postgres:
