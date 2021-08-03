@@ -30,6 +30,7 @@ class LaunchScraperAPIView(APIView):
             unique_id = str(uuid4())  # create a unique ID.
             settings = {
                 'unique_id': unique_id,  # unique ID for each record for DB
+                'website': website,
                 'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
             }
 

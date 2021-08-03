@@ -19,6 +19,7 @@ class ScrapyAppPipeline(object):
     def from_crawler(cls, crawler):
         return cls(
             unique_id=crawler.settings.get('unique_id'),  # this will be passed from django view
+            website=crawler.settings.get('website'),  # this will be passed from django view
         )
 
     def close_spider(self, spider):
@@ -26,6 +27,7 @@ class ScrapyAppPipeline(object):
         item = ScrapyItem()
         item.unique_id = self.unique_id
         item.data = json.dumps(self.items)
+        item.website = self.website
         item.save()
 
     def process_item(self, item, spider):

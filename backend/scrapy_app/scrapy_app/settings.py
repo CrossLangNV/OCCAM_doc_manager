@@ -29,7 +29,7 @@ NEWSPIDER_MODULE = 'scrapy_app.spiders'
 
 # Obey robots.txt rules (Nope we don't)
 ROBOTSTXT_OBEY = False
-FILES_STORE = os.environ["SCRAPY_FILES_FOLDER"] + "files/"
+# FILES_STORE = os.environ["SCRAPY_FILES_FOLDER"] + "files/"
 LOG_LEVEL = "DEBUG"
 CLOSESPIDER_TIMEOUT = 0
 
