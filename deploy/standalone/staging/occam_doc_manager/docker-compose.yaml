@@ -23,13 +23,13 @@ services:
       - django
     networks:
       - default
-    environment:
-      - CHOKIDAR_USEPOLLING=true
     labels:
       - traefik.http.routers.angular.rule=Host(`react.staging.occam.crosslang.com`)
       - traefik.http.routers.angular.tls=true
       - traefik.http.routers.angular.tls.certresolver=le
       - traefik.http.routers.angular.entrypoints=websecure
+    volumes:
+      - ./secrets/react.env:/usr/share/nginx/html/.env
 
   django_nginx:
     image: docker.crosslang.com/occam_doc_manager/django_nginx:develop-latest

@@ -19,6 +19,8 @@ logger = logging.getLogger(__name__)
 
 class LaunchScraperAPIView(APIView):
     queryset = ScrapyItem.objects.none()
+
+    # TODO Remove this
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
