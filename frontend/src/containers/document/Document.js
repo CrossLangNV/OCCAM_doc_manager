@@ -21,6 +21,8 @@ const Document = (props) => {
     // Redux states
     const documentState = useSelector(state => state.document)
     const auth = useSelector(state => state.auth);
+    const uiStates = useSelector(state => state.uiStates);
+
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId))
@@ -34,7 +36,7 @@ const Document = (props) => {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 dispatch(DeleteDocument(event))
-                dispatch(GetDocumentList(5, 1, ""))
+                dispatch(GetDocumentList(5, 1, "", uiStates.showDemoContent))
                 history.push("/")
             }
         });

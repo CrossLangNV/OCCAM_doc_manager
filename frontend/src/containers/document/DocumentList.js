@@ -1,19 +1,20 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
-import React from "react";
+import React, {useState} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPaginate from "react-paginate"
 import {Button} from "primereact/button";
 import Moment from 'react-moment';
 import {confirmPopup} from "primereact/confirmpopup";
-import DocumentState from "./DocumentState";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import DocumentPreview from "./DocumentPreview";
 import {useTranslation} from "react-i18next";
 import LanguageSelector from "../core/LanguageSelector";
+import {InputSwitch} from "primereact/inputswitch";
+import {ModifyShowDemoContent} from "../../actions/uiActions";
 
 
 const DocumentList = () => {
@@ -25,13 +26,15 @@ const DocumentList = () => {
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
+    const [checkedDemoContent, setCheckedDemoContent] = useState(false);
+
 
     React.useEffect(() => {
-        fetchDocuments(5, 1, uiStates.documentQuery);
+        fetchDocuments(5, 1, uiStates.documentQuery, false);
     }, []);
 
-    const fetchDocuments = (rows, page, query) => {
-        dispatch(GetDocumentList(rows, page, query))
+    const fetchDocuments = (rows, page, query, showDemoContent) => {
+        dispatch(GetDocumentList(rows, page, query, showDemoContent))
     }
 
     const confirmDeleteDoc = (event) => {
@@ -134,6 +137,18 @@ const DocumentList = () => {
                     icon="pi pi-plus"
                     className="doc-list-step-three"
             />
+
+            <InputSwitch
+                className="margin-left"
+                inputId="checkedDemoContent" checked={checkedDemoContent} onChange={e => {
+                setCheckedDemoContent(e.value)
+                dispatch(ModifyShowDemoContent(e.value))
+                fetchDocuments(documentList.rows, documentList.page, uiStates.documentQuery, e.value)
+            }} />
+            <span className="margin-left">
+                Show demo content
+            </span>
+
             <br/>
             <Row className="justify-content-between">
                 <Col/>
@@ -162,7 +177,7 @@ const DocumentList = () => {
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}
-                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery)}
+                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery, uiStates.showDemoContent)}
                     containerClassName={"pagination"}
                     activeClassName={'active'}
                     breakClassName={'page-item'}

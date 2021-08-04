@@ -6,7 +6,8 @@ const DefaultState = {
     selectedPage: "",
     layout_engines: [],
     selected_layout_engine: "",
-    language: "en"
+    language: "en",
+    showDemoContent: false,
 };
 
 const UiReducer = (state = DefaultState, action) => {
@@ -38,6 +39,11 @@ const UiReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 language: action.payload
+            }
+        case UiActionTypes.UI_SHOW_DEMO_CONTENT_MODIFY:
+            return {
+                ...state,
+                showDemoContent: action.payload
             }
         default:
             return state

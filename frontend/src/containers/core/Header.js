@@ -23,7 +23,7 @@ const Header = () => {
 
     const searchDocuments = async (query) => {
         dispatch(ModifyDocumentQuery(query))
-        dispatch(GetDocumentList(5, 1, query))
+        dispatch(GetDocumentList(5, 1, query, uiStates.showDemoContent))
     }
 
     const reduxIsLoading = () => {

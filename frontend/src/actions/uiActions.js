@@ -10,6 +10,13 @@ export const ModifyDocumentQuery = (query) => async dispatch => {
     });
 }
 
+export const ModifyShowDemoContent = (value) => async dispatch => {
+    dispatch({
+        type: UiActionTypes.UI_SHOW_DEMO_CONTENT_MODIFY,
+        payload: value
+    });
+}
+
 export const ModifySelectedPage = (query) => async dispatch => {
     dispatch({
         type: UiActionTypes.UI_DOCUMENT_SELECTED_PAGE_MODIFY,

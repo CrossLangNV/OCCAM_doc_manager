@@ -2,7 +2,7 @@ import {DocumentActionTypes} from "../constants/document-action-types";
 import axios from "axios";
 import {baseUrl} from "../constants/axiosConf";
 
-export const GetDocumentList = (rows, page, query) => async dispatch => {
+export const GetDocumentList = (rows, page, query, showDemoContent) => async dispatch => {
     try {
 
         const config = {
@@ -17,7 +17,7 @@ export const GetDocumentList = (rows, page, query) => async dispatch => {
         });
 
         const offset = (page * rows) - rows;
-        const res = await axios.get(`${baseUrl}/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}`, config)
+        const res = await axios.get(`${baseUrl}/documents/api/documents?rows=${rows}&offset=${offset}&query=${query}&showDemoContent=${showDemoContent}`, config)
 
         dispatch({
             type: DocumentActionTypes.DOCUMENT_LIST_SUCCESS,
