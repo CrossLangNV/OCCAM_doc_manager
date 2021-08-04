@@ -79,7 +79,11 @@ class StaatsbladSpider(scrapy.Spider):
                         results.append({"title": title_str, "file": url})
 
                         # Create Document object in Django
-                        user_obj = User.objects.get(username=user)
+                        if user == "demo":
+                            user_obj = None
+                        else:
+                            user_obj = User.objects.get(username=user)
+
                         website_obj = Website.objects.get(name=website)
                         description = "Scraped from Belgisch Staatsblad Publicaties"
                         document = Document.objects.update_or_create(name=title_str,
