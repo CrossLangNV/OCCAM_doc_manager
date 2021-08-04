@@ -17,6 +17,7 @@ urlpatterns = [
     path('documents/', include(('documents.urls', 'documents'), namespace='documents')),
     path('activitylogs/', include(('activitylogs.urls', 'activitylogs'), namespace='activitylogs')),
     path('tutorial/', include(('tutorial.urls', 'tutorial'), namespace='tutorial')),
+    path('scraper/', include(('scraper.urls', 'scraper'), namespace='scraper')),
 ]
 
 if settings.DEBUG:

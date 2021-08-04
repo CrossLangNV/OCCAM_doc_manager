@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel
+from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel, Website
 
 
 class DocumentAdmin(admin.ModelAdmin):
@@ -30,3 +30,4 @@ admin.site.register(Overlay, OverlayAdmin)
 admin.site.register(Geojson, GeojsonAdmin)
 admin.site.register(Label, LabelAdmin)
 admin.site.register(LayoutAnalysisModel)
+admin.site.register(Website)

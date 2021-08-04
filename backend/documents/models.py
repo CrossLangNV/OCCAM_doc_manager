@@ -40,6 +40,15 @@ class LangField(models.CharField):
         super(LangField, self).__init__(*args, choices=choices, max_length=max_length, **kwargs)
 
 
+class Website(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    content = models.TextField(blank=True)
+    url = models.URLField(unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(default="", max_length=1000)
@@ -61,6 +70,7 @@ class Document(models.Model):
     )
 
     layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
+    website = models.ForeignKey(Website, on_delete=models.CASCADE, blank=True, null=True)
 
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
 
