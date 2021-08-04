@@ -42,11 +42,18 @@ class DocumentListAPIView(ListCreateAPIView):
     serializer_class = DocumentSerializer
 
     def get_queryset(self):
-        q = Document.objects.filter(user=self.request.user)
+        q = Document.objects.all()
         query = self.request.GET.get("query", "")
+        show_demo_content = self.request.GET.get("showDemoContent", "")
 
         if query:
             q = q.filter(name__icontains=query)
+
+        if show_demo_content == "true":
+            print("show_demo_content = true")
+            q = q.filter(user=None)
+        else:
+            q = q.filter(user=self.request.user)
 
         return q.order_by('-updated_at')
 
