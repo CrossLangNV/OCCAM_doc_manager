@@ -96,6 +96,18 @@ services:
       - traefik.http.routers.minio.tls.certresolver=le
       - traefik.http.routers.minio.entrypoints=websecure
 
+  scrapyd:
+    image: docker.crosslang.com/occam_doc_manager/django:develop-latest
+    ports:
+      - "6800:6800"
+    env_file:
+      - ./secrets/django-docker.env
+    volumes:
+      - /mnt/HC_Volume_123777/occam_doc_manager/scrapy_app:/backend
+    working_dir: /backend/scrapy_app
+    command: scrapyd
+
+
 networks:
   default:
     external:

@@ -17,9 +17,7 @@ RUN pip install pipenv
 WORKDIR /backend
 
 # Install needed packages specified in requirements.txt
-ADD ./Pipfile .
-
-RUN pipenv lock --keep-outdated --requirements > requirements.txt
+ADD ./requirements.txt .
 RUN pip install -r requirements.txt
 
 # OCCAM Transcription

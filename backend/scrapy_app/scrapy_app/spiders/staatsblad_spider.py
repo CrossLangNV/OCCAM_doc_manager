@@ -34,7 +34,7 @@ class StaatsbladSpider(scrapy.Spider):
 
         print("Started scraping for company number: ", company_number)
         print("Publications URL: ", url)
-        yield scrapy.Request(url, self.parse_publications, meta={'download_timeout': 3600})
+        yield scrapy.Request(url, self.parse_publications)
 
     def parse_publications(self, response):
         results = []

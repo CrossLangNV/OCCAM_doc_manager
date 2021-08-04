@@ -19,7 +19,7 @@ class StaatsbladSpider(scrapy.Spider):
 
         print(f"Started '{self.name}' scraper for company number: ", company_number)
         print("Publications URL: ", url)
-        yield scrapy.Request(url, self.parse_nbb_publications, meta={'download_timeout': 3600})
+        yield scrapy.Request(url, self.parse_nbb_publications)
 
     def parse_nbb_publications(self, response):
         print("Started scrapy 'parse_nbb_publications' request")
