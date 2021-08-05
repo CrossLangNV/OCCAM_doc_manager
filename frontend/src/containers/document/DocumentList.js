@@ -144,9 +144,9 @@ const DocumentList = () => {
                 setCheckedDemoContent(e.value)
                 dispatch(ModifyShowDemoContent(e.value))
                 fetchDocuments(documentList.rows, documentList.page, uiStates.documentQuery, e.value)
-            }} />
+            }}/>
             <span className="margin-left">
-                Show demo content
+                Show scraped documents
             </span>
 
             <br/>
