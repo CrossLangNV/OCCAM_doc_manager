@@ -69,7 +69,7 @@ services:
       - rabbitmq
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3.8
     env_file:
       - ./secrets/django-docker.env
     ports:

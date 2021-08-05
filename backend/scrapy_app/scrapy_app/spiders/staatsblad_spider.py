@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from django.contrib.auth.models import User
 from pdf2image import convert_from_path
 
-from documents.models import Document, Page, Website
+from documents.models import Document, Page, Website, LayoutAnalysisModel
 
 EXAMPLES = {
     "crosslang": "869914707",
@@ -86,10 +86,13 @@ class StaatsbladSpider(scrapy.Spider):
 
                         website_obj = Website.objects.get(name=website)
                         description = "Scraped from Belgisch Staatsblad Publicaties"
+
+                        layout_model = LayoutAnalysisModel.objects.get(name="Czech old printed")
                         document = Document.objects.update_or_create(name=title_str,
                                                                      user=user_obj,
                                                                      website=website_obj,
-                                                                     content=description)
+                                                                     content=description,
+                                                                     layout_analysis_model=layout_model)
 
                         doc = document[0]
                         print("Created document: ", doc.name)
