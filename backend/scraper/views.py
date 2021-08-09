@@ -1,3 +1,4 @@
+import csv
 import logging
 import os
 from uuid import uuid4
@@ -26,7 +27,8 @@ class LaunchScraperAPIView(APIView):
     def post(self, request):
         try:
             website = request.data["website"]
-            company_number = request.data["company_number"]
+            company_number = request.data.get("company_number", None)
+            limit = request.data.get("limit", None)
             user = request.data["user"]
 
             unique_id = str(uuid4())  # create a unique ID.
@@ -36,8 +38,32 @@ class LaunchScraperAPIView(APIView):
                 'USER_AGENT': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
             }
 
-            task = scrapyd.schedule('default', website, settings=settings,
-                                    company_number=company_number, user=user, website=website)
+            task = ""
+            if company_number:
+                task = scrapyd.schedule('default', website, settings=settings,
+                                        company_number=company_number, user=user, website=website)
+            else:
+                with open(os.environ["ENTERPRISES_FILE_PATH"], "r") as csvfile:
+                    csv_reader = csv.reader(csvfile)
+
+                    count = 0
+
+                    for row in csv_reader:
+
+                        # Launch scraper for every record in the Staatsblad companies CSV file
+                        enterprise_number = row[0]
+
+                        if enterprise_number != "EnterpriseNumber":
+                            enterprise_number = enterprise_number.replace(".", "")
+                            print("Started scraping for enterprise number: ", enterprise_number)
+                            task = scrapyd.schedule('default', website, settings=settings,
+                                                    company_number=enterprise_number,
+                                                    user=user, website=website)
+
+                            if limit and count == limit:
+                                break
+
+                        count = count + 1
 
             response = {
                 "message": "Started scraper task",
