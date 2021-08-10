@@ -22,7 +22,7 @@ def launch_scrapyd_throttled_request(website, settings, user, limit, *args, **kw
 
         count = 0
 
-        for row in csv_reader:
+        for row in reversed(list(csv_reader)):
 
             # Launch scraper for every record in the Staatsblad companies CSV file
             enterprise_number = row[0]
