@@ -73,9 +73,6 @@ class StaatsbladSpider(scrapy.Spider):
                         # We take the href from the <a> sibling and append it to the base URL
                         url = FILE_URL + sib["href"]
 
-                        print("TITLE: ", title_str)
-                        print("URL  : ", url)
-
                         results.append({"title": title_str, "file": url})
 
                         # Create Document object in Django
@@ -95,11 +92,10 @@ class StaatsbladSpider(scrapy.Spider):
                                                                      layout_analysis_model=layout_model)
 
                         doc = document[0]
-                        print("Created document: ", doc.name)
+                        print("Created/updated document: ", doc.name)
                         print("id: ", doc.id)
 
                         res = requests.get(url)
-                        # page = Page.objects.update_or_create(document=doc)
 
                         filename = "scraped_file.pdf"
 
@@ -107,21 +103,19 @@ class StaatsbladSpider(scrapy.Spider):
                             f.write(res.content)
 
                             images = convert_from_path(filename)
-                            print("images len: ", len(images))
                             for i in range(len(images)):
                                 # Save pages as images in the pdf
-
                                 image_name = f'scraped_file_{i}.jpg'
                                 output_io = io.BytesIO()
                                 images[i].save(output_io, 'JPEG')
                                 output_io.name = image_name
                                 image_hash = uuid.uuid4()
 
-                                print("image_name: ", image_name)
-                                print("output_io: ", output_io)
-                                print("output_io.name: ", output_io.name)
-                                print("images: ", images)
-                                print("image_hash: ", image_hash)
+                                # print("image_name: ", image_name)
+                                # print("output_io: ", output_io)
+                                # print("output_io.name: ", output_io.name)
+                                # print("images: ", images)
+                                # print("image_hash: ", image_hash)
 
                                 page = Page.objects.update_or_create(image_hash=image_hash, defaults={'document': doc})
                                 if page:
@@ -134,13 +128,12 @@ class StaatsbladSpider(scrapy.Spider):
 
                         continue
                     if sib.name == "hr":
-                        print("stopped, there is no link for this title")
                         break
 
                 with open("kbo_publications.json", "w", encoding='utf8') as f:
                     json.dump(results, f, indent=8, ensure_ascii=False)
 
-        print(f"Found {link_count} publications for this enterprise")
+        print(f"Found {link_count} publications for this enterprise.")
 
 
 def strip_html(html):

@@ -55,7 +55,7 @@ class LaunchScraperAPIView(APIView):
 
                         if enterprise_number != "EnterpriseNumber":
                             enterprise_number = enterprise_number.replace(".", "")
-                            print("Started scraping for enterprise number: ", enterprise_number)
+                            print(f"Started scraping for enterprise number: {enterprise_number} (#{count})")
                             task = scrapyd.schedule('default', website, settings=settings,
                                                     company_number=enterprise_number,
                                                     user=user, website=website)
