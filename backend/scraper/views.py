@@ -81,6 +81,9 @@ class LaunchScraperAPIView(APIView):
         except requests.exceptions.ConnectionError as e:
             logger.error(e)
             return Response("Failed to connect to the scrapyd service.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            logger.error(e)
+            return Response("Internal server error", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
         task_id = request.GET.get('task_id', None)
