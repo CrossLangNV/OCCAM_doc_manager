@@ -43,7 +43,7 @@ class LaunchScraperAPIView(APIView):
                 task = scrapyd.schedule('default', website, settings=settings,
                                         company_number=company_number, user=user, website=website)
             else:
-                launch_scrapyd_throttled_request.delay(website, settings, user, limit)
+                launch_scrapyd_throttled_request.delay(website, settings, user, limit, countdown=1)
 
             response = {
                 "message": "Started scraper task",
