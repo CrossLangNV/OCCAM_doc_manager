@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from scrapyd_api import ScrapydAPI
 
+from scheduler.scraping_tasks import launch_scrapyd_throttled_request
 from scraper.models import ScrapyItem
 
 # connect scrapyd service
@@ -56,9 +57,13 @@ class LaunchScraperAPIView(APIView):
                         if enterprise_number != "EnterpriseNumber":
                             enterprise_number = enterprise_number.replace(".", "")
                             print(f"Started scraping for enterprise number: {enterprise_number} (#{count})")
-                            task = scrapyd.schedule('default', website, settings=settings,
-                                                    company_number=enterprise_number,
-                                                    user=user, website=website)
+
+                            launch_scrapyd_throttled_request.delay(website, settings, enterprise_number, user,
+                                                                   countdown=2)
+
+                            # task = scrapyd.schedule('default', website, settings=settings,
+                            #                         company_number=enterprise_number,
+                            #                         user=user, website=website)
 
                             if limit and count == limit:
                                 break
