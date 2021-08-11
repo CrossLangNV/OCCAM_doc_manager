@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'documents',
     'tutorial',
     'activitylogs',
+    'kbo',
     'rest_framework',
     'corsheaders',
     'minio_storage',
