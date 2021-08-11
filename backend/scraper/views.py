@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from scrapyd_api import ScrapydAPI
 
-from scheduler.scraping_tasks import launch_scrapyd_throttled_request
+from scheduler.scraping_tasks import launch_scrapyd_throttled_staatsblad
 from scraper.models import ScrapyItem
 
 # connect scrapyd service
@@ -17,6 +17,7 @@ scrapyd = ScrapydAPI(os.environ["SCRAPYD_URL"])
 
 logger = logging.getLogger(__name__)
 
+SCRAPER_STAATSBLAD = "Belgisch Staatsblad Publicaties"
 
 class LaunchScraperAPIView(APIView):
     queryset = ScrapyItem.objects.none()
@@ -43,7 +44,10 @@ class LaunchScraperAPIView(APIView):
                 task = scrapyd.schedule('default', website, settings=settings,
                                         company_number=company_number, user=user, website=website)
             else:
-                launch_scrapyd_throttled_request.delay(website, settings, user, limit)
+                # If no company number is provided, we will launch a celery task that will launch scrapyd requests
+                # This celery task will iterate a CSV file with company numbers, and scrape all of them
+                if website == SCRAPER_STAATSBLAD:
+                    launch_scrapyd_throttled_staatsblad.delay(website, settings, user, limit)
 
             response = {
                 "message": "Started scraper task",
@@ -56,6 +60,7 @@ class LaunchScraperAPIView(APIView):
             return Response(response,
                             status=status.HTTP_201_CREATED)
         except KeyError as e:
+            logger.error(e)
             return Response("Invalid request format. Please specify both 'website', 'user' and 'company_number' keys.",
                             status=status.HTTP_400_BAD_REQUEST)
         except requests.exceptions.ConnectionError as e:

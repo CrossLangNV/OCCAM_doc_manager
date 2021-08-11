@@ -16,7 +16,7 @@ scrapyd = ScrapydAPI(os.environ["SCRAPYD_URL"])
 
 
 @app.task(rate_limit='60/m')
-def launch_scrapyd_throttled_request(website, settings, user, limit, *args, **kwargs):
+def launch_scrapyd_throttled_staatsblad(website, settings, user, limit, *args, **kwargs):
     with open(os.environ["ENTERPRISES_FILE_PATH"], "r") as csvfile:
         csv_reader = csv.reader(csvfile)
 

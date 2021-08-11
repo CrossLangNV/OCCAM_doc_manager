@@ -16,5 +16,14 @@
       "content": "Publicaties van de jaarrekeningen bij de NBB",
       "url": "https://cri.nbb.be/bc9/web/catalog?lang=N&companyNr="
     }
+  },
+  {
+    "model": "documents.Website",
+    "pk": 3,
+    "fields": {
+      "name": "KBO",
+      "content": "Kruispuntbank van Ondernemingen",
+      "url": "https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer="
+    }
   }
 ]
