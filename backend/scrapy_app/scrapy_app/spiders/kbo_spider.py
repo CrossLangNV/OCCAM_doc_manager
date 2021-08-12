@@ -4,7 +4,7 @@ import scrapy
 from bs4 import BeautifulSoup
 from scrapy import Selector
 
-from kbo.models import Company, BtwNacebelActivity, RszNacebelActivity, ExternalLink, LinkedEntity
+from kbo.models import Company, BtwNacebelActivity, RszNacebelActivity, ExternalLink, LinkedEntity, Director
 
 STATE = "Status:"
 LEGAL_STATUS = "Rechtstoestand:"
@@ -22,6 +22,9 @@ ANNUAL_MEETING = "Jaarvergadering"
 FISCAL_YEAR_END_DATE = "Einddatum boekjaar"
 START_DATE_EXCEPTIONAL_FINANCIAL_YEAR = "Begindatum uitzonderlijk boekjaar"
 END_DATE_EXCEPTIONAL_FINANCIAL_YEAR = "Einddatum uitzonderlijk boekjaar"
+
+EXTERNAL_LINKS = ["http://www.ejustice.just.fgov.be", "http://cri.nbb.be", "https://www.socialsecurity.be"]
+DIRECTOR_PREFIXES = ["Bestuurder", "Vaste vertegenwoordiger", "Gedelegeerd bestuurder"]
 
 BASE_URL = 'https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer='
 
@@ -53,7 +56,7 @@ class KboSpider(scrapy.Spider):
         except Company.DoesNotExist:
             company = Company.objects.create(company_number=company_number)
 
-        EXTERNAL_LINKS = ["http://www.ejustice.just.fgov.be", "http://cri.nbb.be", "https://www.socialsecurity.be"]
+
 
         for item in items[1:]:
             name = item.xpath('td[1]/text()').extract_first()
@@ -141,20 +144,11 @@ class KboSpider(scrapy.Spider):
                 elif name.startswith("RSZ"):
                     RszNacebelActivity.objects.update_or_create(name=name, company=company)
 
+                elif name.startswith(tuple(DIRECTOR_PREFIXES)):
+                    Director.objects.update_or_create(name=value, role=name, company=company)
+
             company.save()
 
-            # Special cases
-            # Link between entities
-
-            # if len(h2):
-            #     if h2[0] == "Linken tussen entiteiten":
-            #         print("Here we are... ", name)
-            #         print("Here we are... ", value)
-            #
-            #         value = item.xpath('td[2]').extract()
-            #         print("and this? ", value)
-
-        print("")
         exec_time = time.time() - start
         print(f"Scraping completed in {exec_time} seconds")
 
