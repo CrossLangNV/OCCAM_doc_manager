@@ -13,13 +13,15 @@ from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
-from scheduler.ocr_tasks import ocr_page_pipeline, upload_overlay_pipeline, xml_lang_detect
+from scheduler.ocr_tasks import ocr_page_pipeline, classify_document_pipeline, xml_lang_detect
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 PDF_CONTENT_TYPE = 'application/pdf'
 DOCUMENT = "document"
+KEY_PAGE_ID = "PageId"
+KEY_LABEL_NAME = 'labelName'
 
 logger = logging.getLogger(__name__)
 
@@ -100,38 +102,42 @@ class PageListAPIView(ListCreateAPIView):
 
         file = request.data.get(FILE)
 
-        if file:
-            if file.content_type == PDF_CONTENT_TYPE:
+        if file and file.content_type == PDF_CONTENT_TYPE:
 
-                document_id = request.data[DOCUMENT]
-                document = Document.objects.get(pk=document_id)
+            document_id = request.data[DOCUMENT]
+            document = Document.objects.get(pk=document_id)
 
-                page_ids = []
+            page_ids = []
 
-                for i, im in enumerate(pdf_image_generator(file.read())):
-                    data_i = request.data.copy()
-                    data_i[FILE] = im  # outputIO
+            for i, im in enumerate(pdf_image_generator(file.read())):
+                data_i = request.data.copy()
+                data_i[FILE] = im  # outputIO
 
-                    outputIO = io.BytesIO()
-                    im.save(outputIO, format=im.format,
-                            quality=100)
+                outputIO = io.BytesIO()
+                im.save(outputIO, format=im.format,
+                        quality=100)
 
-                    # needs a name in order to save it
-                    outputIO.name = os.path.splitext(os.path.split(file.name)[-1])[0] + f'_{i}.jpg'
+                # needs a name in order to save it
+                outputIO.name = os.path.splitext(os.path.split(file.name)[-1])[0] + f'_{i}.jpg'
 
-                    page = self.queryset.create(document=document)
-                    page.update_image(outputIO)
+                page = self.queryset.create(document=document)
+                page.update_image(outputIO)
 
-                    page_ids.append(page.id)
+                page_id = page.id
+                classify_document_pipeline.delay(page_id)
 
-                page_queryset = self.queryset.filter(id__in=page_ids)
-                serializer = self.get_serializer(page_queryset, many=True)
-                headers = self.get_success_headers(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+                page_ids.append(page_id)
 
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+            page_queryset = self.queryset.filter(id__in=page_ids)
+            serializer = self.get_serializer(page_queryset, many=True)
+
+        else:
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+
+            classify_document_pipeline.delay(serializer.data.get('id'))
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -142,8 +148,9 @@ class LabelsListAPIView(ListCreateAPIView):
 
     def get_queryset(self):
         q = Label.objects.all()
-        page_id = self.request.GET.get("pageId", "")
-        name = self.request.GET.get("labelName", "")
+
+        page_id = self.request.GET.get(KEY_PAGE_ID, "")
+        name = self.request.GET.get(KEY_LABEL_NAME, "")
 
         if page_id:
             q = q.filter(page__id=str(page_id))
@@ -173,15 +180,13 @@ class OverlayListAPIView(ListCreateAPIView):
         file = request.FILES["file"]
 
         page = Page.objects.get(pk=page_id)
-        source_lang = xml_lang_detect(file)  # TODO check if this works...
+        source_lang = xml_lang_detect(file)
         overlay, _ = Overlay.objects.update_or_create(page=page,
                                                       defaults={'file': file,
                                                                 'source_lang': source_lang}
                                                       )
 
         overlay.create_geojson()
-
-        upload_overlay_pipeline.delay(page_id)
 
         serializer = self.get_serializer(overlay)
         headers = self.get_success_headers(serializer.data)

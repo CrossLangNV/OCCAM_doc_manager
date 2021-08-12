@@ -5,7 +5,7 @@ services:
     env_file:
       - ./secrets/django-docker.env
     volumes:
-    - ./backend:/backend
+      - ./backend:/backend
     command: ./start.sh
     restart:
       always
