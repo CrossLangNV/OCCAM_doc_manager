@@ -2,7 +2,7 @@ import scrapy
 from bs4 import BeautifulSoup
 from scrapy import Selector
 
-from kbo.models import Company
+from kbo.models import Company, BtwNacebelActivity, RszNacebelActivity
 
 STATE = "Status:"
 LEGAL_STATUS = "Rechtstoestand:"
@@ -137,8 +137,12 @@ class KboSpider(scrapy.Spider):
                     print("Updated end_date_exceptional_financial_year")
 
                 elif name.startswith("BTW"):
-                    # TODO
-                    pass
+                    BtwNacebelActivity.objects.update_or_create(name=name, company=company)
+                    print("Updated/created BtwNacebelActivity object")
+
+                elif name.startswith("RSZ"):
+                    RszNacebelActivity.objects.update_or_create(name=name, company=company)
+                    print("Updated/created RszNacebelActivity object")
 
             company.save()
 
