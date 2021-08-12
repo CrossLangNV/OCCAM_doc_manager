@@ -9,6 +9,7 @@ from scheduler.tasks import logger, get_activity_log
 
 DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
 DOC_CLASSIFIER_MODEL_ID = "1"
+DOCUMENT_SCANNED_URL = os.environ["DOCUMENT_SCANNED_URL"]
 
 
 @shared_task
@@ -46,6 +47,21 @@ def classify_document_pipeline(page_pk,
         logger.info("Classified page")
 
 
+def classify_scanned(file, verbose=1):
+    # f = page.file  # image
+    files = {'file': file}
+
+    r = requests.post(DOCUMENT_SCANNED_URL,
+                      files=files)
+
+    res = r.json()
+
+    if verbose:
+        print("Classification result: ", res)
+
+    return
+
+
 def get_document_classification(page):
     headers = {
         "model-id": DOC_CLASSIFIER_MODEL_ID,
@@ -58,7 +74,7 @@ def get_document_classification(page):
 
     res = r.json()
 
-    print("classification result: ", res)
+    print("Classification result: ", res)
 
     return res
 
@@ -70,4 +86,4 @@ def classify_document(page):
     if classification_results:
         for label, value in classification_results.items():
             Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
-            print("created label: ", label)
+            print("Created label: ", label)

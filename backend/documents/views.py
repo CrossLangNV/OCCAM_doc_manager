@@ -13,13 +13,14 @@ from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
-from scheduler.classification_tasks import classify_document_pipeline
+from scheduler.classification_tasks import classify_document_pipeline, classify_scanned
 from scheduler.ocr_tasks import ocr_page_pipeline, xml_lang_detect
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
 PDF_CONTENT_TYPE = 'application/pdf'
+FILE = 'file'
 DOCUMENT = "document"
 KEY_PAGE_ID = "PageId"
 KEY_LABEL_NAME = 'labelName'
@@ -97,20 +98,23 @@ class PageListAPIView(ListCreateAPIView):
 
         """
 
-        # PDF, extract pages
-
-        FILE = 'file'
-
         file = request.data.get(FILE)
 
+        # PDF, extract pages
         if file and file.content_type == PDF_CONTENT_TYPE:
+            pdf_read = file.read()  # file is gone after reading
+
+            # Check if the PDF is a scanned document
+            # TODO if detected that the file is not a scanned document,
+            #  Show a warning message that there is no need to OCR.
+            classify_scanned(pdf_read)
 
             document_id = request.data[DOCUMENT]
             document = Document.objects.get(pk=document_id)
 
             page_ids = []
 
-            for i, im in enumerate(pdf_image_generator(file.read())):
+            for i, im in enumerate(pdf_image_generator(pdf_read)):
                 data_i = request.data.copy()
                 data_i[FILE] = im  # outputIO
 
@@ -178,7 +182,7 @@ class OverlayListAPIView(ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         page_id = request.POST["page"]
-        file = request.FILES["file"]
+        file = request.FILES[FILE]
 
         page = Page.objects.get(pk=page_id)
         source_lang = xml_lang_detect(file)
