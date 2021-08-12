@@ -13,7 +13,8 @@ from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer
 from documents.tm_connector import MouseTmConnector
-from scheduler.ocr_tasks import ocr_page_pipeline, classify_document_pipeline, xml_lang_detect
+from scheduler.classification_tasks import classify_document_pipeline
+from scheduler.ocr_tasks import ocr_page_pipeline, xml_lang_detect
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
