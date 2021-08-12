@@ -100,6 +100,7 @@ class RszNacebelActivity(models.Model):
 
 class LinkedEntity(models.Model):
     name = models.TextField(default="", blank=True)
+    url = models.URLField(default="")
     company = models.ForeignKey(
         Company,
         related_name="company_links_between_entities",
