@@ -41,13 +41,12 @@ class BranchUnit(models.Model):
     )
 
 
-class Function(models.Model):
+class Director(models.Model):
     name = models.CharField(default="", max_length=1000)
-    job_holder = models.CharField(default="", max_length=1000)
-    date = models.CharField(default="", max_length=100)
+    role = models.CharField(default="", max_length=1000)
     company = models.ForeignKey(
         Company,
-        related_name="company_functions",
+        related_name="company_directors",
         on_delete=models.CASCADE,
     )
 
@@ -100,6 +99,7 @@ class RszNacebelActivity(models.Model):
 
 class LinkedEntity(models.Model):
     name = models.TextField(default="", blank=True)
+    url = models.URLField(default="")
     company = models.ForeignKey(
         Company,
         related_name="company_links_between_entities",

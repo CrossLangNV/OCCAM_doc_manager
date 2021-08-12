@@ -16,7 +16,7 @@ scrapyd = ScrapydAPI(os.environ["SCRAPYD_URL"])
 
 
 @app.task(rate_limit='60/m')
-def launch_scrapyd_throttled_staatsblad(website, settings, user, limit, *args, **kwargs):
+def launch_scrapyd_throttled_scraper(website, settings, user, limit, *args, **kwargs):
     with open(os.environ["ENTERPRISES_FILE_PATH"], "r") as csvfile:
         csv_reader = csv.reader(csvfile)
 
@@ -31,9 +31,9 @@ def launch_scrapyd_throttled_staatsblad(website, settings, user, limit, *args, *
                 enterprise_number = enterprise_number.replace(".", "")
                 print(f"Started scraping for enterprise number: {enterprise_number} (#{count})")
 
-                task = scrapyd.schedule('default', website, settings=settings,
-                                        company_number=enterprise_number,
-                                        user=user, website=website)
+                scrapyd.schedule('default', website, settings=settings,
+                                 company_number=enterprise_number,
+                                 user=user, website=website)
 
                 if limit and count == limit:
                     break

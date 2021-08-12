@@ -1,8 +1,10 @@
+import time
+
 import scrapy
 from bs4 import BeautifulSoup
 from scrapy import Selector
 
-from kbo.models import Company
+from kbo.models import Company, BtwNacebelActivity, RszNacebelActivity, ExternalLink, LinkedEntity, Director
 
 STATE = "Status:"
 LEGAL_STATUS = "Rechtstoestand:"
@@ -21,6 +23,9 @@ FISCAL_YEAR_END_DATE = "Einddatum boekjaar"
 START_DATE_EXCEPTIONAL_FINANCIAL_YEAR = "Begindatum uitzonderlijk boekjaar"
 END_DATE_EXCEPTIONAL_FINANCIAL_YEAR = "Einddatum uitzonderlijk boekjaar"
 
+EXTERNAL_LINKS = ["http://www.ejustice.just.fgov.be", "http://cri.nbb.be", "https://www.socialsecurity.be"]
+DIRECTOR_PREFIXES = ["Bestuurder", "Vaste vertegenwoordiger", "Gedelegeerd bestuurder"]
+
 BASE_URL = 'https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer='
 
 
@@ -38,6 +43,8 @@ class KboSpider(scrapy.Spider):
         yield scrapy.Request(url, self.parse_kbo_publications)
 
     def parse_kbo_publications(self, response):
+        start = time.time()
+
         company_number = str(self.company_number).strip()
         print("Started scrapy 'parse_kbo_publications' request for company number: ", company_number)
 
@@ -46,17 +53,28 @@ class KboSpider(scrapy.Spider):
 
         try:
             company = Company.objects.get(company_number=company_number)
-            print("Ok, company does exist.......", company)
         except Company.DoesNotExist:
-            print("Nope, it does not exist...... creating.....")
             company = Company.objects.create(company_number=company_number)
-            print("Created........", company)
 
-        print("company: ", company)
+
 
         for item in items[1:]:
             name = item.xpath('td[1]/text()').extract_first()
             value = item.xpath('td[2]/text()').extract()
+            links = item.xpath('td[1]//a/@href').extract()
+            links_text = item.xpath('td[1]//a/text()').extract()
+
+            # Find external links and linked entities
+            if links:
+                for i in range(len(links)):
+                    if any(map(links[i].__contains__, EXTERNAL_LINKS)):
+                        url = links[i]
+                        name = links_text[i]
+                        ExternalLink.objects.update_or_create(name=name, url=url, company=company)
+                    else:
+                        url = "https://kbopub.economie.fgov.be/kbopub/" + links[i]
+                        name = links_text[i]
+                        LinkedEntity.objects.update_or_create(name=name, url=url, company=company)
 
             if not value:
                 # If value of text() is empty, it will probably be in another tag
@@ -72,78 +90,67 @@ class KboSpider(scrapy.Spider):
 
                 if name == STATE:
                     company.state = value
-                    print("Updated state. And it worked.")
 
                 elif name == LEGAL_STATUS:
                     company.legal_status = value
-                    print("Updated legal_status")
 
                 elif name == START_DATE:
                     company.start_date = value
-                    print("Updated start_date. And it worked.")
 
                 elif name == NAME:
                     company.name = value
-                    print("Updated name")
 
                 elif name == ADDRESS:
                     value = item.xpath('td[2]').extract()
                     value_stripped = remove_html_and_tabs(value[0])
                     company.address = value_stripped
-                    print("Updated address")
 
                 elif name == PHONE_NUMBER:
                     company.phone_number = value
-                    print("Updated phone_number")
 
                 elif name == FAX_NUMBER:
                     company.fax_number = value
-                    print("Updated fax_number")
 
                 elif name == EMAIL:
                     company.email = value
-                    print("Updated email")
 
                 elif name == WEBSITE:
                     company.website = value
-                    print("Updated website")
 
                 elif str(name) == ENTITY_TYPE:
                     company.entity_type = value
-                    print("Updated entity_type")
 
                 elif name == LEGAL_FORM:
                     company.legal_form = value
-                    print("Updated legal_form")
 
                 elif name == CAPITAL:
                     company.capital = value
-                    print("Updated capital")
 
                 elif name == ANNUAL_MEETING:
                     company.annual_meeting = value
-                    print("Updated annual_meeting")
 
                 elif name == FISCAL_YEAR_END_DATE:
                     company.fiscal_year_end_date = value
-                    print("Updated fiscal_year_end_date")
 
                 elif name == START_DATE_EXCEPTIONAL_FINANCIAL_YEAR:
                     company.start_date_exceptional_financial_year = value
-                    print("Updated start_date_exceptional_financial_year")
 
                 elif name == END_DATE_EXCEPTIONAL_FINANCIAL_YEAR:
                     company.end_date_exceptional_financial_year = value
-                    print("Updated end_date_exceptional_financial_year")
 
                 elif name.startswith("BTW"):
-                    # TODO
-                    pass
+                    BtwNacebelActivity.objects.update_or_create(name=name, company=company)
+
+                elif name.startswith("RSZ"):
+                    RszNacebelActivity.objects.update_or_create(name=name, company=company)
+
+                elif name.startswith(tuple(DIRECTOR_PREFIXES)):
+                    Director.objects.update_or_create(name=value, role=name, company=company)
 
             company.save()
 
-        test_result = Company.objects.filter(company_number=self.company_number)
-        print("test_result: ", test_result)
+        exec_time = time.time() - start
+        print(f"Scraping completed in {exec_time} seconds")
 
 
 def remove_html_and_tabs(text):
