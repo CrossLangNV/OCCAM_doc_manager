@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from scrapyd_api import ScrapydAPI
 
-from scheduler.scraping_tasks import launch_scrapyd_throttled_staatsblad
+from scheduler.scraping_tasks import launch_scrapyd_throttled_scraper
 from scraper.models import ScrapyItem
 
 # connect scrapyd service
@@ -18,6 +18,7 @@ scrapyd = ScrapydAPI(os.environ["SCRAPYD_URL"])
 logger = logging.getLogger(__name__)
 
 SCRAPER_STAATSBLAD = "Belgisch Staatsblad Publicaties"
+SCRAPER_KBO = "KBO"
 
 class LaunchScraperAPIView(APIView):
     queryset = ScrapyItem.objects.none()
@@ -46,8 +47,8 @@ class LaunchScraperAPIView(APIView):
             else:
                 # If no company number is provided, we will launch a celery task that will launch scrapyd requests
                 # This celery task will iterate a CSV file with company numbers, and scrape all of them
-                if website == SCRAPER_STAATSBLAD:
-                    launch_scrapyd_throttled_staatsblad.delay(website, settings, user, limit)
+                if website == SCRAPER_STAATSBLAD or website == SCRAPER_KBO:
+                    launch_scrapyd_throttled_scraper.delay(website, settings, user, limit)
 
             response = {
                 "message": "Started scraper task",
