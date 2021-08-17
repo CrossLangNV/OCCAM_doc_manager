@@ -47,8 +47,7 @@ def classify_document_pipeline(page_pk,
         logger.info("Classified page")
 
 
-def classify_scanned(file, verbose=1):
-    # f = page.file  # image
+def classify_scanned(file, verbose=1) -> bool:
     files = {'file': file}
 
     r = requests.post(DOCUMENT_SCANNED_URL,
@@ -59,7 +58,9 @@ def classify_scanned(file, verbose=1):
     if verbose:
         print("Classification result: ", res)
 
-    return
+    b_scanned = res.get("prediction")
+
+    return b_scanned
 
 
 def get_document_classification(page):

@@ -107,7 +107,7 @@ class PageListAPIView(ListCreateAPIView):
             # Check if the PDF is a scanned document
             # TODO if detected that the file is not a scanned document,
             #  Show a warning message that there is no need to OCR.
-            classify_scanned(pdf_read)
+            b_scanned = classify_scanned(pdf_read)
 
             document_id = request.data[DOCUMENT]
             document = Document.objects.get(pk=document_id)
@@ -130,6 +130,9 @@ class PageListAPIView(ListCreateAPIView):
 
                 page_id = page.id
                 classify_document_pipeline.delay(page_id)
+
+                label = Label.objects.update_or_create(page=page, name='scanned document', defaults={'name': "scanned", 'value': b_scanned})
+                print("Created label: ", label)
 
                 page_ids.append(page_id)
 
