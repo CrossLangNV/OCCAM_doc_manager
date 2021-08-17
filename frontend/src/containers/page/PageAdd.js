@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
@@ -10,6 +10,9 @@ import {useHistory} from "react-router-dom";
 import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
+import axios from "axios";
+import {baseUrl} from "../../constants/axiosConf";
+import {Messages} from "primereact/messages";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
@@ -21,13 +24,56 @@ const PageAdd = (props) => {
 
     const auth = useSelector(state => state.auth);
 
+    const [scannedDocuments, setScannedDocuments] = useState([]);
+    const scannedDocumentsMessages = useRef(null);
+
+
+
+    React.useEffect(() => {
+        checkMachineReadablePages()
+    }, []);
+
     const pagesUploader = async (event) => {
         const files = event.files
 
         if (files) {
-            dispatch(AddPage(documentId, files))
+            await dispatch(AddPage(documentId, files))
             toast.current.show({severity: 'info', summary: 'Success', detail: t("page-add.Page(s) have been uploaded")});
+            setTimeout(() => {
+                checkMachineReadablePages()
+            }, 2000);
         }
+    }
+
+    const checkMachineReadablePages =  async () => {
+        let scannedDocuments = []
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            },
+            params: {document: documentId}
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/pages?rows=100&offset=0`,
+            config)
+
+        console.log("res data: ", res.data)
+
+        res.data.results.map(page => {
+
+            if (page.metadata.scanned) {
+                if (page.metadata.scanned[0] === "False") {
+                    scannedDocuments.push(page.metadata.titles)
+                    scannedDocumentsMessages.current.show({sticky: true, severity: 'warn', detail: "Your uploaded file '"+page.metadata.titles+"' is machine readable. "})
+                }
+            }
+        })
+
+        console.log("scannedDocuments: ", scannedDocuments)
+        setScannedDocuments(scannedDocuments)
+
+        return scannedDocuments;
     }
 
     const chooseOptions = {label: t("ui.choose"), icon: 'pi pi-fw pi-plus'}
@@ -105,6 +151,9 @@ const PageAdd = (props) => {
                 auto={true}
                 chooseOptions={chooseOptions}
             />
+
+            <Messages ref={scannedDocumentsMessages} />
+
             <Toast ref={toast} />
 
             <Row className="margin-top">

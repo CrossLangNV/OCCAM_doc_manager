@@ -62,7 +62,7 @@ const PageList = (props) => {
 
     // Load pages initially
     useEffect(() => {
-        dispatch(GetPageList(100, 1, documentId));
+        dispatch(GetPageList(100, 0, documentId));
         if (auth.hasCompletedTutorial === false) {
             setTourOpened(true)
         }
