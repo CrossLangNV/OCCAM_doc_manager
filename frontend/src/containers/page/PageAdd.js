@@ -41,6 +41,10 @@ const PageAdd = (props) => {
             setTimeout(() => {
                 checkMachineReadablePages()
             }, 2000);
+            // For bigger files
+            setTimeout(() => {
+                checkMachineReadablePages()
+            }, 5000);
         }
     }
 
