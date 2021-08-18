@@ -169,7 +169,9 @@
     "Documents will automatically be uploaded once you selected them from your system": "Documents will automatically be uploaded once you selected them from your system.",
     "When you have selected all your pages, you can press this button to proceed to the next step": "When you have selected all your pages, you can press this button to proceed to the next step.",
     "Page(s) have been uploaded": "Page(s) have been uploaded.",
-    "Drag and drop image(s) here": "Drag and drop image(s) here"
+    "Drag and drop image(s) here": "Drag and drop image(s) here",
+    "Your uploaded file": "Your uploaded file '",
+    "is machine readable": "' is machine readable."
   },
 
   "page-leaflet": {

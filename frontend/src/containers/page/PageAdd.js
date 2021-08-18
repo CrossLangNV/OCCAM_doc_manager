@@ -25,9 +25,7 @@ const PageAdd = (props) => {
 
     const auth = useSelector(state => state.auth);
 
-    const [scannedDocuments, setScannedDocuments] = useState([]);
     const scannedDocumentsMessages = useRef(null);
-
 
 
     React.useEffect(() => {
@@ -66,13 +64,14 @@ const PageAdd = (props) => {
             if (page.metadata.scanned) {
                 if (page.metadata.scanned[0] === "False") {
                     scannedDocuments.push(page.metadata.titles)
-                    scannedDocumentsMessages.current.show({sticky: true, severity: 'warn', detail: "Your uploaded file '"+page.metadata.titles+"' is machine readable. "})
+                    scannedDocumentsMessages.current.show({
+                        sticky: true,
+                        severity: 'warn',
+                        detail: t('page-add.Your uploaded file')+page.metadata.titles+t('page-add.is machine readable')
+                    })
                 }
             }
         })
-
-        console.log("scannedDocuments: ", scannedDocuments)
-        setScannedDocuments(scannedDocuments)
 
         return scannedDocuments;
     }

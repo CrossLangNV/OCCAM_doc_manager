@@ -168,7 +168,9 @@
     "Documents will automatically be uploaded once you selected them from your system": "Documenten worden automatisch geüpload zodra u ze uit uw systeem hebt geselecteerd.",
     "When you have selected all your pages, you can press this button to proceed to the next step": "Wanneer u al uw pagina's heeft opgeladen, kunt u op deze knop drukken om naar de volgende stap te gaan.",
     "Page(s) have been uploaded": "Pagina('s) zijn geupload.",
-    "Drag and drop image(s) here": "Sleep hier afbeelding(en) naartoe"
+    "Drag and drop image(s) here": "Sleep hier afbeelding(en) naartoe",
+    "Your uploaded file": "Uw opgeladen bestand '",
+    "is machine readable": "' is machine leesbaar."
   },
   
   "page-leaflet": {

@@ -169,7 +169,9 @@
     "Documents will automatically be uploaded once you selected them from your system": "Les documents seront automatiquement téléchargés une fois que vous avez sélectionné à partir de votre système.",
     "When you have selected all your pages, you can press this button to proceed to the next step": "Lorsque vous avez sélectionné toutes vos pages, vous pouvez appuyer sur ce bouton pour passer à l'étape suivante.",
     "Page(s) have been uploaded": "La ou les pages ont été téléchargées.",
-    "Drag and drop image(s) here": "Glissez et déposez l'image (s) ici"
+    "Drag and drop image(s) here": "Glissez et déposez l'image (s) ici",
+    "Your uploaded file": "Votre fichier téléchargé '",
+    "is machine readable": "' est lisible par machine"
   },
 
   "page-leaflet": {
