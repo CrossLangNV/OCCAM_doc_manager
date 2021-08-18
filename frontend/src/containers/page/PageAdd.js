@@ -13,6 +13,7 @@ import {useTranslation} from "react-i18next";
 import axios from "axios";
 import {baseUrl} from "../../constants/axiosConf";
 import {Messages} from "primereact/messages";
+import {ScrollPanel} from "primereact/scrollpanel";
 
 const PageAdd = (props) => {
     const dispatch = useDispatch();
@@ -152,12 +153,21 @@ const PageAdd = (props) => {
                 chooseOptions={chooseOptions}
             />
 
-            <Messages ref={scannedDocumentsMessages} />
+            {scannedDocumentsMessages && (
+                <div>
+                    <br/><br/>
+                    <h4>Notifications</h4>
+                    <ScrollPanel style={{width: '100%', height: '220px'}}>
+                        <Messages ref={scannedDocumentsMessages}/>
+                    </ScrollPanel>
+                </div>
+            )}
 
-            <Toast ref={toast} />
+
+            <Toast ref={toast}/>
 
             <Row className="margin-top">
-                <Col md={6} />
+                <Col md={6}/>
                 <Col md="auto">
                     <Button className="upload-pages-step-two" onClick={nextStep} label="Next"/>
                 </Col>
