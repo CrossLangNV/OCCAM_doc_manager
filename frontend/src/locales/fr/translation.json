@@ -195,6 +195,11 @@
     "History": "Histoire"
   },
 
+  "publish": {
+    "Download": "Télécharger",
+    "Metadata": "Metadonnées"
+  },
+
   "translated-languages": {
     "original": "Original",
     "english": "Anglais",

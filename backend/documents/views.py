@@ -1,7 +1,10 @@
 import io
 import logging
 import os
+import zipfile
+from io import BytesIO
 
+from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -131,7 +134,8 @@ class PageListAPIView(ListCreateAPIView):
                 page_id = page.id
                 classify_document_pipeline.delay(page_id)
 
-                label = Label.objects.update_or_create(page=page, name='scanned document', defaults={'name': "scanned", 'value': b_scanned})
+                label = Label.objects.update_or_create(page=page, name='scanned document',
+                                                       defaults={'name': "scanned", 'value': b_scanned})
                 print("Created label: ", label)
 
                 page_ids.append(page_id)
@@ -274,3 +278,31 @@ class TmStatsAPIView(APIView):
             })
 
         return Response(results)
+
+
+class ExportMetadataAPIView(APIView):
+    # TODO: set auth with a cookie, see https://stackoverflow.com/a/23501687, for now no auth
+    permission_classes = []
+    queryset = Page.objects.all()
+
+    def get(self, request, format=None, *args, **kwargs):
+        document_id = self.request.GET.get(DOCUMENT, "")
+
+        if document_id:
+            self.queryset = self.queryset.filter(document__id=str(document_id))
+            serializer = PageSerializer()
+
+            f = BytesIO()
+            z = zipfile.ZipFile(f, 'a', zipfile.ZIP_DEFLATED)
+            for page in self.queryset:
+                p_metadata = serializer.get_metadata(page)
+                p_metadata_xml = serializer.get_metadata_xml(page)
+                filename = os.path.splitext(p_metadata['titles'][0])[0]
+                z.writestr(filename + '.xml', p_metadata_xml)
+            z.close()
+
+            response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
+            response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
+            return response
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)

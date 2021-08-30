@@ -7,7 +7,7 @@ export const GetDocumentList = (rows, page, query, showDemoContent) => async dis
 
         const config = {
             headers: {
-                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }
 
@@ -41,7 +41,7 @@ export const GetDocument = (id) => async dispatch => {
 
         const config = {
             headers: {
-                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }
 
@@ -67,7 +67,7 @@ export const DeleteDocument = (id) => async dispatch => {
 
         const config = {
             headers: {
-                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }
 
@@ -94,11 +94,11 @@ export const ProcessOcrDocument = (id) => async dispatch => {
 
         const config = {
             headers: {
-                 'Authorization': `Bearer ${localStorage.getItem("access")}`
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
             }
         }
 
-        await axios.delete(`${baseUrl}documents/api/documents/${id}/ocr`, config)
+        await axios.delete(`${baseUrl}/documents/api/documents/${id}/ocr`, config)
             .then((res) => {
                 dispatch({
                     type: DocumentActionTypes.DOCUMENT_OCR_SUCCESS,
