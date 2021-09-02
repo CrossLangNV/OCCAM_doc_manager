@@ -1,0 +1,11 @@
+POST {{django_scraper_url}}
+Content-Type: application/json
+
+{
+    "website": "CTR",
+    "company_number": "423841",
+    "user": "oan.stultjens"
+}
+
+###
+
