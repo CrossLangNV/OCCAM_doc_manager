@@ -1,6 +1,6 @@
 import React from 'react';
 import ProgressBar from "../ProgressBar";
-import {Col, Row} from "react-bootstrap";
+import {Col, Image, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {Button} from "primereact/button";
 import {baseUrl} from "../../constants/axiosConf";
@@ -8,6 +8,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {GetDocument} from "../../actions/documentActions";
 import {ModifySelectedPage} from "../../actions/uiActions";
 import _ from "lodash";
+import {GetPageList} from "../../actions/pageActions";
+import {ScrollPanel} from "primereact/scrollpanel";
+import {Card} from "primereact/card";
+import NotSelectedMessage from "../NotSelectedMessage";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
@@ -21,8 +25,9 @@ const DocumentPublish = (props) => {
     const documentState = useSelector(state => state.document);
 
     React.useEffect(() => {
-        dispatch(GetDocument(documentId))
-        dispatch(ModifySelectedPage(""))
+        dispatch(GetDocument(documentId));
+        dispatch(GetPageList(100, 0, documentId));
+        dispatch(ModifySelectedPage(""));
     }, [])
 
     // UI
@@ -47,17 +52,47 @@ const DocumentPublish = (props) => {
                         </Col>
                     </Row>
 
+                    <h5>Pages ({pageList.count})</h5>
+                    {!_.isEmpty(pageList.data) && (
+                        <ScrollPanel className="occ-ui-publish-pages-list-scroll">
+                            <Row className="flex-md-nowrap">
+                                {pageList.data.map(page => {
+                                    return <Col md={3}>
+                                        <Card key={page.id}>
+                                            <Image
+                                                className={uiStates.selectedPage.id === page.id ?
+                                                    'page-card-img selectedPage' : 'page-card-img'}
+                                                src={page.file}
+                                            />
+                                        </Card>
+                                    </Col>
+                                })}
+                            </Row>
+                        </ScrollPanel>
+                    )}
+
+                    <NotSelectedMessage context={pageList.data}
+                                        message={t("page-list.No pages are uploaded yet")}/>
+
                     <Row className="margin-top">
                         <Col>
                             <h3>{t("publish.Metadata")}</h3>
                         </Col>
                     </Row>
-
                     <Row>
                         <Col>
                             <Button>
                                 <a style={linkStyle}
                                    href={`${baseUrl}/documents/api/export/metadata?document=${documentId}`}>{t("publish.Download")}</a>
+                            </Button>
+                        </Col>
+                    </Row>
+                    <hr/>
+                    <Row className="margin-top">
+                        <Col>
+                            <Button className="p-button-success">
+                                <a style={linkStyle}
+                                   href={`${baseUrl}/documents/api/publish?document=${documentId}`}>{t("publish.Publish")}</a>
                             </Button>
                         </Col>
                     </Row>

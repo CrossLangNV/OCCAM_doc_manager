@@ -115,6 +115,10 @@ a {
   background-color: white;
 }
 
+.p-scrollpanel.occ-ui-publish-pages-list-scroll .p-scrollpanel-bar-x {
+  display: none;
+}
+
 .occ-ui-empty-leaflet-container {
   width: 100%;
   /*height: 695px;*/
