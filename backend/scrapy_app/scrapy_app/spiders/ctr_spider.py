@@ -28,6 +28,8 @@ LIEN = "Zástavní právo:"
 SHARE_CAPITAL = "Základní kapitál:"
 OTHER_FACTS = "Ostatní skutečnosti:"
 
+DIGITAL_FILE = "Digitální podoba:"
+
 LEGAL_DOCUMENTS_URL = 'https://or.justice.cz/ias/ui/vypis-sl-firma?subjektId='
 COMPANY_INFO_BASE_URL = 'https://or.justice.cz/ias/ui/rejstrik-firma.vysledky?subjektId='
 COMPANY_INFO_BASE_PARAMS = '&typ=UPLNY'
@@ -46,13 +48,13 @@ class CtrSpider(scrapy.Spider):
 
         print(f"Started '{self.name}' scraper for company number: {company_number}")
         print(f"URL: {url}")
-        yield scrapy.Request(url, self.parse_ctr_publications)
+        yield scrapy.Request(url, self.parse_ctr_company_information)
 
-    def parse_ctr_publications(self, response):
+    def parse_ctr_company_information(self, response):
         start = time.time()
 
         identification_number = str(self.company_number).strip()
-        print(f"Started scrapy 'parse_ctr_publications' request for company number: {identification_number}")
+        print(f"Started 'CTR Company Information Extraction' extraction for company number: {identification_number}")
 
         selector = Selector(text=response.text)
         # aunp-content
@@ -197,7 +199,71 @@ class CtrSpider(scrapy.Spider):
 
 
         exec_time = time.time() - start
-        print(f"Scraping completed in {exec_time} seconds")
+        print(f"Scraping company information completed in {exec_time} seconds")
+
+        company_number = getattr(self, 'company_number', None)
+        publications_url = LEGAL_DOCUMENTS_URL + company_number
+        yield scrapy.Request(publications_url, self.parse_ctr_publications)
+
+    def parse_ctr_publications(self, response):
+        start = time.time()
+
+        identification_number = str(self.company_number).strip()
+        print(f"Started 'CTR Company Publications' extraction for company number: {identification_number}")
+
+        selector = Selector(text=response.text)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        print("response.text: ", response.text)
+
+        rows = response.xpath('//table[@class="list"]/tbody/tr')
+
+        for row in rows:
+            document_number = row.xpath('td[1]//span/text()').extract_first()
+            document_url = "https://or.justice.cz/ias/ui/" + str(row.xpath('td[1]//a/@href').extract_first())[2:]
+            document_type = row.xpath('td[2]//span//span/text()').extract_first()
+            origin_of_the_document = row.xpath('td[3]/text()').extract_first()
+
+            digitized_status = row.xpath('td[7]//span/@title').extract()[0]
+
+            print("document_number: ", document_number)
+            print("document_url: ", document_url)
+            print("document_type: ", document_type)
+            print("origin_of_the_document: ", origin_of_the_document)
+            print("digitized_status: ", digitized_status)
+
+            # TODO: Create the document and all its information.
+
+            yield scrapy.Request(document_url, self.parse_download_file)
+
+
+        exec_time = time.time() - start
+        print(f"Scraping publications completed in {exec_time} seconds")
+
+    def parse_download_file(self, response):
+        start = time.time()
+        print("Downloading files")
+
+        selector = Selector(text=response.text)
+
+        rows = response.xpath('//table/tbody/tr')
+
+        print("rows: ", rows)
+
+        for row in rows:
+            table_item_type = row.xpath('th/text()').extract_first()
+            print("table_item_type: ", table_item_type)
+
+            if table_item_type == DIGITAL_FILE:
+                print("digital file: ", row)
+                file = "https://or.justice.cz" + row.xpath('td//a/@href').extract_first()
+                print("file: ", file)
+
+
+        exec_time = time.time() - start
+        print(f"Downloading files completed in {exec_time} seconds")
+
+
 
 
 def remove_html_and_tabs(text):

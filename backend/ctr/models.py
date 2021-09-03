@@ -34,3 +34,6 @@ class CtrCompany(models.Model):
 
     class Meta:
         verbose_name_plural = "CTR Companies"
+
+    def __str__(self):
+        return str(self.business_name)
