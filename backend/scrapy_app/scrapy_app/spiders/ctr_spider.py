@@ -1,10 +1,17 @@
+import io
 import time
+import uuid
 
+import requests
 import scrapy
 from bs4 import BeautifulSoup
+from pdf2image import convert_from_path
 from scrapy import Selector
 
 from ctr.models import CtrCompany
+from django.contrib.auth.models import User
+
+from documents.models import Website, LayoutAnalysisModel, Document, Page
 
 DATE_OF_CREATION_AND_ENTRY = "Datum vzniku a zápisu:"
 FILE_REFERENCE = "Spisová značka:"
@@ -29,6 +36,7 @@ SHARE_CAPITAL = "Základní kapitál:"
 OTHER_FACTS = "Ostatní skutečnosti:"
 
 DIGITAL_FILE = "Digitální podoba:"
+FINANCIAL_STATEMENT = "účetní závěrka"
 
 LEGAL_DOCUMENTS_URL = 'https://or.justice.cz/ias/ui/vypis-sl-firma?subjektId='
 COMPANY_INFO_BASE_URL = 'https://or.justice.cz/ias/ui/rejstrik-firma.vysledky?subjektId='
@@ -209,12 +217,10 @@ class CtrSpider(scrapy.Spider):
         start = time.time()
 
         identification_number = str(self.company_number).strip()
+        user = getattr(self, 'user', None)
+        website = getattr(self, 'website', None)
+
         print(f"Started 'CTR Company Publications' extraction for company number: {identification_number}")
-
-        selector = Selector(text=response.text)
-        soup = BeautifulSoup(response.text, "html.parser")
-
-        print("response.text: ", response.text)
 
         rows = response.xpath('//table[@class="list"]/tbody/tr')
 
@@ -232,9 +238,37 @@ class CtrSpider(scrapy.Spider):
             print("origin_of_the_document: ", origin_of_the_document)
             print("digitized_status: ", digitized_status)
 
+            document_name = document_number + " - " + document_type
+            print("document_name: ", document_name)
+
             # TODO: Create the document and all its information.
 
-            yield scrapy.Request(document_url, self.parse_download_file)
+            # Create Document object in Django
+            if user == "demo":
+                user_obj = None
+            else:
+                user_obj = User.objects.get(username=user)
+
+            website_obj = Website.objects.get(name=website)
+            description = "Scraped from Czech Business Register"
+
+            layout_model = LayoutAnalysisModel.objects.get(name="Czech old printed")
+            document = Document.objects.update_or_create(name=document_name,
+                                                         user=user_obj,
+                                                         website=website_obj,
+                                                         content=description,
+                                                         layout_analysis_model=layout_model)
+
+            doc = document[0]
+            print("Created/updated document: ", doc.name)
+            print("id: ", doc.id)
+
+
+
+            yield scrapy.Request(document_url, self.parse_download_file, meta={
+                "doc_id": doc.id,
+                "doc_url": document_url,
+            })
 
 
         exec_time = time.time() - start
@@ -242,22 +276,52 @@ class CtrSpider(scrapy.Spider):
 
     def parse_download_file(self, response):
         start = time.time()
-        print("Downloading files")
+        doc_id = response.meta.get("doc_id")
+        doc_url = response.meta.get("doc_url")
 
-        selector = Selector(text=response.text)
+        print("Downloading file for document id: ", doc_id)
+        print(doc_url)
 
+        doc = Document.objects.get(pk=doc_id)
+
+        # GET THE DOWNLOADABLE URL
         rows = response.xpath('//table/tbody/tr')
-
-        print("rows: ", rows)
 
         for row in rows:
             table_item_type = row.xpath('th/text()').extract_first()
-            print("table_item_type: ", table_item_type)
 
             if table_item_type == DIGITAL_FILE:
-                print("digital file: ", row)
                 file = "https://or.justice.cz" + row.xpath('td//a/@href').extract_first()
-                print("file: ", file)
+                print("file url: ", file)
+
+        res = requests.get(file)
+        filename = "scraped_file.pdf"
+
+        with open(filename, 'wb+') as f:
+            f.write(res.content)
+
+            images = convert_from_path(filename)
+            for i in range(len(images)):
+                # Save pages as images in the pdf
+                image_name = f'scraped_file_{i}.jpg'
+                output_io = io.BytesIO()
+                images[i].save(output_io, 'JPEG')
+                output_io.name = image_name
+                image_hash = uuid.uuid4()
+
+                # print("image_name: ", image_name)
+                # print("output_io: ", output_io)
+                # print("output_io.name: ", output_io.name)
+                # print("images: ", images)
+                # print("image_hash: ", image_hash)
+
+                page = Page.objects.update_or_create(image_hash=image_hash, defaults={'document': doc})
+                if page:
+                    page = page[0]
+                    print("Created page: ", page)
+                    page.update_image(output_io)
+                    print("Updated image: page looks like: ", page)
+
 
 
         exec_time = time.time() - start

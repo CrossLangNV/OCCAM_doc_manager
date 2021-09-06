@@ -23,6 +23,15 @@
     "fields": {
       "name": "KBO",
       "content": "Kruispuntbank van Ondernemingen",
+      "url": "https://or.justice.cz/ias/ui/vypis-sl-firma?subjektId="
+    }
+  },
+  {
+    "model": "documents.Website",
+    "pk": 4,
+    "fields": {
+      "name": "CTR",
+      "content": "Czech Trade Register",
       "url": "https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer="
     }
   }
