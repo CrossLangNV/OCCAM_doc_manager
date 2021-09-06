@@ -16,6 +16,7 @@ import {useTranslation} from "react-i18next";
 import {RadioButton} from "primereact/radiobutton";
 import {Message} from "primereact/message";
 import {load} from "cheerio";
+import {AddPage} from "../../actions/pageActions";
 
 
 const DocumentAdd = (props) => {
@@ -84,6 +85,7 @@ const DocumentAdd = (props) => {
                 if (documentType === "Europeana") {
                     await axios.post(`${baseUrl}/documents/api/documents`, data, config
                     ).then((res) => {
+                        addEuropeanaPage(res.data.id, europeanaData.imageUrl);
                         history.push(`/document-edit/${res.data.id}/layout_model`);
                     });
 
@@ -176,6 +178,15 @@ const DocumentAdd = (props) => {
                 setEuropeanaData({title: title, imageUrl: imageUrl, thumbUrl: thumbUrl});
                 setTitle(title);
             });
+        }
+
+        const addEuropeanaPage = async (documentId, imageUrl) => {
+            let files = []
+            await axios.get(imageUrl, {responseType: 'blob'}).then(response => {
+               files.push(new File([response.data], title + '.jpg'));
+            });
+
+            await dispatch(AddPage(documentId, files));
         }
 
         return (
