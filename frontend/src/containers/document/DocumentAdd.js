@@ -52,6 +52,7 @@ const DocumentAdd = (props) => {
                     setContent(res.data.content);
                     setDocumentType(res.data.type);
                     setEuropeanaItemId(res.data.europeana_item_id);
+                    fetchEuropeanaItem(res.data.europeana_item_id);
                 }).catch((err => {
                     history.push("/");
                     console.log(err);
