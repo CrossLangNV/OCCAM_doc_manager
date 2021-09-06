@@ -81,16 +81,16 @@ const DocumentAdd = (props) => {
             }
 
             if (title !== "") {
-                if (documentType === "europeana") {
+                if (documentType === "Europeana") {
                     await axios.post(`${baseUrl}/documents/api/documents`, data, config
                     ).then((res) => {
-                        //history.push('/document/' + res.data.id + "/add-pages")
+                        history.push(`/document-edit/${res.data.id}/layout_model`);
                     });
 
                 } else {
                     await axios.post(`${baseUrl}/documents/api/documents`, data, config
                     ).then((res) => {
-                        history.push('/document/' + res.data.id + "/add-pages")
+                        history.push(`/document/${res.data.id}/add-pages`);
                     });
                 }
             }
