@@ -78,6 +78,7 @@ class Document(models.Model):
         choices=DocumentType.choices,
         default=DocumentType.MANUAL,
     )
+    europeana_item_id = models.CharField(default="", max_length=1000)
 
     layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
     website = models.ForeignKey(Website, on_delete=models.CASCADE, blank=True, null=True)

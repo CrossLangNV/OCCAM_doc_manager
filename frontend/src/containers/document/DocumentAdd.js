@@ -50,6 +50,7 @@ const DocumentAdd = (props) => {
                     setTitle(res.data.name);
                     setContent(res.data.content);
                     setDocumentType(res.data.type);
+                    setEuropeanaItemId(res.data.europeana_item_id);
                 }).catch((err => {
                     history.push("/");
                     console.log(err);
@@ -75,7 +76,8 @@ const DocumentAdd = (props) => {
                 content: content,
                 state: 'New',
                 user: auth.user,
-                type: documentType
+                type: documentType,
+                europeana_item_id: europeanaItemId
             }
 
             if (title !== "") {
