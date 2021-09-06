@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'tutorial',
     'activitylogs',
     'kbo',
+    'ctr',
     'rest_framework',
     'corsheaders',
     'minio_storage',
