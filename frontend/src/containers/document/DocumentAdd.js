@@ -26,7 +26,7 @@ const DocumentAdd = (props) => {
         const auth = useSelector(state => state.auth);
         const {t} = useTranslation();
 
-        const [documentType, setDocumentType] = useState(null);
+        const [documentType, setDocumentType] = useState("");
         const [title, setTitle] = useState("");
         const [content, setContent] = useState("");
 
@@ -47,11 +47,12 @@ const DocumentAdd = (props) => {
 
             if (documentId !== undefined) {
                 axios.get(`${baseUrl}/documents/api/document/${documentId}`, config).then((res) => {
-                    setTitle(res.data.name)
-                    setContent(res.data.content)
+                    setTitle(res.data.name);
+                    setContent(res.data.content);
+                    setDocumentType(res.data.type);
                 }).catch((err => {
-                    history.push("/")
-                    console.log(err)
+                    history.push("/");
+                    console.log(err);
                 }))
             }
 
@@ -73,15 +74,25 @@ const DocumentAdd = (props) => {
                 name: title,
                 content: content,
                 state: 'New',
-                user: auth.user
+                user: auth.user,
+                type: documentType
             }
 
             if (title !== "") {
-                await axios.post(`${baseUrl}/documents/api/documents`, data, config
-                ).then((res) => {
-                    history.push('/document/' + res.data.id + "/add-pages")
-                });
+                if (documentType === "europeana") {
+                    await axios.post(`${baseUrl}/documents/api/documents`, data, config
+                    ).then((res) => {
+                        //history.push('/document/' + res.data.id + "/add-pages")
+                    });
+
+                } else {
+                    await axios.post(`${baseUrl}/documents/api/documents`, data, config
+                    ).then((res) => {
+                        history.push('/document/' + res.data.id + "/add-pages")
+                    });
+                }
             }
+
         }
 
         const editDocument = async () => {
@@ -161,6 +172,7 @@ const DocumentAdd = (props) => {
                 const imageUrl = $('div.item-hero a').attr('href');
                 const thumbUrl = $('div.item-hero img').attr('src');
                 setEuropeanaData({title: title, imageUrl: imageUrl, thumbUrl: thumbUrl});
+                setTitle(title);
             });
         }
 
@@ -184,44 +196,46 @@ const DocumentAdd = (props) => {
 
                 </Row>
 
-                <Row className="margin-top">
-                    <Col md={3}/>
-                    <Col md={6}>
-                        <Card>
-                            <div key="manual" className="p-field-radiobutton">
-                                <RadioButton inputId="manual" name="documentType" value="manual"
-                                             onChange={(e) => changeDocumentType(e.value)}
-                                             checked={documentType === "manual"}/>
-                                <Col md={4}>
-                                    <label htmlFor="manual">Manual</label>
-                                </Col>
-                                <Col md={8}>
-                                    {(documentType === "manual") && (
-                                        <Message className="margin-left" severity="info" text="Manual"/>
-                                    )}
-                                </Col>
-                            </div>
-                            <div key="europeana" className="p-field-radiobutton">
-                                <RadioButton inputId="europeana" name="documentType" value="europeana"
-                                             onChange={(e) => changeDocumentType(e.value)}
-                                             checked={documentType === "europeana"}/>
-                                <Col md={4}>
-                                    <label htmlFor="europeana">Europeana</label>
-                                </Col>
-                                <Col md={8}>
-                                    {(documentType === "europeana") && (
-                                        <Message className="margin-left" severity="info" text="Europeana"/>
-                                    )}
-                                </Col>
-                            </div>
-                        </Card>
-                    </Col>
-                </Row>
+                {(documentId === undefined) && (
+                    <Row className="margin-top">
+                        <Col md={3}/>
+                        <Col md={6}>
+                            <Card>
+                                <div key="manual" className="p-field-radiobutton">
+                                    <RadioButton inputId="manual" name="documentType" value="Manual"
+                                                 onChange={(e) => changeDocumentType(e.value)}
+                                                 checked={documentType === "Manual"}/>
+                                    <Col md={4}>
+                                        <label htmlFor="manual">Manual</label>
+                                    </Col>
+                                    <Col md={8}>
+                                        {(documentType === "Manual") && (
+                                            <Message className="margin-left" severity="info" text="Manual"/>
+                                        )}
+                                    </Col>
+                                </div>
+                                <div key="europeana" className="p-field-radiobutton">
+                                    <RadioButton inputId="europeana" name="documentType" value="Europeana"
+                                                 onChange={(e) => changeDocumentType(e.value)}
+                                                 checked={documentType === "Europeana"}/>
+                                    <Col md={4}>
+                                        <label htmlFor="europeana">Europeana</label>
+                                    </Col>
+                                    <Col md={8}>
+                                        {(documentType === "Europeana") && (
+                                            <Message className="margin-left" severity="info" text="Europeana"/>
+                                        )}
+                                    </Col>
+                                </div>
+                            </Card>
+                        </Col>
+                    </Row>
+                )}
 
                 <Row className="margin-top">
                     <Col md={3}/>
                     <Col md={6}>
-                        {(documentType === "manual") && (
+                        {(documentType === "Manual") && (
                             <Card footer={footer}>
                                 <h5>{t("document-add.Document information")}</h5>
                                 <br/>
@@ -252,7 +266,7 @@ const DocumentAdd = (props) => {
                             </span>
                             </Card>
                         )}
-                        {(documentType === "europeana") && (
+                        {(documentType === "Europeana") && (
                             <Card footer={footer}>
                                 <h5>{t("document-add.Document information")}</h5>
                                 <br/>
@@ -273,10 +287,12 @@ const DocumentAdd = (props) => {
                                 <div className="margin-top">
                                     <h6>Preview</h6>
                                     {(europeanaData.title) && (
-                                      <div>Title: {europeanaData.title}</div>
+                                        <div>{europeanaData.title}</div>
                                     )}
                                     {(europeanaData.thumbUrl) && (
-                                      <img src={europeanaData.thumbUrl}/>
+                                        <div className="margin-top-lesser">
+                                            <img src={europeanaData.thumbUrl}/>
+                                        </div>
                                     )}
                                 </div>
                                 </span>
