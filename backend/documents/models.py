@@ -69,6 +69,16 @@ class Document(models.Model):
         default=DocumentState.NEW,
     )
 
+    class DocumentType(models.TextChoices):
+        MANUAL = "Manual"
+        EUROPEANA = "Europeana"
+
+    type = models.CharField(
+        max_length=20,
+        choices=DocumentType.choices,
+        default=DocumentType.MANUAL,
+    )
+
     layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
     website = models.ForeignKey(Website, on_delete=models.CASCADE, blank=True, null=True)
 
