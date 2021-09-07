@@ -3,7 +3,7 @@ from rest_framework import serializers
 from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
 from documents.metadata_django import MetadataDjango
-from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel
+from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel, Website
 
 
 class GeojsonSerializer(serializers.ModelSerializer):
@@ -105,4 +105,10 @@ class LabelSerializer(serializers.ModelSerializer):
 class LayoutAnalysisModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = LayoutAnalysisModel
+        fields = "__all__"
+
+
+class WebsiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Website
         fields = "__all__"

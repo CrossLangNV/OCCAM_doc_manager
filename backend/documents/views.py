@@ -4,6 +4,7 @@ import os
 import zipfile
 from io import BytesIO
 
+from django.db.models import Count, Q
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -11,10 +12,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel
+from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website
 from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
-    LayoutAnalysisModelSerializer
+    LayoutAnalysisModelSerializer, WebsiteSerializer
 from documents.tm_connector import MouseTmConnector
 from scheduler.classification_tasks import classify_document_pipeline, classify_scanned
 from scheduler.ocr_tasks import ocr_page_pipeline, xml_lang_detect
@@ -52,13 +53,14 @@ class DocumentListAPIView(ListCreateAPIView):
         q = Document.objects.all()
         query = self.request.GET.get("query", "")
         show_demo_content = self.request.GET.get("showDemoContent", "")
+        website = self.request.GET.get("website", "")
+
 
         if query:
             q = q.filter(name__icontains=query)
 
-        if show_demo_content == "true":
-            print("show_demo_content = true")
-            q = q.filter(user=None)
+        if website:
+            q = q.filter(website__name__iexact=website, user=None)
         else:
             q = q.filter(user=self.request.user)
 
@@ -306,3 +308,8 @@ class ExportMetadataAPIView(APIView):
             return response
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class WebsiteListAPIView(ListCreateAPIView):
+    queryset = Website.objects.all()
+    serializer_class = WebsiteSerializer
