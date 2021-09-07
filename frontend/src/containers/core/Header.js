@@ -21,11 +21,6 @@ const Header = () => {
     const auth = useSelector(state => state.auth);
     const uiStates = useSelector(state => state.uiStates);
 
-    const searchDocuments = async (query) => {
-        dispatch(ModifyDocumentQuery(query))
-        dispatch(GetDocumentList(5, 1, query, uiStates.showDemoContent))
-    }
-
     const reduxIsLoading = () => {
         return pageList.loading || documentList.loading || activityList.loading
     }
@@ -60,26 +55,26 @@ const Header = () => {
             }
 
 
-            {location.pathname === "/" &&
-                <Form inline>
-                    <FormControl
-                        type="text"
-                        placeholder={t("nav.search-document")}
-                        className="mr-sm-2"
-                        value={uiStates.documentQuery}
-                        onChange={(e) => {
-                            searchDocuments(e.target.value)
-                        }}
-                        onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault()
-                                searchDocuments(e.target.value)
-                            }
-                        }}
-                    />
-                    <Button variant="outline-info">{t("nav.search")}</Button>
-                </Form>
-            }
+            {/*{location.pathname === "/" &&*/}
+            {/*    <Form inline>*/}
+            {/*        <FormControl*/}
+            {/*            type="text"*/}
+            {/*            placeholder={t("nav.search-document")}*/}
+            {/*            className="mr-sm-2"*/}
+            {/*            value={uiStates.documentQuery}*/}
+            {/*            onChange={(e) => {*/}
+            {/*                searchDocuments(e.target.value)*/}
+            {/*            }}*/}
+            {/*            onKeyPress={(e) => {*/}
+            {/*                if (e.key === "Enter") {*/}
+            {/*                    e.preventDefault()*/}
+            {/*                    searchDocuments(e.target.value)*/}
+            {/*                }*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*        <Button variant="outline-info">{t("nav.search")}</Button>*/}
+            {/*    </Form>*/}
+            {/*}*/}
 
             {location.pathname !== "/login" &&
             <Nav>

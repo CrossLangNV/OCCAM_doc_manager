@@ -8,6 +8,8 @@ const DefaultState = {
     selected_layout_engine: "",
     language: "en",
     showDemoContent: false,
+    selectedWebsite: "",
+    websites: [],
 };
 
 const UiReducer = (state = DefaultState, action) => {
@@ -44,6 +46,17 @@ const UiReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 showDemoContent: action.payload
+            }
+        case UiActionTypes.UI_WEBSITES_SELECTED_MODIFY:
+            return {
+                ...state,
+                selectedWebsite: action.payload
+            }
+
+        case UiActionTypes.UI_WEBSITES_LIST_SUCCESS:
+            return {
+                ...state,
+                websites: action.payload
             }
         default:
             return state

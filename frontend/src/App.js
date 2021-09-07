@@ -20,6 +20,7 @@ import PageAdd from "./containers/page/PageAdd";
 import DocumentLayoutAnalysis from "./containers/document/DocumentLayoutAnalysis";
 import HelpComponent from "./containers/HelpComponent";
 import DocumentPublish from "./containers/document/DocumentPublish";
+import {GetWebsites} from "./actions/uiActions";
 
 function App() {
     // Don't remove these unused location/history variables, otherwise react tour will only open after refreshing
@@ -29,6 +30,7 @@ function App() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(load_user())
+        dispatch(GetWebsites())
     })
 
     return (
