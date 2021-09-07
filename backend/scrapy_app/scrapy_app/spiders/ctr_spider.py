@@ -64,20 +64,10 @@ class CtrSpider(scrapy.Spider):
         identification_number = str(self.company_number).strip()
         print(f"Started 'CTR Company Information Extraction' extraction for company number: {identification_number}")
 
-        selector = Selector(text=response.text)
-        # aunp-content
-        items = selector.xpath('//div[@class="aunp-content"]')
-        # print("items: ", items)
-
         try:
             company = CtrCompany.objects.get(identification_number=identification_number)
         except CtrCompany.DoesNotExist:
             company = CtrCompany.objects.create(identification_number=identification_number)
-
-        # This works as well, but almost impossible to map this
-        # for item in items:
-        #     vr_child_type = item.xpath('div[@class="vr-child"]//div[@class="vr-hlavicka"]//span[@class="nounderline"]/text()').extract()
-        #     vr_child_value = item.xpath('div[@class="vr-child"]//div[@class="div-cell"]//span/text()').extract()
 
         soup = BeautifulSoup(response.text, "html.parser")
 
@@ -106,7 +96,6 @@ class CtrSpider(scrapy.Spider):
             for sib in tag.next_siblings:
                 if sib.name == "div":
                     col_type = sib.find("div", class_="vr-hlavicka").get_text()
-                    # print("col_type: ", col_type)
 
                     # Skip first here because the first one is the type
                     values = []
@@ -115,7 +104,6 @@ class CtrSpider(scrapy.Spider):
                             values.append(remove_html_and_tabs(value.get_text()))
 
                     values_str = "\n".join(values)
-                    # print("values_str: ", values_str)
 
                     if DATE_OF_CREATION_AND_ENTRY in col_type:
                         date_of_creation_and_registration = values_str
@@ -168,24 +156,6 @@ class CtrSpider(scrapy.Spider):
                     elif OTHER_FACTS in col_type:
                         other_facts = values_str
 
-        print("date_of_creation_and_registration: ", date_of_creation_and_registration)
-        print("file_reference: ", file_reference)
-        print("business_name: ", business_name)
-        print("location: ", location)
-        print("identification_number: ", identification_number)
-        print("legal_status: ", legal_status)
-        print("object_of_business: ", object_of_business)
-        print("statutory_body: ", statutory_body)
-        print("manager: ", manager)
-        print("number_of_members: ", number_of_members)
-        print("representation: ", representation)
-        print("shareholders: ", shareholders)
-        print("shareholder: ", shareholder)
-        print("share: ", share)
-        print("lien: ", lien)
-        print("share_capital: ", share_capital)
-        print("other_facts: ", other_facts)
-
         company.date_of_creation_and_registration = date_of_creation_and_registration
         company.file_reference = file_reference
         company.business_name = business_name
@@ -204,7 +174,6 @@ class CtrSpider(scrapy.Spider):
         company.other_facts = other_facts
 
         company.save()
-
 
         exec_time = time.time() - start
         print(f"Scraping company information completed in {exec_time} seconds")
@@ -320,8 +289,6 @@ class CtrSpider(scrapy.Spider):
 
         exec_time = time.time() - start
         print(f"Downloading files completed in {exec_time} seconds")
-
-
 
 
 def remove_html_and_tabs(text):
