@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
-import React, {useState} from "react";
+import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPaginate from "react-paginate"
@@ -13,8 +13,7 @@ import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import DocumentPreview from "./DocumentPreview";
 import {useTranslation} from "react-i18next";
 import LanguageSelector from "../core/LanguageSelector";
-import {InputSwitch} from "primereact/inputswitch";
-import {ModifyDocumentQuery, ModifySelectedWebsite, ModifyShowDemoContent} from "../../actions/uiActions";
+import {ModifyDocumentQuery, ModifySelectedWebsite} from "../../actions/uiActions";
 import {Dropdown} from "primereact/dropdown";
 import {InputText} from "primereact/inputtext";
 
@@ -28,8 +27,6 @@ const DocumentList = () => {
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
-    const [checkedDemoContent, setCheckedDemoContent] = useState(false);
-
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery, false);
@@ -141,7 +138,7 @@ const DocumentList = () => {
             <div>
                 <br/>
 
-                <Row>
+                <Row className="justify-content-between">
                     <Col md={"auto"}>
                         <Button onClick={() => history.push("/document-add")}
                                 label={t("document-list.New document")}
@@ -169,7 +166,7 @@ const DocumentList = () => {
                         </div>
                     </Col>
 
-                    <Col md={3}>
+                    <Col md={2}>
                         <Dropdown options={uiStates.websites}
                                   placeholder="Website..."
                                   value={uiStates.selectedWebsite}
@@ -185,7 +182,7 @@ const DocumentList = () => {
                         />
 
                     </Col>
-                    <Col md="mr-auto">
+                    <Col md="auto">
                         <p className="occ-table-result-count">{t("document-list.Document(s) found")} {documentList.count}</p>
                     </Col>
                 </Row>
