@@ -252,7 +252,7 @@ const DocumentAdd = (props) => {
                 <Row className="margin-top">
                     <Col md={3}/>
                     <Col md={6}>
-                        {(websiteId === 0) || (websiteId === null) && (
+                        {((websiteId === 0) || (websiteId === null && documentId !== undefined)) && (
                             <Card footer={footer}>
                                 <h5>{t("document-add.Document information")}</h5>
                                 <br/>
