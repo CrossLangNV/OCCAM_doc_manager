@@ -24,10 +24,13 @@ const DocumentAdd = (props) => {
 
         let history = useHistory();
         const dispatch = useDispatch();
-        const auth = useSelector(state => state.auth);
         const {t} = useTranslation();
 
-        const [documentType, setDocumentType] = useState("");
+        // Redux states
+        const uiStates = useSelector(state => state.uiStates);
+        const auth = useSelector(state => state.auth);
+
+        const [websiteId, setWebsiteId] = useState(null);
         const [title, setTitle] = useState("");
         const [content, setContent] = useState("");
 
@@ -50,7 +53,7 @@ const DocumentAdd = (props) => {
                 axios.get(`${baseUrl}/documents/api/document/${documentId}`, config).then((res) => {
                     setTitle(res.data.name);
                     setContent(res.data.content);
-                    setDocumentType(res.data.type);
+                    setWebsiteId(res.data.website);
                     setEuropeanaItemId(res.data.europeana_item_id);
                     fetchEuropeanaItem(res.data.europeana_item_id);
                 }).catch((err => {
@@ -78,12 +81,12 @@ const DocumentAdd = (props) => {
                 content: content,
                 state: 'New',
                 user: auth.user,
-                type: documentType,
+                website: websiteId === 0 ? null : websiteId,
                 europeana_item_id: europeanaItemId
             }
 
             if (title !== "") {
-                if (documentType === "Europeana") {
+                if (websiteId === 5) {
                     await axios.post(`${baseUrl}/documents/api/documents`, data, config
                     ).then((res) => {
                         addEuropeanaPage(res.data.id, europeanaData.imageUrl);
@@ -166,8 +169,8 @@ const DocumentAdd = (props) => {
             }
         ]
 
-        const changeDocumentType = (e) => {
-            setDocumentType(e);
+        const changeDocumentWebsite = (e) => {
+            setWebsiteId(e);
         }
 
         const fetchEuropeanaItem = async (itemId) => {
@@ -184,7 +187,7 @@ const DocumentAdd = (props) => {
         const addEuropeanaPage = async (documentId, imageUrl) => {
             let files = []
             await axios.get(imageUrl, {responseType: 'blob'}).then(response => {
-               files.push(new File([response.data], title + '.jpg'));
+                files.push(new File([response.data], title + '.jpg'));
             });
 
             await dispatch(AddPage(documentId, files));
@@ -216,27 +219,27 @@ const DocumentAdd = (props) => {
                         <Col md={6}>
                             <Card>
                                 <div key="manual" className="p-field-radiobutton">
-                                    <RadioButton inputId="manual" name="documentType" value="Manual"
-                                                 onChange={(e) => changeDocumentType(e.value)}
-                                                 checked={documentType === "Manual"}/>
+                                    <RadioButton inputId="manual" name="documentType" value="0"
+                                                 onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
+                                                 checked={websiteId === 0}/>
                                     <Col md={4}>
                                         <label htmlFor="manual">Manual</label>
                                     </Col>
                                     <Col md={8}>
-                                        {(documentType === "Manual") && (
+                                        {(websiteId === 0) && (
                                             <Message className="margin-left" severity="info" text="Manual"/>
                                         )}
                                     </Col>
                                 </div>
                                 <div key="europeana" className="p-field-radiobutton">
-                                    <RadioButton inputId="europeana" name="documentType" value="Europeana"
-                                                 onChange={(e) => changeDocumentType(e.value)}
-                                                 checked={documentType === "Europeana"}/>
+                                    <RadioButton inputId="europeana" name="documentType" value="5"
+                                                 onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
+                                                 checked={websiteId === 5}/>
                                     <Col md={4}>
                                         <label htmlFor="europeana">Europeana</label>
                                     </Col>
                                     <Col md={8}>
-                                        {(documentType === "Europeana") && (
+                                        {(websiteId === 5) && (
                                             <Message className="margin-left" severity="info" text="Europeana"/>
                                         )}
                                     </Col>
@@ -249,7 +252,7 @@ const DocumentAdd = (props) => {
                 <Row className="margin-top">
                     <Col md={3}/>
                     <Col md={6}>
-                        {(documentType === "Manual") && (
+                        {(websiteId === 0) || (websiteId === null) && (
                             <Card footer={footer}>
                                 <h5>{t("document-add.Document information")}</h5>
                                 <br/>
@@ -280,7 +283,7 @@ const DocumentAdd = (props) => {
                             </span>
                             </Card>
                         )}
-                        {(documentType === "Europeana") && (
+                        {(websiteId === 5) && (
                             <Card footer={footer}>
                                 <h5>{t("document-add.Document information")}</h5>
                                 <br/>
@@ -316,7 +319,7 @@ const DocumentAdd = (props) => {
                     </Col>
                 </Row>
 
-                {(documentType !== null) && (
+                {(websiteId !== null) && (
                     <Row>
                         <Col md={3}/>
                         <Col md={6}>

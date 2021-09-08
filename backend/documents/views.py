@@ -60,7 +60,7 @@ class DocumentListAPIView(ListCreateAPIView):
             q = q.filter(name__icontains=query)
 
         if website:
-            q = q.filter(website__name__iexact=website, user=None)
+            q = q.filter(website__name__iexact=website)
         else:
             q = q.filter(user=self.request.user)
 

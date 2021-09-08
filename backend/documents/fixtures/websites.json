@@ -34,5 +34,14 @@
       "content": "Czech Trade Register",
       "url": "https://kbopub.economie.fgov.be/kbopub/zoeknummerform.html?nummer="
     }
+  },
+  {
+    "model": "documents.Website",
+    "pk": 5,
+    "fields": {
+      "name": "Europeana",
+      "content": "Cultural heritage from thousands of European archives, libraries and museums",
+      "url": "https://www.europeana.eu/en/item/"
+    }
   }
 ]
