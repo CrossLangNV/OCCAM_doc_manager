@@ -43,7 +43,8 @@
     "last-updated": "Last updated",
     "choose": "Choose",
     "ocr": "OCR",
-    "save": "Save"
+    "save": "Save",
+    "saved-metadata": "Metadata has been saved successfully"
   },
 
   "document": {

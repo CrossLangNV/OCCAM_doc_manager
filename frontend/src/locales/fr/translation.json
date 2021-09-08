@@ -43,7 +43,8 @@
     "last-updated": "Dernière mise à jour",
     "choose": "Choisir",
     "ocr": "OCR",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "saved-metadata": "Les métadonnées ont été sauvegardées avec succès"
   },
 
   "document": {

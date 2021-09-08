@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Timeline} from "primereact/timeline";
 import _ from "lodash";
 import {useTranslation} from "react-i18next";
@@ -6,6 +6,8 @@ import {Button} from "primereact/button";
 import {Dialog} from "primereact/dialog";
 import {InputTextarea} from "primereact/inputtextarea";
 import {useDispatch} from "react-redux";
+import {ModifyMetadata} from "../../actions/uiActions";
+import {Toast} from "primereact/toast";
 
 const PageMetadata = (props) => {
     const page = props.page
@@ -16,6 +18,7 @@ const PageMetadata = (props) => {
     const [editMetadataDialog, setEditMetadataDialog] = useState(false);
     const [newMetadataValue, setNewMetadataValue] = useState("");
     const [newMetadataType, setNewMetadataType] = useState("");
+    const toast = useRef(null);
 
 
     React.useEffect(() => {
@@ -58,7 +61,9 @@ const PageMetadata = (props) => {
                 />
                 <Button label={t("ui.save")} onClick={() => {
                     console.log(newMetadataType)
-                    // dispatch(ChangeTutorialState(auth.user, true))
+                    dispatch(ModifyMetadata(newMetadataType, newMetadataValue))
+                    setEditMetadataDialog(false)
+                    toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("ui.saved-metadata")});
                 }}/>
             </Dialog>
 
@@ -80,6 +85,8 @@ const PageMetadata = (props) => {
                               }
                           </small>
                       }/>
+
+            <Toast ref={toast}/>
         </div>
     );
 };

@@ -137,11 +137,12 @@ export const ModifyMetadata = (type, value) => async dispatch => {
             }
         }
 
-        const res = await axios.get(`${baseUrl}/documents/api/websites`, config)
+        // TODO Need to be implemented
+        // const res = await axios.get(`${baseUrl}/pages/api/metadata`, config)
 
         dispatch({
             type: UiActionTypes.UI_METADATA_MODIFY_SUCCESS,
-            payload: res.data,
+            // payload: res.data,
         });
     } catch (e) {
         dispatch({

@@ -43,7 +43,8 @@
     "last-updated": "Laatst bijgewerkt",
     "choose": "Selecteer",
     "ocr": "OCR",
-    "save": "Opslaan"
+    "save": "Opslaan",
+    "saved-metadata": "Metadata is succesvol opgeslagen"
   },
 
   "document": {
