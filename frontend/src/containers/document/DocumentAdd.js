@@ -223,11 +223,11 @@ const DocumentAdd = (props) => {
                                                  onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
                                                  checked={websiteId === 0}/>
                                     <Col md={4}>
-                                        <label htmlFor="manual">Manual</label>
+                                        <label htmlFor="manual">{t("document-add.Manual")}</label>
                                     </Col>
                                     <Col md={8}>
                                         {(websiteId === 0) && (
-                                            <Message className="margin-left" severity="info" text="Manual"/>
+                                            <Message className="margin-left" severity="info" text={t("document-add.Manual")}/>
                                         )}
                                     </Col>
                                 </div>
@@ -236,11 +236,11 @@ const DocumentAdd = (props) => {
                                                  onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
                                                  checked={websiteId === 5}/>
                                     <Col md={4}>
-                                        <label htmlFor="europeana">Europeana</label>
+                                        <label htmlFor="europeana">{t("document-add.Europeana")}</label>
                                     </Col>
                                     <Col md={8}>
                                         {(websiteId === 5) && (
-                                            <Message className="margin-left" severity="info" text="Europeana"/>
+                                            <Message className="margin-left" severity="info" text={t("document-add.Europeana")}/>
                                         )}
                                     </Col>
                                 </div>
@@ -302,7 +302,7 @@ const DocumentAdd = (props) => {
                                     />
                                 </div>
                                 <div className="margin-top">
-                                    <h6>Preview</h6>
+                                    <h6>{t("ui.preview")}</h6>
                                     {(europeanaData.title) && (
                                         <div>{europeanaData.title}</div>
                                     )}

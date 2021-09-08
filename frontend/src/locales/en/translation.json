@@ -152,7 +152,9 @@
     "Optional": "Optional",
     "Document information saved.": "Document information saved.",
     "Add new document": "Add new document",
-    "Document information": "Document information"
+    "Document information": "Document information",
+    "Manual": "Manually",
+    "Europeana": "Europeana"
   },
 
   "layout": {

@@ -151,7 +151,9 @@
     "Optional": "Optioneel",
     "Document information saved.": "Document informatie opgeslagen.",
     "Add new document": "Nieuw document toevoegen",
-    "Document information": "Informatie over het document"
+    "Document information": "Informatie over het document",
+    "Manual": "Manueel",
+    "Europeana": "Europeana"
   },
 
   "layout": {
