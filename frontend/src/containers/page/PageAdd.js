@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
@@ -37,14 +37,14 @@ const PageAdd = (props) => {
 
         if (files) {
             await dispatch(AddPage(documentId, files))
-            toast.current.show({severity: 'info', summary: 'Success', detail: t("page-add.Page(s) have been uploaded")});
+            toast.current.show({
+                severity: 'info',
+                summary: 'Success',
+                detail: t("page-add.Page(s) have been uploaded")
+            });
             setTimeout(() => {
                 checkMachineReadablePages()
-            }, 2000);
-            // For bigger files
-            setTimeout(() => {
-                checkMachineReadablePages()
-            }, 5000);
+            }, 3000);
         }
     }
 
