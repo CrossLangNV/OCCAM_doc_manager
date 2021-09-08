@@ -69,7 +69,7 @@ class Document(models.Model):
         default=DocumentState.NEW,
     )
 
-    europeana_item_id = models.CharField(default="", max_length=1000)
+    europeana_item_id = models.CharField(max_length=1000, blank=True, null=True)
 
     layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
     website = models.ForeignKey(Website, on_delete=models.CASCADE, blank=True, null=True)
