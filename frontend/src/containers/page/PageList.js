@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, UpdatePageState, OcrPage, TranslatePage} from "../../actions/pageActions";
+import {DeletePage, GetPageList, OcrPage, TranslatePage, UpdatePageState} from "../../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -302,7 +302,8 @@ const PageList = (props) => {
                                         </Col>
 
                                         {/* Translation Overlay Panel */}
-                                        <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel" style={{width: '450px'}} className="overlaypanel-demo">
+                                        <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel"
+                                                      style={{width: '450px'}}>
                                             <h6>{t("page-list.Translate page")}</h6>
                                             <Row>
                                                 <Col md={2}>

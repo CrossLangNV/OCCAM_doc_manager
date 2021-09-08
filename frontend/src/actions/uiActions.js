@@ -122,3 +122,30 @@ export const GetWebsites = () => async dispatch => {
         });
     }
 }
+
+
+export const ModifyMetadata = (type, value) => async dispatch => {
+    try {
+
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_LOADING
+        })
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/websites`, config)
+
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_SUCCESS,
+            payload: res.data,
+        });
+    } catch (e) {
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_FAILED
+        });
+    }
+}

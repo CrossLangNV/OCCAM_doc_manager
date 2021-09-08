@@ -222,3 +222,13 @@ a {
 .occ-doc-list-td {
   vertical-align: middle !important;
 }
+
+.small-edit-button {
+  margin-left: 8px !important;
+  height: 28px !important;
+  width: 28px !important;
+}
+
+.space-between-title-and-button {
+  margin-top: 3px !important;
+}
