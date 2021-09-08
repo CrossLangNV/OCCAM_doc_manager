@@ -88,5 +88,37 @@ export const GetLayoutEngines = (documentId) => async dispatch => {
             type: UiActionTypes.UI_DOCUMENT_LAYOUT_ENGINES_FAILED,
         })
     }
+}
 
+export const ModifySelectedWebsite = (state) => async dispatch => {
+    dispatch({
+        type: UiActionTypes.UI_WEBSITES_SELECTED_MODIFY,
+        payload: state
+    })
+}
+
+export const GetWebsites = () => async dispatch => {
+    try {
+
+        dispatch({
+            type: UiActionTypes.UI_WEBSITES_LIST_LOADING
+        })
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        const res = await axios.get(`${baseUrl}/documents/api/websites`, config)
+
+        dispatch({
+            type: UiActionTypes.UI_WEBSITES_LIST_SUCCESS,
+            payload: res.data,
+        });
+    } catch (e) {
+        dispatch({
+            type: UiActionTypes.UI_WEBSITES_LIST_FAILED
+        });
+    }
 }

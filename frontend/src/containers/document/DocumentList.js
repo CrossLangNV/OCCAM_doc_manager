@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import _ from 'lodash';
 import {DeleteDocument, GetDocumentList} from "../../actions/documentActions";
-import React, {useState} from "react";
+import React from "react";
 import {Link, useHistory} from "react-router-dom";
 import {Col, Row, Table} from "react-bootstrap";
 import ReactPaginate from "react-paginate"
@@ -13,8 +13,9 @@ import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import DocumentPreview from "./DocumentPreview";
 import {useTranslation} from "react-i18next";
 import LanguageSelector from "../core/LanguageSelector";
-import {InputSwitch} from "primereact/inputswitch";
-import {ModifyShowDemoContent} from "../../actions/uiActions";
+import {ModifyDocumentQuery, ModifySelectedWebsite} from "../../actions/uiActions";
+import {Dropdown} from "primereact/dropdown";
+import {InputText} from "primereact/inputtext";
 
 
 const DocumentList = () => {
@@ -26,15 +27,13 @@ const DocumentList = () => {
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
-    const [checkedDemoContent, setCheckedDemoContent] = useState(false);
-
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery, false);
     }, []);
 
     const fetchDocuments = (rows, page, query, showDemoContent) => {
-        dispatch(GetDocumentList(rows, page, query, showDemoContent))
+        dispatch(GetDocumentList(rows, page, query, ""))
     }
 
     const confirmDeleteDoc = (event) => {
@@ -44,6 +43,11 @@ const DocumentList = () => {
             icon: 'pi pi-exclamation-triangle',
             accept: () => dispatch(DeleteDocument(event)),
         });
+    }
+
+    const searchDocuments = async (query) => {
+        dispatch(ModifyDocumentQuery(query))
+        dispatch(GetDocumentList(5, 1, query, uiStates.selectedWebsite))
     }
 
     const loadTableRows = () => {
@@ -132,31 +136,61 @@ const DocumentList = () => {
                 className={"occ-tour-lg"}
             />
 
+            <div>
+                <br/>
 
-            <Button onClick={() => history.push("/document-add")}
-                    label={t("document-list.New document")}
-                    icon="pi pi-plus"
-                    className="doc-list-step-three"
-            />
+                <Row className="justify-content-between">
+                    <Col md={"auto"}>
+                        <Button onClick={() => history.push("/document-add")}
+                                label={t("document-list.New document")}
+                                icon="pi pi-plus"
+                                className="doc-list-step-three"
+                        />
+                    </Col>
 
-            <InputSwitch
-                className="margin-left"
-                inputId="checkedDemoContent" checked={checkedDemoContent} onChange={e => {
-                setCheckedDemoContent(e.value)
-                dispatch(ModifyShowDemoContent(e.value))
-                fetchDocuments(documentList.rows, documentList.page, uiStates.documentQuery, e.value)
-            }}/>
-            <span className="margin-left">
-                Show scraped documents
-            </span>
+                    <Col md={7}>
+                        <div className="p-inputgroup">
+                            <Button label="Search"/>
+                            <InputText
+                                placeholder={t("nav.search-document")}
+                                value={uiStates.documentQuery}
+                                onChange={(e) => {
+                                    searchDocuments(e.target.value)
+                                }}
+                                onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault()
+                                        searchDocuments(e.target.value)
+                                    }
+                                }}
+                            />
+                        </div>
+                    </Col>
+
+                    <Col md={2}>
+                        <Dropdown options={uiStates.websites}
+                                  placeholder="Website..."
+                                  value={uiStates.selectedWebsite}
+                                  optionValue="name"
+                                  optionLabel="name"
+                                  onChange={(e => {
+                                      console.log(e)
+                                      dispatch(ModifySelectedWebsite(e.value))
+                                      dispatch(GetDocumentList(5, 1, uiStates.documentQuery, e.value))
+                                  })}
+                                  showClear={true}
+                                  className="w-100"
+                        />
+
+                    </Col>
+                    <Col md="auto">
+                        <p className="occ-table-result-count">{t("document-list.Document(s) found")} {documentList.count}</p>
+                    </Col>
+                </Row>
+            </div>
 
             <br/>
-            <Row className="justify-content-between">
-                <Col/>
-                <Col md="mr-auto">
-                    <p className="occ-table-result-count">{t("document-list.Document(s) found")} {documentList.count}</p>
-                </Col>
-            </Row>
+
             <Table striped borderless hover>
                 <thead>
                 <tr>

@@ -3,7 +3,8 @@
 function manage_app () {
     python manage.py makemigrations --merge --noinput &
     python manage.py migrate --noinput &
-    python manage.py collectstatic --no-input --clear
+    python manage.py collectstatic --no-input --clear &
+    python manage.py loaddata websites
 }
 
 function start_development() {

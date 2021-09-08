@@ -111,12 +111,6 @@ class StaatsbladSpider(scrapy.Spider):
                                 output_io.name = image_name
                                 image_hash = uuid.uuid4()
 
-                                # print("image_name: ", image_name)
-                                # print("output_io: ", output_io)
-                                # print("output_io.name: ", output_io.name)
-                                # print("images: ", images)
-                                # print("image_hash: ", image_hash)
-
                                 page = Page.objects.update_or_create(image_hash=image_hash, defaults={'document': doc})
                                 if page:
                                     page = page[0]
