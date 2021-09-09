@@ -29,11 +29,11 @@ const DocumentList = () => {
     const auth = useSelector(state => state.auth)
 
     React.useEffect(() => {
-        fetchDocuments(5, 1, uiStates.documentQuery, false);
+        fetchDocuments(5, 1, uiStates.documentQuery);
     }, []);
 
-    const fetchDocuments = (rows, page, query, showDemoContent) => {
-        dispatch(GetDocumentList(rows, page, query, ""))
+    const fetchDocuments = (rows, page, query) => {
+        dispatch(GetDocumentList(rows, page, query, uiStates.selectedWebsite))
     }
 
     const confirmDeleteDoc = (event) => {
@@ -211,7 +211,7 @@ const DocumentList = () => {
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}
-                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery, uiStates.showDemoContent)}
+                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery, uiStates.selectedWebsite)}
                     containerClassName={"pagination"}
                     activeClassName={'active'}
                     breakClassName={'page-item'}
