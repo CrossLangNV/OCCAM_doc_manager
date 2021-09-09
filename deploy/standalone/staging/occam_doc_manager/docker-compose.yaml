@@ -24,16 +24,16 @@ services:
     networks:
       - default
     labels:
-      - traefik.http.routers.angular.rule=Host(`react.staging.occam.crosslang.com`)
-      - traefik.http.routers.angular.tls=true
-      - traefik.http.routers.angular.tls.certresolver=le
-      - traefik.http.routers.angular.entrypoints=websecure
+      - traefik.http.routers.react.rule=Host(`react.staging.occam.crosslang.com`)
+      - traefik.http.routers.react.tls=true
+      - traefik.http.routers.react.tls.certresolver=le
+      - traefik.http.routers.react.entrypoints=websecure
     volumes:
       - ./secrets/react.env:/usr/share/nginx/html/.env
 
   django_nginx:
     image: docker.crosslang.com/occam_doc_manager/django_nginx:develop-latest
-    expose: [ 8000 ]
+    expose: [8000]
     restart: always
     depends_on:
       - django
@@ -81,20 +81,32 @@ services:
       - default
 
   occ_minio:
-    image: minio/minio
+    image: minio/minio:RELEASE.2021-08-31T05-46-54Z
     restart: always
-    command: server /data
+    command: server /data --console-address ":9001"
     env_file:
       - ./secrets/django-docker.env
     volumes:
       - /mnt/HC_Volume_123777/occam_doc_manager/minio:/data
     networks:
       - default
+    ports:
+      - 9000:9000
+      - 9001:9001
     labels:
+      - traefik.http.routers.minioConsole.rule=Host(`console.minio.staging.occam.crosslang.com`)
+      - traefik.http.routers.minioConsole.tls=true
+      - traefik.http.routers.minioConsole.tls.certresolver=le
+      - traefik.http.routers.minioConsole.entrypoints=websecure
+      - traefik.http.routers.minioConsole.service=minioConsoleService
+      - traefik.http.services.minioConsoleService.loadbalancer.server.port=9001
       - traefik.http.routers.minio.rule=Host(`minio.staging.occam.crosslang.com`)
       - traefik.http.routers.minio.tls=true
       - traefik.http.routers.minio.tls.certresolver=le
       - traefik.http.routers.minio.entrypoints=websecure
+      - traefik.http.routers.minio.service=minioService
+      - traefik.http.services.minioService.loadbalancer.server.port=9000
+
 
   scrapyd:
     image: docker.crosslang.com/occam_doc_manager/django:develop-latest
@@ -102,11 +114,13 @@ services:
       - "6800:6800"
     env_file:
       - ./secrets/django-docker.env
-    volumes:
-      - /mnt/HC_Volume_123777/occam_doc_manager/scrapy_app:/backend
     working_dir: /backend/scrapy_app
     command: scrapyd
-
+    labels:
+      - traefik.http.routers.scrapy.rule=Host(`scrapy.staging.occam.crosslang.com`)
+      - traefik.http.routers.scrapy.tls=true
+      - traefik.http.routers.scrapy.tls.certresolver=le
+      - traefik.http.routers.scrapy.entrypoints=websecure
 
 networks:
   default:
