@@ -116,11 +116,11 @@ services:
       - ./secrets/django-docker.env
     working_dir: /backend/scrapy_app
     command: scrapyd
-    labels:
-      - traefik.http.routers.scrapy.rule=Host(`scrapy.staging.occam.crosslang.com`)
-      - traefik.http.routers.scrapy.tls=true
-      - traefik.http.routers.scrapy.tls.certresolver=le
-      - traefik.http.routers.scrapy.entrypoints=websecure
+#    labels:
+#      - traefik.http.routers.scrapy.rule=Host(`scrapy.staging.occam.crosslang.com`)
+#      - traefik.http.routers.scrapy.tls=true
+#      - traefik.http.routers.scrapy.tls.certresolver=le
+#      - traefik.http.routers.scrapy.entrypoints=websecure
 
 networks:
   default:
