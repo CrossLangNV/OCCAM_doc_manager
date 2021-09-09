@@ -16,6 +16,7 @@ import LanguageSelector from "../core/LanguageSelector";
 import {ModifyDocumentQuery, ModifySelectedWebsite} from "../../actions/uiActions";
 import {Dropdown} from "primereact/dropdown";
 import {InputText} from "primereact/inputtext";
+import SkeletonLoadingRow from "./SkeletonLoadingRow";
 
 
 const DocumentList = () => {
@@ -90,7 +91,7 @@ const DocumentList = () => {
             </tr>
         }
 
-        if (documentList.data.length === 0) {
+        if (documentList.data.length === 0 && documentList.loading === false) {
             return <tr>
                 <td/>
                 <td>{t("ui.no-results")}</td>
@@ -98,6 +99,18 @@ const DocumentList = () => {
                 <td/>
                 <td/>
             </tr>
+        }
+
+        if (documentList.data.length === 0 && documentList.loading === true) {
+            return (
+                <>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                </>
+            )
         }
     }
 
