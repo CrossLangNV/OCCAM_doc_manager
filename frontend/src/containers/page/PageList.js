@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Card} from "primereact/card";
 import {Col, Image, Row} from "react-bootstrap";
 import {useDispatch, useSelector} from "react-redux";
-import {DeletePage, GetPageList, UpdatePageState, OcrPage, TranslatePage} from "../../actions/pageActions";
+import {DeletePage, GetPageList, OcrPage, TranslatePage, UpdatePageState} from "../../actions/pageActions";
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
 import {Toast} from "primereact/toast";
@@ -24,6 +24,7 @@ import Tour from "reactour";
 import {Message} from "primereact/message";
 import {CloseTutorial} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
+import {Sidebar} from "primereact/sidebar";
 
 
 const PageList = (props) => {
@@ -46,10 +47,10 @@ const PageList = (props) => {
     const [contextMenuPage, setContextMenuPage] = useState("");
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
     const [checkedTM, setCheckedTM] = useState(false);
-
     const [tourOpened, setTourOpened] = useState(false);
-
     const cm = useRef(null);
+    const [pageListSidebar, setPageListSidebar] = useState(true);
+
 
     const languageSelectItems = [
         {label: t("translated-languages.original"), value: 'ORIGINAL'},
@@ -231,17 +232,22 @@ const PageList = (props) => {
             <h5>Pages ({pageList.count})</h5>
             <br/>
             <Row>
-                <Col md={3}>
-                    {!_.isEmpty(pageList.data) && (
-                        <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
-                            {pageList.data.map(page => {
-                                return <Card key={page.id} className='page-card'>
-                                    <Row>
-                                        <Col>
-                                            <Image
-                                                onClick={() => selectPage(page)}
-                                                className={uiStates.selectedPage.id === page.id ?
-                                                    'page-card-img selectedPage' : 'page-card-img'}
+                <Button icon="pi pi-arrow-right" onClick={() => setPageListSidebar(true)}
+                        className="p-mr-2 page-list-sidebar-button"/>
+
+                <Sidebar visible={pageListSidebar} position="left" style={{width: '30em'}}
+                         onHide={() => setPageListSidebar(false)}>
+                    <Col md={3}>
+                        {!_.isEmpty(pageList.data) && (
+                            <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
+                                {pageList.data.map(page => {
+                                    return <Card key={page.id} className='page-card'>
+                                        <Row>
+                                            <Col>
+                                                <Image
+                                                    onClick={() => selectPage(page)}
+                                                    className={uiStates.selectedPage.id === page.id ?
+                                                        'page-card-img selectedPage' : 'page-card-img'}
                                                 src={page.file}
                                             />
                                             <Button
@@ -345,16 +351,18 @@ const PageList = (props) => {
                                             </Row>
                                         </OverlayPanel>
                                     </Row>
-                                </Card>
-                            })}
+                                    </Card>
+                                })}
 
 
-                        </ScrollPanel>
-                    )}
+                            </ScrollPanel>
+                        )}
 
-                    <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")} />
+                        <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")}/>
 
-                </Col>
+                    </Col>
+                </Sidebar>
+
 
                 {!_.isEmpty(pageList.data) && (
                     <Col>

@@ -25,6 +25,7 @@ const PageLeaflet = (props) => {
     const [selectableLanguages, setSelectableLanguages] = useState([]);
     const [leafletMarkers, setLeafletMarkers] = useState([])
     const [activeView, setActiveView] = useState(0);
+    const [textViewSidebar, setTextViewSidebar] = useState(false);
     const [activeLanguageIndex, setActiveLanguageIndex] = useState(0);
     const [plainText, setPlainText] = useState("");
     const {t} = useTranslation();
@@ -268,30 +269,71 @@ const PageLeaflet = (props) => {
                 </Col>
             </Row>
 
+            <Row className="justify-content-between">
+                <Col md={11}/>
+                <Col md={"auto"}>
+                    <Button icon={textViewSidebar ? "pi pi-arrow-right" : "pi pi-arrow-left"}
+                            onClick={() => setTextViewSidebar(!textViewSidebar)} className="p-mr-2"/>
+                </Col>
+            </Row>
+
+
             {/* Leaflet Page View */}
-            {(activeView === 0 &&
+            {((activeView === 0 && textViewSidebar === false) &&
+                <>
+                    <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
 
-                <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
+                        <ImageOverlay
+                            ref={mapRef}
+                            url={file}
+                            bounds={imageBounds}
+                            opacity={1}
+                            zIndex={10}
+                        />
 
-                    <ImageOverlay
-                        ref={mapRef}
-                        url={file}
-                        bounds={imageBounds}
-                        opacity={1}
-                        zIndex={10}
-                    />
+                        <ResizeComponent/>
 
-                    <ResizeComponent/>
+                        <LeafletMarkers leafletMarkers={leafletMarkers}/>
+                    </MapContainer>
+                </>
+            )}
 
-                    <LeafletMarkers leafletMarkers={leafletMarkers} />
+            {/* Leaflet Page View SPLIT VIEW */}
+            {((activeView === 0 && textViewSidebar === true) &&
+                <Row>
+                    <Col md={8}>
+                        <MapContainer center={[0, 0]} scrollWheelZoom={true} crs={CRS.Simple}>
 
-                </MapContainer>
+                            <ImageOverlay
+                                ref={mapRef}
+                                url={file}
+                                bounds={imageBounds}
+                                opacity={1}
+                                zIndex={10}
+                            />
+
+                            <ResizeComponent/>
+
+                            <LeafletMarkers leafletMarkers={leafletMarkers}/>
+                        </MapContainer>
+                    </Col>
+
+                    <Col md={4}>
+                        {/* Plain Text View */}
+                        {(textViewSidebar &&
+                            <div className="occ-plaintext white-space margin-top">
+                                <PagePlainText content={plainText}/>
+                            </div>
+                        )}
+                    </Col>
+
+                </Row>
             )}
 
             {/* Plain Text View */}
             {(activeView === 1 &&
                 <div className="occ-plaintext white-space margin-top">
-                    <PagePlainText content={plainText} />
+                    <PagePlainText content={plainText}/>
                 </div>
             )}
 
