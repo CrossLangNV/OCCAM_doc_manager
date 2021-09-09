@@ -42,7 +42,8 @@
     "Overlay": "Superposition",
     "last-updated": "Dernière mise à jour",
     "choose": "Choisir",
-    "ocr": "OCR"
+    "ocr": "OCR",
+    "no-results": "Désolé, nous n'avons pas pu trouver de résultats."
   },
 
   "document": {

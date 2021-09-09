@@ -42,7 +42,8 @@
     "Overlay": "Overlay",
     "last-updated": "Laatst bijgewerkt",
     "choose": "Selecteer",
-    "ocr": "OCR"
+    "ocr": "OCR",
+    "no-results": "Sorry, we konden geen resultaten vinden."
   },
 
   "document": {

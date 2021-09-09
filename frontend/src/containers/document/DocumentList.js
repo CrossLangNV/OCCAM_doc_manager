@@ -82,7 +82,21 @@ const DocumentList = () => {
 
         if (documentList.errorMsg !== "") {
             return <tr>
+                <td/>
                 <td>{documentList.errorMsg}</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+        }
+
+        if (documentList.data.length === 0) {
+            return <tr>
+                <td/>
+                <td>{t("ui.no-results")}</td>
+                <td/>
+                <td/>
+                <td/>
             </tr>
         }
     }
