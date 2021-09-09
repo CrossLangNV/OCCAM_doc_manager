@@ -24,7 +24,6 @@ import Tour from "reactour";
 import {Message} from "primereact/message";
 import {CloseTutorial} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
-import {Sidebar} from "primereact/sidebar";
 
 
 const PageList = (props) => {
@@ -231,13 +230,14 @@ const PageList = (props) => {
 
             <br/>
             <Row>
-                <Button icon="pi pi-arrow-right" onClick={() => setPageListSidebar(true)}
+                <Button icon={pageListSidebar ? "pi pi-arrow-left" : "pi pi-arrow-right"}
+                        onClick={() => setPageListSidebar(!pageListSidebar)}
                         className="p-mr-2 page-list-sidebar-button"/>
 
-                <Sidebar visible={pageListSidebar} position="left" style={{width: '30em'}}
-                         onHide={() => setPageListSidebar(false)}>
-                    <Col md={12}>
-                        <h5>Pages ({pageList.count})</h5>
+                {((pageListSidebar === true) &&
+
+                    <div>
+                        {/*<h5>Pages ({pageList.count})</h5>*/}
                         {!_.isEmpty(pageList.data) && (
                             <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
                                 {pageList.data.map(page => {
@@ -276,7 +276,7 @@ const PageList = (props) => {
                                                         </Col>
 
                                                         <Col md="auto">
-                                                            <DocumentState state={(!_.isEmpty(page.latest_ocr_state) && 
+                                                            <DocumentState state={(!_.isEmpty(page.latest_ocr_state) &&
                                                                 page.latest_ocr_state.state)}/>
 
                                                             {(!_.isEmpty(page.latest_ocr_state && page.latest_ocr_state.state === "Processing") &&
@@ -357,11 +357,9 @@ const PageList = (props) => {
 
                             </ScrollPanel>
                         )}
-
                         <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")}/>
-
-                    </Col>
-                </Sidebar>
+                    </div>
+                )}
 
 
                 {!_.isEmpty(pageList.data) && (
