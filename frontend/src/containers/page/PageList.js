@@ -229,7 +229,6 @@ const PageList = (props) => {
                 }}
             />
 
-            <h5>Pages ({pageList.count})</h5>
             <br/>
             <Row>
                 <Button icon="pi pi-arrow-right" onClick={() => setPageListSidebar(true)}
@@ -237,7 +236,8 @@ const PageList = (props) => {
 
                 <Sidebar visible={pageListSidebar} position="left" style={{width: '30em'}}
                          onHide={() => setPageListSidebar(false)}>
-                    <Col md={3}>
+                    <Col md={12}>
+                        <h5>Pages ({pageList.count})</h5>
                         {!_.isEmpty(pageList.data) && (
                             <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
                                 {pageList.data.map(page => {
