@@ -4,7 +4,9 @@ import requests
 
 from activitylogs.models import ActivityLog, ActivityLogState
 from celery import shared_task
-from documents.models import Page, Label
+
+from documents.metadata_django import MetadataDjango
+from documents.models import Page, Label, Metadata
 from scheduler.tasks import logger, get_activity_log
 
 DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
@@ -13,10 +15,7 @@ DOCUMENT_SCANNED_URL = os.environ["DOCUMENT_SCANNED_URL"]
 
 
 @shared_task
-def classify_document_pipeline(page_pk,
-                               user_pk=None,
-                               activity_log: ActivityLog = None,
-                               verbose: int = 1):
+def classify_document_pipeline(page_pk, user_pk=None, activity_log: ActivityLog = None, verbose: int = 1):
     """
 
     Args:
@@ -36,8 +35,7 @@ def classify_document_pipeline(page_pk,
         logger.info("Started upload for page: %s", page)
 
     if activity_log is None:
-        activity_log = get_activity_log(page,
-                                        user_pk=user_pk)
+        activity_log = get_activity_log(page, user_pk=user_pk)
 
     classify_document(page)
     activity_log.state = ActivityLogState.CLASSIFIED
@@ -48,10 +46,9 @@ def classify_document_pipeline(page_pk,
 
 
 def classify_scanned(file, verbose=1) -> bool:
-    files = {'file': file}
+    files = {"file": file}
 
-    r = requests.post(DOCUMENT_SCANNED_URL,
-                      files=files)
+    r = requests.post(DOCUMENT_SCANNED_URL, files=files)
 
     res = r.json()
 
@@ -69,7 +66,7 @@ def get_document_classification(page):
     }
 
     f = page.file  # image
-    files = {'file': f}
+    files = {"file": f}
 
     r = requests.post(DOCUMENT_CLASSIFIER_URL, headers=headers, files=files)
 
@@ -85,6 +82,39 @@ def classify_document(page):
     classification_results = get_document_classification(page)
 
     if classification_results:
+        # Create Metadata object
+        generated_metadata = MetadataDjango.from_page(page)
+        data = generated_metadata.get_dict()
+        print("data: ", data)
+
+        title = ", ".join(data["titles"])
+        creators = ", ".join(data["creators"])
+        subjects = ", ".join(data["subjects"])
+        descriptions = ", ".join(data["descriptions"])
+        publishers = ", ".join(data["publishers"])
+        contributors = ", ".join(data["contributors"])
+        dates = ", ".join(data["dates"])
+        types = ", ".join(data["types"])
+        formats = ", ".join(data["formats"])
+        sources = ", ".join(data["sources"])
+
+        metadata = Metadata.objects.update_or_create(
+            page=page,
+            title=title,
+            creator=creators,
+            subject=subjects,
+            description=descriptions,
+            publisher=publishers,
+            contributor=contributors,
+            date=dates,
+            type=types,
+            format=formats,
+            source=sources
+        )
+
+        print("Metadata has been saved in Django: ", metadata)
+
+        # Create labels from classifier
         for label, value in classification_results.items():
-            Label.objects.update_or_create(page=page, name=label, defaults={'name': label, 'value': value})
+            Label.objects.update_or_create(page=page, name=label, defaults={"name": label, "value": value})
             print("Created label: ", label)

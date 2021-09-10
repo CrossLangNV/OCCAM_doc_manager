@@ -13,7 +13,7 @@ const PageMetadata = (props) => {
     const page = props.page
     const [metadata, setMetadata] = useState([]);
     const {t} = useTranslation();
-    const editable = ["titles", "descriptions", "description"]
+    const editable = ["title", "description"]
     const dispatch = useDispatch();
     const [editMetadataDialog, setEditMetadataDialog] = useState(false);
     const [newMetadataValue, setNewMetadataValue] = useState("");
@@ -26,7 +26,11 @@ const PageMetadata = (props) => {
 
         const metadata = Object.entries(page.metadata)
         metadata.forEach(label => {
-            labels.push({status: `${label[0]}`, date: label[1].join(", ")})
+            if (label[1].length > 0) {
+                // labels.push({status: `${label[0]}`, date: label[1].join(", ")})
+                labels.push({status: `${label[0]}`, date: label[1]})
+            }
+
         })
 
         setMetadata(labels)
@@ -47,6 +51,18 @@ const PageMetadata = (props) => {
         }
     };
 
+    const submitMetadataItem = () => {
+        console.log(newMetadataType)
+        dispatch(ModifyMetadata(page.id, newMetadataType, newMetadataValue))
+        setEditMetadataDialog(false)
+        toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("ui.saved-metadata")});
+        metadata.forEach(m => {
+            if (m.status === newMetadataType) {
+                m.date = newMetadataValue
+            }
+        })
+    }
+
     return (
         <div>
             <Dialog header="Edit value" visible={editMetadataDialog} style={{width: '40vw'}}
@@ -60,10 +76,7 @@ const PageMetadata = (props) => {
                                autoFocus={true}
                 />
                 <Button label={t("ui.save")} onClick={() => {
-                    console.log(newMetadataType)
-                    dispatch(ModifyMetadata(newMetadataType, newMetadataValue))
-                    setEditMetadataDialog(false)
-                    toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("ui.saved-metadata")});
+                    submitMetadataItem()
                 }}/>
             </Dialog>
 

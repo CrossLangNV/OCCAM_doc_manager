@@ -326,4 +326,4 @@ class Metadata(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return str(self.title)
+        return f"Metadata of {str(self.title)}"

@@ -1,9 +1,10 @@
+from django.forms import model_to_dict
 from rest_framework import serializers
 
 from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
 from documents.metadata_django import MetadataDjango
-from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel, Website
+from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel, Website, Metadata
 
 
 class GeojsonSerializer(serializers.ModelSerializer):
@@ -46,7 +47,7 @@ class PageSerializer(serializers.ModelSerializer):
     def get_latest_ocr_state(self, page):
         latest_activity_for_page = ActivityLog.objects.filter(page=page, type=ActivityLogType.OCR)
         if latest_activity_for_page:
-            latest_activity_for_page = latest_activity_for_page.latest('created_at')
+            latest_activity_for_page = latest_activity_for_page.latest("created_at")
             serializer = ActivityLogSerializer(instance=latest_activity_for_page, many=False, read_only=True)
             return serializer.data
         else:
@@ -55,7 +56,7 @@ class PageSerializer(serializers.ModelSerializer):
     def get_latest_translation_state(self, page):
         latest_overlay = Overlay.objects.filter(page=page)
         if latest_overlay:
-            latest_overlay = latest_overlay.latest('created_at')
+            latest_overlay = latest_overlay.latest("created_at")
 
             q = ActivityLog.objects.filter(overlay=latest_overlay, type=ActivityLogType.TRANSLATION)
             serializer = ActivityLogSerializer(instance=q, many=True, read_only=True)
@@ -68,15 +69,48 @@ class PageSerializer(serializers.ModelSerializer):
         return page.file.width
 
     def get_metadata(self, page):
-        metadata = MetadataDjango.from_page(page)
+        # metadata = MetadataDjango.from_page(page)
+        #
+        # data = metadata.get_dict()
+        # print("DATA old: ", data)
 
-        data = metadata.get_dict()
+        metadata = Metadata.objects.filter(page=page)
 
-        page_labels = page.page_labels.all()
-        for page_label in page_labels:
-            data.setdefault(page_label.name, []).append(page_label.value)
+        if metadata:
+            metadata = metadata[0]
+            data = model_to_dict(
+                metadata,
+                fields=[
+                    "title",
+                    "creator",
+                    "subject",
+                    "description",
+                    "publisher",
+                    "contributor",
+                    "date",
+                    "type",
+                    "format",
+                    "identifier",
+                    "source",
+                    "language",
+                    "relation",
+                    "coverage",
+                    "right",
+                ],
+            )
+            print("DATA new: ", data)
 
-        return data
+            page_labels = page.page_labels.all()
+            for page_label in page_labels:
+                data.setdefault(page_label.name, page_label.value)
+
+            return data
+        else:
+            return ""
+
+
+
+
 
     def get_metadata_xml(self, page):
         metadata = MetadataDjango.from_page(page)

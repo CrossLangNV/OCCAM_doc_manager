@@ -124,7 +124,7 @@ export const GetWebsites = () => async dispatch => {
 }
 
 
-export const ModifyMetadata = (type, value) => async dispatch => {
+export const ModifyMetadata = (page, type, value) => async dispatch => {
     try {
 
         dispatch({
@@ -138,7 +138,15 @@ export const ModifyMetadata = (type, value) => async dispatch => {
         }
 
         // TODO Need to be implemented
-        // const res = await axios.get(`${baseUrl}/pages/api/metadata`, config)
+
+        await axios.post(`${baseUrl}/documents/api/pages/update_metadata`,
+            {
+                "page_id": page,
+                "metadata_key": type,
+                "metadata_value": value
+            },
+            config)
+
 
         dispatch({
             type: UiActionTypes.UI_METADATA_MODIFY_SUCCESS,
