@@ -18,6 +18,7 @@ const PageMetadata = (props) => {
     const [editMetadataDialog, setEditMetadataDialog] = useState(false);
     const [newMetadataValue, setNewMetadataValue] = useState("");
     const [newMetadataType, setNewMetadataType] = useState("");
+    const [metadataOldValue, setMetadataOldValue] = useState("");
     const toast = useRef(null);
 
 
@@ -43,10 +44,11 @@ const PageMetadata = (props) => {
         return true
     }
 
-    const changeMetadataItem = (item) => {
+    const changeMetadataItem = (item, oldValue) => {
         if (editable.includes(item)) {
             console.log(`Changing metadata: ${item}`)
             setNewMetadataType(item)
+            setMetadataOldValue(oldValue)
             setEditMetadataDialog(true)
         }
     };
@@ -69,7 +71,7 @@ const PageMetadata = (props) => {
                     onHide={() => setEditMetadataDialog(false)}>
                 <InputTextarea className={"space-between-title-and-button"}
                                value={newMetadataValue} onChange={(e) => setNewMetadataValue(e.target.value)}
-                               placeholder={"Enter a new value..."}
+                               placeholder={metadataOldValue}
                                rows={1}
                                cols={70}
                                autoResize={true}
@@ -93,7 +95,7 @@ const PageMetadata = (props) => {
                                   <Button
                                       icon="pi pi-pencil"
                                       className="p-button-rounded p-button-outlined small-edit-button p-button-warning"
-                                      onClick={((event) => changeMetadataItem(item.status))}
+                                      onClick={((event) => changeMetadataItem(item.status, item.date))}
                                   /> : ""
                               }
                           </small>
