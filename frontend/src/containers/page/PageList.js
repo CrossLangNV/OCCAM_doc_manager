@@ -230,9 +230,9 @@ const PageList = (props) => {
 
             <br/>
             <Row>
-                <Button icon={pageListSidebar ? "pi pi-arrow-left" : "pi pi-arrow-right"}
+                <Button icon={pageListSidebar ? "pi pi-angle-double-left" : "pi pi-angle-double-right"}
                         onClick={() => setPageListSidebar(!pageListSidebar)}
-                        className="p-mr-2 page-list-sidebar-button"/>
+                        className="p-mr-2 page-list-sidebar-button p-button-secondary"/>
 
                 {((pageListSidebar === true) &&
 

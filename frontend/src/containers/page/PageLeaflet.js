@@ -274,8 +274,9 @@ const PageLeaflet = (props) => {
                 <Row className="justify-content-between">
                     <Col md={11}/>
                     <Col md={"auto"}>
-                        <Button icon={textViewSidebar ? "pi pi-arrow-right" : "pi pi-arrow-left"}
-                                onClick={() => setTextViewSidebar(!textViewSidebar)} className="p-mr-2"/>
+                        <Button icon={textViewSidebar ? "pi pi-angle-double-right" : "pi pi-angle-double-left"}
+                                onClick={() => setTextViewSidebar(!textViewSidebar)}
+                                className="p-mr-2 p-button-secondary"/>
                     </Col>
                 </Row>
             )}
