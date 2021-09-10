@@ -17,11 +17,18 @@ from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer, WebsiteSerializer
 from documents.tm_connector import MouseTmConnector
+from oaipmh.connector import ConnectorDSpaceREST
+from oaipmh.models import CommunityAdd, CollectionAdd, ItemAdd
 from scheduler.classification_tasks import classify_document_pipeline, classify_scanned
 from scheduler.ocr_tasks import ocr_page_pipeline, xml_lang_detect
 from scheduler.translation_tasks import translate_overlay
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
+URL_DSPACE = os.environ['URL_DSPACE']
+EMAIL_DSPACE = os.environ['EMAIL_DSPACE']
+PASSWORD_DSPACE = os.environ['PASSWORD_DSPACE']
+OCCAM_COMMUNITY_NAME = "OCCAM web app"
+OCCAM_COLLECTION_NAME = "Documents"
 
 PDF_CONTENT_TYPE = 'application/pdf'
 FILE = 'file'
@@ -54,7 +61,6 @@ class DocumentListAPIView(ListCreateAPIView):
         query = self.request.GET.get("query", "")
         show_demo_content = self.request.GET.get("showDemoContent", "")
         website = self.request.GET.get("website", "")
-
 
         if query:
             q = q.filter(name__icontains=query)
@@ -306,6 +312,37 @@ class ExportMetadataAPIView(APIView):
             response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
             response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
             return response
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class PublishDocumentAPIView(APIView):
+    queryset = Page.objects.all()
+
+    def get(self, request, format=None, *args, **kwargs):
+        document_id = self.request.GET.get(DOCUMENT, "")
+
+        if document_id:
+            document = Document.objects.get(id=document_id)
+            connector = ConnectorDSpaceREST(URL_DSPACE)
+            connector.login(EMAIL_DSPACE, PASSWORD_DSPACE)
+
+            communities = connector.get_communities()
+            community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, communities), None)
+            if not community:
+                connector.add_community(CommunityAdd(name=OCCAM_COMMUNITY_NAME))
+                community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, connector.get_communities()), None)
+
+            collections = connector.get_collections()
+            collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, collections), None)
+            if not collection:
+                connector.add_collection(CollectionAdd(name=OCCAM_COLLECTION_NAME), community.uuid)
+                collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, connector.get_collections()), None)
+
+            item = ItemAdd(**document.__dict__)
+            connector.add_item(item, collection.uuid)
+
+            return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

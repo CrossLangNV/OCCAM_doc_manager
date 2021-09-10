@@ -14,6 +14,7 @@ import NotSelectedMessage from "../NotSelectedMessage";
 import {Checkbox} from "primereact/checkbox";
 import DocumentPublishOverlay from "./DocumentPublishOverlay";
 import DocumentPublishTranslation from "./DocumentPublishTranslation";
+import axios from "axios";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
@@ -27,6 +28,12 @@ const DocumentPublish = (props) => {
     const documentState = useSelector(state => state.document);
 
     const [selectedPages, setSelectedPages] = useState([]);
+
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem("access")}`
+        }
+    }
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId));
@@ -67,6 +74,13 @@ const DocumentPublish = (props) => {
 
     const onOverlaySelection = async (e) => {
 
+    }
+
+    const onPublishClick = async () => {
+        await axios.get(`${baseUrl}/documents/api/publish?document=${documentId}`, config).then(res => {
+                console.log('Document published to OAI-PMH server')
+            }
+        )
     }
 
     const showData = () => {
@@ -149,9 +163,8 @@ const DocumentPublish = (props) => {
                     <hr/>
                     <Row className="margin-top">
                         <Col>
-                            <Button className="p-button-success">
-                                <a style={linkStyle}
-                                   href={`${baseUrl}/documents/api/publish?document=${documentId}`}>{t("publish.Publish")}</a>
+                            <Button className="p-button-success" onClick={onPublishClick}>
+                                {t("publish.Publish")}
                             </Button>
                         </Col>
                     </Row>

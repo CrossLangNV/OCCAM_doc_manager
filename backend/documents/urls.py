@@ -3,7 +3,7 @@ from django.urls import path
 from .views import PageListAPIView, PageDetailAPIView, TranslatePageAPIView, OverlayListAPIView, \
     DocumentListAPIView, \
     DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, LabelsListAPIView, TmxUploadAPIView, \
-    TmStatsAPIView, LayoutAnalysisModelsAPIView, ExportMetadataAPIView, WebsiteListAPIView
+    TmStatsAPIView, LayoutAnalysisModelsAPIView, ExportMetadataAPIView, WebsiteListAPIView, PublishDocumentAPIView
 
 urlpatterns = [
     path("api/documents", DocumentListAPIView.as_view(), name="document_list_api"),
@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/layout_analysis_models', LayoutAnalysisModelsAPIView.as_view(), name='layout_analysis_models_list_api'),
 
     path('api/export/metadata', ExportMetadataAPIView.as_view(), name='export_metadata_api'),
+    path('api/publish', PublishDocumentAPIView.as_view(), name='publish_document_api'),
 
     path('api/websites', WebsiteListAPIView.as_view(),
          name='website_list_api'),
