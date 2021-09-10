@@ -13,7 +13,7 @@ const PageMetadata = (props) => {
     const page = props.page
     const [metadata, setMetadata] = useState([]);
     const {t} = useTranslation();
-    const editable = ["title", "description"]
+    const editable = ["title", "description", "creator", "publisher", "contributor"]
     const dispatch = useDispatch();
     const [editMetadataDialog, setEditMetadataDialog] = useState(false);
     const [newMetadataValue, setNewMetadataValue] = useState("");
