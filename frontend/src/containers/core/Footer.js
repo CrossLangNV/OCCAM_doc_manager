@@ -4,7 +4,7 @@ import {useLocation} from "react-router-dom";
 const Footer = () => {
     const location = useLocation();
 
-    const FOOTER_STICK_TO_BOTTOM = ["/activity", "/login", "/settings", "/document-add"]
+    const FOOTER_STICK_TO_BOTTOM = ["/activity", "/login", "/settings"]
 
     return (
         <div className={FOOTER_STICK_TO_BOTTOM.includes(location.pathname) ? "occ-footer occ-footer-bottom" : "occ-footer"}>

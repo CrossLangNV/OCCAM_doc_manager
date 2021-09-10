@@ -32,7 +32,7 @@
     "summary": "Résumé",
     "next": "Suivant",
     "dont-show-me-again": "Ne me montre pas encore",
-    "preview": "Aperçu de",
+    "preview": "Aperçu",
     "state": "État",
     "created-at": "Créé à",
     "actions": "Actions",
@@ -45,6 +45,8 @@
     "ocr": "OCR",
     "save": "Sauvegarder",
     "saved-metadata": "Les métadonnées ont été sauvegardées avec succès"
+    "ocr": "OCR",
+    "no-results": "Désolé, nous n'avons pas pu trouver de résultats."
   },
 
   "document": {
@@ -154,7 +156,9 @@
     "Optional": "Facultatif",
     "Document information saved.": "Les informations du document sont sauvegardées.",
     "Add new document": "Ajouter un nouveau document",
-    "Document information": "Informations sur les documents"
+    "Document information": "Informations sur les documents",
+    "Manual": "Manuellement",
+    "Europeana": "Europeana"
   },
 
   "layout": {

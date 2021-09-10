@@ -422,3 +422,4 @@ sketch
 # https://plugins.jetbrains.com/plugin/12206-codestream
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,webstorm,django,react,python
+/backend/scrapy_app/twistd.pid

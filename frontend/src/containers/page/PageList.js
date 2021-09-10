@@ -46,10 +46,10 @@ const PageList = (props) => {
     const [contextMenuPage, setContextMenuPage] = useState("");
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
     const [checkedTM, setCheckedTM] = useState(false);
-
     const [tourOpened, setTourOpened] = useState(false);
-
     const cm = useRef(null);
+    const [pageListSidebar, setPageListSidebar] = useState(true);
+
 
     const languageSelectItems = [
         {label: t("translated-languages.original"), value: 'ORIGINAL'},
@@ -228,20 +228,26 @@ const PageList = (props) => {
                 }}
             />
 
-            <h5>Pages ({pageList.count})</h5>
             <br/>
             <Row>
-                <Col md={3}>
-                    {!_.isEmpty(pageList.data) && (
-                        <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
-                            {pageList.data.map(page => {
-                                return <Card key={page.id} className='page-card'>
-                                    <Row>
-                                        <Col>
-                                            <Image
-                                                onClick={() => selectPage(page)}
-                                                className={uiStates.selectedPage.id === page.id ?
-                                                    'page-card-img selectedPage' : 'page-card-img'}
+                <Button icon={pageListSidebar ? "pi pi-arrow-left" : "pi pi-arrow-right"}
+                        onClick={() => setPageListSidebar(!pageListSidebar)}
+                        className="p-mr-2 page-list-sidebar-button"/>
+
+                {((pageListSidebar === true) &&
+
+                    <div>
+                        {/*<h5>Pages ({pageList.count})</h5>*/}
+                        {!_.isEmpty(pageList.data) && (
+                            <ScrollPanel className="occ-scrollbar occ-ui-pages-list-scrollable document-step-two">
+                                {pageList.data.map(page => {
+                                    return <Card key={page.id} className='page-card'>
+                                        <Row>
+                                            <Col>
+                                                <Image
+                                                    onClick={() => selectPage(page)}
+                                                    className={uiStates.selectedPage.id === page.id ?
+                                                        'page-card-img selectedPage' : 'page-card-img'}
                                                 src={page.file}
                                             />
                                             <Button
@@ -270,7 +276,7 @@ const PageList = (props) => {
                                                         </Col>
 
                                                         <Col md="auto">
-                                                            <DocumentState state={(!_.isEmpty(page.latest_ocr_state) && 
+                                                            <DocumentState state={(!_.isEmpty(page.latest_ocr_state) &&
                                                                 page.latest_ocr_state.state)}/>
 
                                                             {(!_.isEmpty(page.latest_ocr_state && page.latest_ocr_state.state === "Processing") &&
@@ -346,16 +352,16 @@ const PageList = (props) => {
                                             </Row>
                                         </OverlayPanel>
                                     </Row>
-                                </Card>
-                            })}
+                                    </Card>
+                                })}
 
 
-                        </ScrollPanel>
-                    )}
+                            </ScrollPanel>
+                        )}
+                        <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")}/>
+                    </div>
+                )}
 
-                    <NotSelectedMessage context={pageList.data} message={t("page-list.No pages are uploaded yet")} />
-
-                </Col>
 
                 {!_.isEmpty(pageList.data) && (
                     <Col>
