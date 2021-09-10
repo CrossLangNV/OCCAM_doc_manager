@@ -294,3 +294,36 @@ class Label(models.Model):
 
     def __str__(self):
         return str(self.name)
+    
+    
+class Metadata(models.Model):
+    title = models.CharField(default="", max_length=200)
+    creator = models.CharField(default="", max_length=200)
+    subject = models.CharField(default="", max_length=200)
+    description = models.CharField(default="", max_length=200)
+    publisher = models.CharField(default="", max_length=200)
+    contributor = models.CharField(default="", max_length=200)
+    date = models.CharField(default="", max_length=200)
+    type = models.CharField(default="", max_length=200)
+    format = models.CharField(default="", max_length=200)
+    identifier = models.CharField(default="", max_length=200)
+    source = models.CharField(default="", max_length=200)
+    language = models.CharField(default="", max_length=200)
+    relation = models.CharField(default="", max_length=200)
+    coverage = models.CharField(default="", max_length=200)
+    right = models.CharField(default="", max_length=200)
+
+    page = models.ForeignKey(
+        Page,
+        related_name="page_metadata",
+        on_delete=models.CASCADE,
+    )
+
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return str(self.title)
