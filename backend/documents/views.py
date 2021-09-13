@@ -1,9 +1,11 @@
 import io
+import json
 import logging
 import os
 import zipfile
 from io import BytesIO
 
+import xmltodict as xmltodict
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -343,7 +345,12 @@ class PublishDocumentAPIView(APIView):
 
             json_response = {'xml': xml_response.tostring()}
 
-            return Response(json_response, status=status.HTTP_200_OK)
+            # coverting xml to Python dictionary
+            dict_data = xmltodict.parse(xml_response.tostring())
+            # coverting to json
+            json_data = json.dumps(dict_data, indent=2)
+
+            return Response(json_data, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
