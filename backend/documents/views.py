@@ -318,7 +318,7 @@ class ExportMetadataAPIView(APIView):
 
 
 class PublishDocumentAPIView(APIView):
-    queryset = Page.objects.all()
+    queryset = Document.objects.none()
 
     def get(self, request, format=None, *args, **kwargs):
         document_id = self.request.GET.get(DOCUMENT, "")
@@ -343,16 +343,22 @@ class PublishDocumentAPIView(APIView):
             item = ItemAdd(**document.__dict__)
             xml_response = connector.add_item(item, collection.uuid)
 
-            json_response = {'xml': xml_response.tostring()}
-
             # coverting xml to Python dictionary
             dict_data = xmltodict.parse(xml_response.tostring())
+            uuid = dict_data["item"]["UUID"]
+
+            # Save the uuid in the Django document
+            document = Document.objects.get(pk=document_id)
+            document.oaipmh_item_id = uuid
+            document.save()
+
             # coverting to json
             json_data = json.dumps(dict_data, indent=2)
 
-            return Response(json_data, status=status.HTTP_200_OK)
+            serializer = DocumentSerializer(document, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response("Invalid document.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class WebsiteListAPIView(ListCreateAPIView):

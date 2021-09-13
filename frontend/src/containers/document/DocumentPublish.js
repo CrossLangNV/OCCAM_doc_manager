@@ -14,7 +14,7 @@ import NotSelectedMessage from "../NotSelectedMessage";
 import {Checkbox} from "primereact/checkbox";
 import DocumentPublishOverlay from "./DocumentPublishOverlay";
 import DocumentPublishTranslation from "./DocumentPublishTranslation";
-import axios from "axios";
+import {Tag} from "primereact/tag";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
@@ -78,11 +78,12 @@ const DocumentPublish = (props) => {
     }
 
     const onPublishClick = async () => {
-        // await axios.get(`${baseUrl}/documents/api/publish?document=${documentId}`, config).then(res => {
-        //         console.log('Document published to OAI-PMH server')
-        //     }
-        // )
         dispatch(PublishDocument(documentId));
+
+        // setTimeout(() => {
+        //     dispatch(GetDocument(documentId));
+        // }, 2000);
+
     }
 
     const showData = () => {
@@ -101,10 +102,31 @@ const DocumentPublish = (props) => {
                         </Col>
                     </Row>
 
-                    <h5>Pages ({pageList.count})</h5>
+                    <Row className="margin-top">
+                        <Col md={1}>
+                            Status:
+                        </Col>
+                        <Col md={3}>
+                            <Tag value={documentData.oaipmh_item_id ? "Published" : "Not published yet"}
+                                 icon={documentData.oaipmh_item_id ? "pi pi-check" : "pi pi-cross"}
+                                 severity={documentData.oaipmh_item_id ? "success" : "warning"}/>
+                        </Col>
+                    </Row>
+
+                    {(documentData.oaipmh_item_id) &&
+                    <Row className="margin-top">
+                        <Col md={1}>
+                            UUID:
+                        </Col>
+                        <Col md={3}>
+                            {documentData.oaipmh_item_id}
+                        </Col>
+                    </Row>
+                    }
+
                     <Row className="margin-top">
                         <Col>
-                            <h3>Download results</h3>
+                            <h3>Download results ({pageList.count})</h3>
                         </Col>
                     </Row>
                     {!_.isEmpty(pageList.data) && (
