@@ -345,11 +345,11 @@ class PublishDocumentAPIView(APIView):
 
             # coverting xml to Python dictionary
             dict_data = xmltodict.parse(xml_response.tostring())
-            uuid = dict_data["item"]["UUID"]
 
             # Save the uuid in the Django document
             document = Document.objects.get(pk=document_id)
-            document.oaipmh_item_id = uuid
+            document.oaipmh_item_id = dict_data["item"]["UUID"]
+            document.oaipmh_item_url = URL_DSPACE +  dict_data["item"]["link"]
             document.save()
 
             # coverting to json

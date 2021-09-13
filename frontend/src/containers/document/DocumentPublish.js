@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import ProgressBar from "../ProgressBar";
 import {Col, Image, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
@@ -15,26 +15,19 @@ import {Checkbox} from "primereact/checkbox";
 import DocumentPublishOverlay from "./DocumentPublishOverlay";
 import DocumentPublishTranslation from "./DocumentPublishTranslation";
 import {Tag} from "primereact/tag";
+import {Toast} from "primereact/toast";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const [selectedPages, setSelectedPages] = useState([]);
+    const toast = useRef(null);
+
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
-    const uiStates = useSelector(state => state.uiStates);
-    const auth = useSelector(state => state.auth);
     const documentState = useSelector(state => state.document);
-    const documentPublishState = useSelector(state => state.documentPublish);
-
-    const [selectedPages, setSelectedPages] = useState([]);
-
-    const config = {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem("access")}`
-        }
-    }
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId));
@@ -79,10 +72,12 @@ const DocumentPublish = (props) => {
 
     const onPublishClick = async () => {
         dispatch(PublishDocument(documentId));
+        toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("oaipmh.uploaded")});
 
-        // setTimeout(() => {
-        //     dispatch(GetDocument(documentId));
-        // }, 2000);
+    }
+
+    const onViewClick = (e) => {
+        window.open(documentState.data[documentId].oaipmh_item_url, '_blank');
 
     }
 
@@ -102,6 +97,11 @@ const DocumentPublish = (props) => {
                         </Col>
                     </Row>
 
+                    <Row className="margin-top">
+                        <Col>
+                            <h3>Publish to OAI-PMH</h3>
+                        </Col>
+                    </Row>
                     <Row className="margin-top">
                         <Col md={1}>
                             Status:
@@ -126,7 +126,23 @@ const DocumentPublish = (props) => {
 
                     <Row className="margin-top">
                         <Col>
-                            <h3>Download results ({pageList.count})</h3>
+                            <Button className="p-button-success" onClick={onPublishClick}>
+                                {t("publish.Publish")}
+                            </Button>
+                            {(documentData.oaipmh_item_url) &&
+                            <Button className="p-button-info margin-left" onClick={onViewClick}>
+                                {t("ui.view")}
+                            </Button>
+                            }
+                        </Col>
+                    </Row>
+
+                    <br/>
+
+                    <Row className="margin-top">
+                        <Col>
+                            <h3>Download results</h3>
+                            <h5>Pages: ({pageList.count})</h5>
                         </Col>
                     </Row>
                     {!_.isEmpty(pageList.data) && (
@@ -184,14 +200,8 @@ const DocumentPublish = (props) => {
                             </Button>
                         </Col>
                     </Row>
-                    <hr/>
-                    <Row className="margin-top">
-                        <Col>
-                            <Button className="p-button-success" onClick={onPublishClick}>
-                                {t("publish.Publish")}
-                            </Button>
-                        </Col>
-                    </Row>
+
+                    <Toast ref={toast}/>
                 </>
             );
         }

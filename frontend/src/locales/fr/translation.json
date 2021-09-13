@@ -42,7 +42,8 @@
     "Overlay": "Superposition",
     "last-updated": "Dernière mise à jour",
     "choose": "Choisir",
-    "ocr": "OCR"
+    "ocr": "OCR",
+    "view": "Afficher"
   },
 
   "document": {
@@ -211,11 +212,13 @@
     "czech": "Tchèque",
     "german": "Allemand"
   },
-
   "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.": "Le modèle est capable de transcrire la plupart des imprimés européens en polices antiqua. Il fonctionne mieux pour les imprimés tchèques de basse qualité tels que les vieux journaux.",
   "Skip OCR and upload your own transcription.": "Ignorez l'OCR et téléchargez votre propre transcription.",
   "Arabic handwritten": "Arabe écrit à la main",
   "Czech old handwritten": "Vieux tchèque écrit à la main",
   "Czech old printed": "Vieux tchèque imprimé",
-  "No OCR": "Pas d'OCR"
+  "No OCR": "Pas d'OCR",
+  "oaipmh": {
+    "uploaded": "Votre document a été publié avec succès sur le serveur OAI-PMH"
+  }
 }
