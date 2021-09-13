@@ -4,7 +4,6 @@ import os
 import zipfile
 from io import BytesIO
 
-from django.db.models import Count, Q
 from django.http.response import HttpResponse
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -340,9 +339,11 @@ class PublishDocumentAPIView(APIView):
                 collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, connector.get_collections()), None)
 
             item = ItemAdd(**document.__dict__)
-            connector.add_item(item, collection.uuid)
+            xml_response = connector.add_item(item, collection.uuid)
 
-            return Response(status=status.HTTP_200_OK)
+            json_response = {'xml': xml_response.tostring()}
+
+            return Response(json_response, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

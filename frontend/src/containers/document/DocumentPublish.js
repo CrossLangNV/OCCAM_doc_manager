@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {Button} from "primereact/button";
 import {baseUrl} from "../../constants/axiosConf";
 import {useDispatch, useSelector} from "react-redux";
-import {GetDocument} from "../../actions/documentActions";
+import {GetDocument, PublishDocument} from "../../actions/documentActions";
 import _ from "lodash";
 import {GetPageList} from "../../actions/pageActions";
 import {ScrollPanel} from "primereact/scrollpanel";
@@ -26,6 +26,7 @@ const DocumentPublish = (props) => {
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
     const documentState = useSelector(state => state.document);
+    const documentPublishState = useSelector(state => state.documentPublish);
 
     const [selectedPages, setSelectedPages] = useState([]);
 
@@ -77,10 +78,11 @@ const DocumentPublish = (props) => {
     }
 
     const onPublishClick = async () => {
-        await axios.get(`${baseUrl}/documents/api/publish?document=${documentId}`, config).then(res => {
-                console.log('Document published to OAI-PMH server')
-            }
-        )
+        // await axios.get(`${baseUrl}/documents/api/publish?document=${documentId}`, config).then(res => {
+        //         console.log('Document published to OAI-PMH server')
+        //     }
+        // )
+        dispatch(PublishDocument(documentId));
     }
 
     const showData = () => {
