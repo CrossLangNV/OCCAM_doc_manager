@@ -250,7 +250,7 @@ class TestConnectorDSpaceRESTAddBitstream(unittest.TestCase):
 
         import os
         # filename = os.path.join(os.path.dirname(__file__), 'example_files/model_nbb_bris.h5')
-        filename = os.path.join(os.path.dirname(__file__), 'example_files/image-055.png')
+        filename = os.path.join(os.path.dirname(__file__), 'example_files/kaligrafie.jpg')
         basename = os.path.split(filename)[-1]
 
         description = 'this a description'
@@ -391,7 +391,7 @@ class TestXMLResponse(unittest.TestCase):
 
 
 def _get_temp_collection(connector):
-    collection0 = list(filter(lambda x: "Demo 3" in x.name, connector.get_collections()))[0]
+    collection0 = list(filter(lambda x: TestConnectorDSpaceRESTAddCollection.name in x.name, connector.get_collections()))[0]
     collection_id = collection0.uuid
 
     return collection_id
