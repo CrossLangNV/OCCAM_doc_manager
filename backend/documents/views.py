@@ -340,8 +340,10 @@ class PublishDocumentAPIView(APIView):
                 connector.add_collection(CollectionAdd(name=OCCAM_COLLECTION_NAME), community.uuid)
                 collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, connector.get_collections()), None)
 
-            item = ItemAdd(**document.__dict__)
-            xml_response = connector.add_item(item, collection.uuid)
+            metadata = document.__dict__
+            metadata['description'] = metadata['content']
+            item = ItemAdd(name=metadata['name'])
+            xml_response = connector.add_item(item, collection.uuid, metadata)
 
             json_response = {'xml': xml_response.tostring()}
 
