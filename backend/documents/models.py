@@ -313,7 +313,7 @@ class Metadata(models.Model):
     language = models.CharField(default="", max_length=200)
     relation = models.CharField(default="", max_length=200)
     coverage = models.CharField(default="", max_length=200)
-    right = models.CharField(default="", max_length=200)
+    rights = models.CharField(default="", max_length=200)
 
     page = models.ForeignKey(
         Page,

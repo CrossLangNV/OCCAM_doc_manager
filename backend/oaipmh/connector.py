@@ -162,7 +162,19 @@ class ConnectorDSpaceREST(requests.Session):
 
         url = self.url_collections + f"/{collection_id}/items"
 
-        dcm = DCMetadata(title=item.name, description=metadata["description"])
+        dcm = DCMetadata(title=item.name, description=metadata["description"],
+                         contributor=metadata["contributor"],
+                         creator=metadata["creator"],
+                         subject=metadata["subject"],
+                         publisher=metadata["publisher"],
+                         date=metadata["date"],
+                         type=metadata["type"],
+                         format=metadata["format"],
+                         identifier=metadata["identifier"],
+                         source=metadata["source"],
+                         language=metadata["language"],
+                         relation=metadata["relation"],
+                         rights=metadata["rights"])
 
         metadata = dcm.get_metadata()
 
@@ -307,15 +319,37 @@ class DCMetadata:
             title: str,
             # Not required
             description: Optional[str],
-            contributor_author: Union[list, str] = None,
+            contributor: Union[list, str] = None,
             abstract: Union[list, str] = None,
+            creator: Union[list, str] = None,
+            subject: Union[list, str] = None,
+            publisher: Union[list, str] = None,
+            date: Union[list, str] = None,
+            type: Union[list, str] = None,
+            format: Union[list, str] = None,
+            identifier: Union[list, str] = None,
+            source: Union[list, str] = None,
+            language: Union[list, str] = None,
+            relation: Union[list, str] = None,
+            rights: Union[list, str] = None,
     ):
 
         self.title = title
 
         self.description = description
-        self.contributor_author = contributor_author
+        self.contributor = contributor
         self.abstract = abstract
+        self.creator = creator
+        self.subject = subject
+        self.publisher = publisher
+        self.date = date
+        self.type = type
+        self.format = format
+        self.identifier = identifier
+        self.source = source
+        self.language = language
+        self.relation = relation
+        self.rights = rights
 
     def get_metadata(self):
 
@@ -328,11 +362,44 @@ class DCMetadata:
         def add_description(description):
             metadata.append({"key": "dc.description", "value": description})
 
-        def add_contributor_author(contributor_author):
-            metadata.append({"key": "dc.contributor.author", "value": contributor_author})
+        def add_contributor(contributor):
+            metadata.append({"key": "dc.contributor.author", "value": contributor})
 
         def add_abstract(abstract):
             metadata.append({"key": "dc.abstract", "value": abstract})
+
+        def add_creator(creator):
+            metadata.append({"key": "dc.creator", "value": creator})
+
+        def add_subject(subject):
+            metadata.append({"key": "dc.subject", "value": subject})
+
+        def add_publisher(publisher):
+            metadata.append({"key": "dc.publisher", "value": publisher})
+
+        def add_date(date):
+            metadata.append({"key": "dc.date", "value": date})
+
+        def add_type(type):
+            metadata.append({"key": "dc.type", "value": type})
+
+        def add_format(format):
+            metadata.append({"key": "dc.format", "value": format})
+
+        def add_identifier(identifier):
+            metadata.append({"key": "dc.identifier", "value": identifier})
+
+        def add_source(source):
+            metadata.append({"key": "dc.source", "value": source})
+
+        def add_language(language):
+            metadata.append({"key": "dc.language", "value": language})
+
+        def add_relation(relation):
+            metadata.append({"key": "dc.relation", "value": relation})
+
+        def add_rights(rights):
+            metadata.append({"key": "dc.rights", "value": rights})
 
         def meta_factory(el, add_i: Callable[[str], None]):
             if el is None:
@@ -344,7 +411,18 @@ class DCMetadata:
 
         meta_factory(self.title, add_title)
         meta_factory(self.description, add_description)
-        meta_factory(self.contributor_author, add_contributor_author)
+        meta_factory(self.contributor, add_contributor)
         meta_factory(self.abstract, add_abstract)
+        meta_factory(self.creator, add_creator)
+        meta_factory(self.subject, add_subject)
+        meta_factory(self.publisher, add_publisher)
+        meta_factory(self.date, add_date)
+        meta_factory(self.type, add_type)
+        meta_factory(self.format, add_format)
+        meta_factory(self.identifier, add_identifier)
+        meta_factory(self.source, add_source)
+        meta_factory(self.language, add_language)
+        meta_factory(self.relation, add_relation)
+        meta_factory(self.rights, add_rights)
 
         return metadata

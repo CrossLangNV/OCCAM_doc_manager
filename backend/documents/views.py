@@ -371,13 +371,11 @@ class PublishDocumentAPIView(APIView):
 
             # Create a new item for every page of the document
             for page in self.queryset.filter(document=document_id):
-                metadata = {
-                    'name': page.file.name,
-                    'description': document.content
-                }
-                item = ItemAdd(name=metadata['name'])
+                metadata = Metadata.objects.filter(page=page.id)[0]
+                metadata_dict = metadata.__dict__
+                item = ItemAdd(name=metadata.title)
                 # add to OAI-PMH
-                item_response = connector.add_item(item, collection_dict['collection']['UUID'], metadata)
+                item_response = connector.add_item(item, collection_dict['collection']['UUID'], metadata_dict)
                 item_dict = xmltodict.parse(item_response.tostring())
                 # add bitstreams to OAI-PMH for page image and for overlay, translations if available
                 connector.add_bitstream(page.file, page.file.name, item_dict["item"]["UUID"])
