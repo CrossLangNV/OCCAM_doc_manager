@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import ProgressBar from "../ProgressBar";
 import {Col, Image, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
@@ -14,27 +14,21 @@ import NotSelectedMessage from "../NotSelectedMessage";
 import {Checkbox} from "primereact/checkbox";
 import DocumentPublishOverlay from "./DocumentPublishOverlay";
 import DocumentPublishTranslation from "./DocumentPublishTranslation";
-import axios from "axios";
+import {Tag} from "primereact/tag";
+import {Toast} from "primereact/toast";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
     const dispatch = useDispatch();
     const {t} = useTranslation();
+    const [selectedPages, setSelectedPages] = useState([]);
+    const [selectedMetadata, setSelectedMetadata] = useState([]);
+    const toast = useRef(null);
+
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
-    const uiStates = useSelector(state => state.uiStates);
-    const auth = useSelector(state => state.auth);
     const documentState = useSelector(state => state.document);
-    const documentPublishState = useSelector(state => state.documentPublish);
-
-    const [selectedPages, setSelectedPages] = useState([]);
-
-    const config = {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem("access")}`
-        }
-    }
 
     React.useEffect(() => {
         dispatch(GetDocument(documentId));
@@ -62,6 +56,9 @@ const DocumentPublish = (props) => {
 
                 if (selectedPage.id === e.value.id) {
                     localSelectedPages.splice(i, 1);
+                    if (selectedMetadata.includes(e.value)) {
+                        selectedMetadata.splice(i, 1);
+                    }
                     break;
                 }
             }
@@ -70,7 +67,25 @@ const DocumentPublish = (props) => {
     }
 
     const onMetadataSelection = async (e) => {
+        let localSelectedMetadata = [...selectedMetadata]
 
+
+        if (e.checked) {
+            localSelectedMetadata.push(e.value);
+            if (!selectedPages.includes(e.value)) {
+                selectedPages.push(e.value);
+            }
+        } else {
+            for (let i = 0; i < localSelectedMetadata.length; i++) {
+                const selectedPage = localSelectedMetadata[i];
+
+                if (selectedPage.id === e.value.id) {
+                    localSelectedMetadata.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        setSelectedMetadata(localSelectedMetadata);
     }
 
     const onOverlaySelection = async (e) => {
@@ -78,11 +93,14 @@ const DocumentPublish = (props) => {
     }
 
     const onPublishClick = async () => {
-        // await axios.get(`${baseUrl}/documents/api/publish?document=${documentId}`, config).then(res => {
-        //         console.log('Document published to OAI-PMH server')
-        //     }
-        // )
         dispatch(PublishDocument(documentId));
+        toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("oaipmh.uploaded")});
+
+    }
+
+    const onViewClick = (e) => {
+        window.open(documentState.data[documentId].oaipmh_collection_url, '_blank');
+
     }
 
     const showData = () => {
@@ -101,23 +119,66 @@ const DocumentPublish = (props) => {
                         </Col>
                     </Row>
 
-                    <h5>Pages ({pageList.count})</h5>
+                    <Row className="margin-top">
+                        <Col>
+                            <h3>Publish to OAI-PMH</h3>
+                        </Col>
+                    </Row>
+                    <Row className="margin-top">
+                        <Col md={1}>
+                            Status:
+                        </Col>
+                        <Col md={3}>
+                            <Tag value={documentData.oaipmh_collection_id ? "Published" : "Not published yet"}
+                                 icon={documentData.oaipmh_collection_id ? "pi pi-check" : "pi pi-cross"}
+                                 severity={documentData.oaipmh_collection_id ? "success" : "warning"}/>
+                        </Col>
+                    </Row>
+
+                    {(documentData.oaipmh_collection_id) &&
+                    <Row className="margin-top">
+                        <Col md={1}>
+                            UUID:
+                        </Col>
+                        <Col md={3}>
+                            {documentData.oaipmh_collection_id}
+                        </Col>
+                    </Row>
+                    }
+
+                    <Row className="margin-top">
+                        <Col>
+                            <Button className="p-button-success" onClick={onPublishClick}>
+                                {t("publish.Publish")}
+                            </Button>
+                            {(documentData.oaipmh_collection_url) &&
+                            <Button className="p-button-info margin-left" onClick={onViewClick}>
+                                {t("ui.view")}
+                            </Button>
+                            }
+                        </Col>
+                    </Row>
+
+                    <br/>
+
                     <Row className="margin-top">
                         <Col>
                             <h3>Download results</h3>
+                            <h5>Pages: ({pageList.count})</h5>
                         </Col>
                     </Row>
                     {!_.isEmpty(pageList.data) && (
                         <ScrollPanel className="occ-ui-publish-pages-list-scroll">
                             <Row className="flex-md-nowrap">
                                 {pageList.data.map(page => {
-                                    return <Col md={3}>
+                                    return <Col md={3} key={page.id}>
                                         <Card className="m-md-1" key={page.id}>
                                             <Row>
                                                 <Image
-                                                    className="page-card-img"
+                                                    className={selectedPages.some((item) => item.id === page.id) ? "page-card-img selectedForDownload" : "page-card-img"}
                                                     src={page.file}
                                                     onClick={e => onPageImageClick(page.file)}
+
                                                 />
                                             </Row>
                                             <Row>
@@ -132,7 +193,9 @@ const DocumentPublish = (props) => {
                                             <Row>
                                                 <div className="p-field-checkbox m-md-1">
                                                     <Checkbox inputId={page.id + "/metadata"} name="metadata"
-                                                              value={page.id}/>
+                                                              value={page}
+                                                              onChange={onMetadataSelection}
+                                                              checked={selectedMetadata.some((item) => item.id === page.id)}/>
                                                     <label className="m-md-2"
                                                            htmlFor={page.id + "/metadata"}>Metadata</label>
                                                 </div>
@@ -162,14 +225,8 @@ const DocumentPublish = (props) => {
                             </Button>
                         </Col>
                     </Row>
-                    <hr/>
-                    <Row className="margin-top">
-                        <Col>
-                            <Button className="p-button-success" onClick={onPublishClick}>
-                                {t("publish.Publish")}
-                            </Button>
-                        </Col>
-                    </Row>
+
+                    <Toast ref={toast}/>
                 </>
             );
         }

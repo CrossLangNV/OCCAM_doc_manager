@@ -222,3 +222,7 @@ a {
 .occ-doc-list-td {
   vertical-align: middle !important;
 }
+
+.selectedForDownload {
+  border: 8px solid #2196F3;
+}

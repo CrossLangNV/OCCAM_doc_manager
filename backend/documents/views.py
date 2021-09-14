@@ -339,21 +339,25 @@ class PublishDocumentAPIView(APIView):
             collection_response = connector.add_collection(CollectionAdd(name=document.name), community_uuid)
             collection_dict = xmltodict.parse(collection_response.tostring())
 
-            pages_response = []
             for page in self.queryset.filter(document=document_id):
-                #TODO: add page image, overlay + translations as an item to OAI-PMH
+                #TODO: add page image, overlay + translations as bitstreams to OAI-PMH
                 metadata = {
                     'name': page.file.name,
                     'description': document.content
                 }
                 item = ItemAdd(name=metadata['name'])
-                xml_response = connector.add_item(item, collection_dict['collection']['UUID'], metadata)
-                # coverting xml to Python dictionary
-                pages_response.append(xmltodict.parse(xml_response.tostring()))
+                connector.add_item(item, collection_dict['collection']['UUID'], metadata)
 
-            return Response(pages_response, status=status.HTTP_200_OK)
+            # Save the uuid in the Django document
+            document = Document.objects.get(pk=document_id)
+            document.oaipmh_collection_id = collection_dict["collection"]["UUID"]
+            document.oaipmh_collection_url = URL_DSPACE + collection_dict["collection"]["link"]
+            document.save()
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+            serializer = DocumentSerializer(document, many=False)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response("Invalid document.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class WebsiteListAPIView(ListCreateAPIView):

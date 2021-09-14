@@ -42,7 +42,8 @@
     "Overlay": "Overlay",
     "last-updated": "Laatst bijgewerkt",
     "choose": "Selecteer",
-    "ocr": "OCR"
+    "ocr": "OCR",
+    "view": "Bekijk"
   },
 
   "document": {
@@ -210,11 +211,13 @@
     "czech": "Tsjechisch",
     "german": "Duits"
   },
-
   "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.": "Het model is in staat de meeste Europese drukwerken in antiqua fonts te transcriberen. Werkt het best voor Tsjechische drukwerken van lage kwaliteit, zoals oude kranten.",
   "Skip OCR and upload your own transcription.": "Sla OCR over en upload uw eigen transcriptie.",
   "Arabic handwritten": "Arabisch handgeschreven",
   "Czech old handwritten": "Tsjechisch oud handgeschreven",
   "Czech old printed": "Tsjechisch oud gedrukt",
-  "No OCR": "Geen OCR"
+  "No OCR": "Geen OCR",
+  "oaipmh": {
+    "uploaded": "Uw document is gepubliceerd op de OAI-PMH server."
+  }
 }
