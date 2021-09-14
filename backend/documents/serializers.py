@@ -98,7 +98,6 @@ class PageSerializer(serializers.ModelSerializer):
                     "right",
                 ],
             )
-            print("DATA new: ", data)
 
             page_labels = page.page_labels.all()
             for page_label in page_labels:

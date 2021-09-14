@@ -8,6 +8,7 @@ from datetime import date
 from io import BytesIO
 
 import xmltodict as xmltodict
+from django.forms import model_to_dict
 from django.http.response import HttpResponse
 from minio import Minio, ResponseError
 from minio.error import BucketAlreadyOwnedByYou, BucketAlreadyExists
@@ -325,18 +326,31 @@ class ExportMetadataAPIView(APIView):
             self.queryset = self.queryset.filter(pk__in=list(page_ids))
             serializer = PageSerializer()
 
+            # f = BytesIO()
             z = zipfile.ZipFile("export.zip", 'w', zipfile.ZIP_DEFLATED)
             for page in self.queryset:
                 print("page: ", page)
-                p_metadata = serializer.get_metadata(page)
-                p_metadata_xml = serializer.get_metadata_xml(page)
-                filename = os.path.splitext(p_metadata['titles'][0])[0]
-                z.writestr(filename + '.xml', p_metadata_xml)
+
+                # p_metadata = serializer.get_metadata(page)
+                # p_metadata_xml = serializer.get_metadata_xml(page)
+                metadata = Metadata.objects.get(page=page)
+
+                z.writestr(metadata.title + '.xml', serializer.get_metadata_xml(page))
+
+            with open("export.zip", "rb") as f:
+                print("z.filelist: ", z.filelist)
+
+
+                encoded = base64.b64encode(f.read())
+                encoded_str = str(encoded.decode("utf-8"))
+                print("encoded: ", encoded)
+                print("encoded_str: ", encoded_str)
+
+                return Response(encoded_str, status=status.HTTP_200_OK)
 
             z.close()
 
-            encoded = base64.b64encode(z)
-            print("encoded zip: ", encoded)
+
 
             # response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
             # response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
