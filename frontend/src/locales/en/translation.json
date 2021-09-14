@@ -43,7 +43,10 @@
     "last-updated": "Last updated",
     "choose": "Choose",
     "ocr": "OCR",
-    "view": "View"
+    "view": "View",
+    "save": "Save",
+    "saved-metadata": "Metadata has been saved successfully",
+    "no-results": "Sorry, we couldn't find any results."
   },
 
   "document": {

@@ -122,3 +122,39 @@ export const GetWebsites = () => async dispatch => {
         });
     }
 }
+
+
+export const ModifyMetadata = (page, type, value) => async dispatch => {
+    try {
+
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_LOADING
+        })
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        // TODO Need to be implemented
+
+        await axios.post(`${baseUrl}/documents/api/pages/update_metadata`,
+            {
+                "page_id": page,
+                "metadata_key": type,
+                "metadata_value": value
+            },
+            config)
+
+
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_SUCCESS,
+            // payload: res.data,
+        });
+    } catch (e) {
+        dispatch({
+            type: UiActionTypes.UI_METADATA_MODIFY_FAILED
+        });
+    }
+}

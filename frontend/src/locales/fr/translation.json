@@ -43,7 +43,10 @@
     "last-updated": "Dernière mise à jour",
     "choose": "Choisir",
     "ocr": "OCR",
-    "view": "Afficher"
+    "view": "Afficher",
+    "save": "Sauvegarder",
+    "saved-metadata": "Les métadonnées ont été sauvegardées avec succès",
+    "no-results": "Désolé, nous n'avons pas pu trouver de résultats."
   },
 
   "document": {

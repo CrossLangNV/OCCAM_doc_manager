@@ -13,7 +13,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website, Geojson
+from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website, Metadata, Geojson
 from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer, WebsiteSerializer
@@ -227,6 +227,26 @@ class OverlayDetailAPIView(RetrieveUpdateDestroyAPIView):
 class PageDetailAPIView(RetrieveUpdateDestroyAPIView):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
+
+
+class UpdatePageMetadataAPIView(APIView):
+    queryset = Metadata.objects.none()
+
+    def post(self, request, format=None, *args, **kwargs):
+        page_id = request.data["page_id"]
+        metadata_key = request.data["metadata_key"]
+        metadata_value = request.data["metadata_value"]
+
+        try:
+            Metadata.objects.update_or_create(page_id=page_id, defaults={metadata_key: metadata_value})
+            return Response("OK", status=status.HTTP_200_OK)
+
+        except Page.DoesNotExist as e:
+            logger.error(e)
+            return Response("Page not found", status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 class TranslatePageAPIView(APIView):

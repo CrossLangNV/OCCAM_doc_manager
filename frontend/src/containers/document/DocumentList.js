@@ -16,6 +16,7 @@ import LanguageSelector from "../core/LanguageSelector";
 import {ModifyDocumentQuery, ModifySelectedWebsite} from "../../actions/uiActions";
 import {Dropdown} from "primereact/dropdown";
 import {InputText} from "primereact/inputtext";
+import SkeletonLoadingRow from "./SkeletonLoadingRow";
 
 
 const DocumentList = () => {
@@ -29,11 +30,11 @@ const DocumentList = () => {
     const auth = useSelector(state => state.auth)
 
     React.useEffect(() => {
-        fetchDocuments(5, 1, uiStates.documentQuery, false);
+        fetchDocuments(5, 1, uiStates.documentQuery);
     }, []);
 
-    const fetchDocuments = (rows, page, query, showDemoContent) => {
-        dispatch(GetDocumentList(rows, page, query, ""))
+    const fetchDocuments = (rows, page, query) => {
+        dispatch(GetDocumentList(rows, page, query, uiStates.selectedWebsite))
     }
 
     const confirmDeleteDoc = (event) => {
@@ -82,8 +83,34 @@ const DocumentList = () => {
 
         if (documentList.errorMsg !== "") {
             return <tr>
+                <td/>
                 <td>{documentList.errorMsg}</td>
+                <td/>
+                <td/>
+                <td/>
             </tr>
+        }
+
+        if (documentList.data.length === 0 && documentList.loading === false) {
+            return <tr>
+                <td/>
+                <td>{t("ui.no-results")}</td>
+                <td/>
+                <td/>
+                <td/>
+            </tr>
+        }
+
+        if (documentList.data.length === 0 && documentList.loading === true) {
+            return (
+                <>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                    <SkeletonLoadingRow/>
+                </>
+            )
         }
     }
 
@@ -211,7 +238,7 @@ const DocumentList = () => {
                     pageCount={Math.ceil(documentList.count / documentList.rows)}
                     pageRangeDisplayed={2}
                     pageMarginDisplayed={1}
-                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery, uiStates.showDemoContent)}
+                    onPageChange={(data) => fetchDocuments(documentList.rows, data.selected + 1, uiStates.documentQuery, uiStates.selectedWebsite)}
                     containerClassName={"pagination"}
                     activeClassName={'active'}
                     breakClassName={'page-item'}

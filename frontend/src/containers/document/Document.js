@@ -36,7 +36,7 @@ const Document = (props) => {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 dispatch(DeleteDocument(event))
-                dispatch(GetDocumentList(5, 1, "", uiStates.showDemoContent))
+                dispatch(GetDocumentList(5, 1, "", ""))
                 history.push("/")
             }
         });
@@ -86,14 +86,17 @@ const Document = (props) => {
                                 icon="pi pi-refresh"
                                 className="p-button-primary margin-left"
                             />
-                            <Button
-                                onClick={() => confirmStartOcr(documentId)}
-                                label={t("document.OCR all pages")}
-                                icon="pi pi-play"
-                                className="p-button-primary margin-left"
-                                tooltip={t("document.Starts layout analysis for every page")}
-                                tooltipOptions={{position: 'bottom'}}
-                            />
+                            {(documentData.layout_analysis_model === 4 && documentData.document_page.length > 0) && (
+                                <Button
+                                    onClick={() => confirmStartOcr(documentId)}
+                                    label={t("document.OCR all pages")}
+                                    icon="pi pi-play"
+                                    className="p-button-primary margin-left"
+                                    tooltip={t("document.Starts layout analysis for every page")}
+                                    tooltipOptions={{position: 'bottom'}}
+                                />
+                            )}
+
                             <Button
                                 onClick={() => confirmDeleteDoc(documentId)}
                                 label={t("document.Delete document")}

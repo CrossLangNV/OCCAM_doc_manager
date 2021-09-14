@@ -23,6 +23,10 @@ const AuthReducer = (state = DefaultState, action) => {
                 ...state,
                 loading: false,
                 errorMsg: "Unable to authenticate to django",
+                access: null,
+                refresh: null,
+                isAuthenticated: false,
+                user: null
             }
         case AuthActionTypes.GOOGLE_AUTH_SUCCESS:
             const accessToken = action.payload.access_token
@@ -53,8 +57,10 @@ const AuthReducer = (state = DefaultState, action) => {
         case AuthActionTypes.GET_USER_FAIL:
             return {
                 ...state,
-                user: null,
+                access: null,
+                refresh: null,
                 isAuthenticated: false,
+                user: null,
                 errorMsg: action.payload
             }
         case AuthActionTypes.LOGOUT:

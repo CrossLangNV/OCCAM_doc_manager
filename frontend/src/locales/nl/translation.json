@@ -43,7 +43,10 @@
     "last-updated": "Laatst bijgewerkt",
     "choose": "Selecteer",
     "ocr": "OCR",
-    "view": "Bekijk"
+    "view": "Bekijk",
+    "save": "Opslaan",
+    "saved-metadata": "Metadata is succesvol opgeslagen",
+    "no-results": "Sorry, we konden geen resultaten vinden."
   },
 
   "document": {
