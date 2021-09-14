@@ -67,6 +67,8 @@ const DocumentPublish = (props) => {
 
     const onViewClick = (e) => {
         window.open(documentState.data[documentId].oaipmh_item_url, '_blank');
+        window.open(documentState.data[documentId].oaipmh_collection_url, '_blank');
+
     }
 
     const showData = () => {
@@ -95,19 +97,19 @@ const DocumentPublish = (props) => {
                             Status:
                         </Col>
                         <Col md={3}>
-                            <Tag value={documentData.oaipmh_item_id ? "Published" : "Not published yet"}
-                                 icon={documentData.oaipmh_item_id ? "pi pi-check" : "pi pi-cross"}
-                                 severity={documentData.oaipmh_item_id ? "success" : "warning"}/>
+                            <Tag value={documentData.oaipmh_collection_id ? "Published" : "Not published yet"}
+                                 icon={documentData.oaipmh_collection_id ? "pi pi-check" : "pi pi-cross"}
+                                 severity={documentData.oaipmh_collection_id ? "success" : "warning"}/>
                         </Col>
                     </Row>
 
-                    {(documentData.oaipmh_item_id) &&
+                    {(documentData.oaipmh_collection_id) &&
                     <Row className="margin-top">
                         <Col md={1}>
                             UUID:
                         </Col>
                         <Col md={3}>
-                            {documentData.oaipmh_item_id}
+                            {documentData.oaipmh_collection_id}
                         </Col>
                     </Row>
                     }
@@ -117,7 +119,7 @@ const DocumentPublish = (props) => {
                             <Button className="p-button-success" onClick={onPublishClick}>
                                 {t("publish.Publish")}
                             </Button>
-                            {(documentData.oaipmh_item_url) &&
+                            {(documentData.oaipmh_collection_url) &&
                             <Button className="p-button-info margin-left" onClick={onViewClick}>
                                 {t("ui.view")}
                             </Button>

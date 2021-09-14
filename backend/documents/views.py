@@ -318,7 +318,7 @@ class ExportMetadataAPIView(APIView):
 
 
 class PublishDocumentAPIView(APIView):
-    queryset = Document.objects.none()
+    queryset = Page.objects.all()
 
     def get(self, request, format=None, *args, **kwargs):
         document_id = self.request.GET.get(DOCUMENT, "")
@@ -330,30 +330,29 @@ class PublishDocumentAPIView(APIView):
 
             communities = connector.get_communities()
             community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, communities), None)
+            community_uuid = community.uuid
             if not community:
-                connector.add_community(CommunityAdd(name=OCCAM_COMMUNITY_NAME))
-                community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, connector.get_communities()), None)
+                community_response = connector.add_community(CommunityAdd(name=OCCAM_COMMUNITY_NAME))
+                community_dict = xmltodict.parse(community_response.tostring())
+                community_uuid = community_dict['UUID']
 
-            collections = connector.get_collections()
-            collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, collections), None)
-            if not collection:
-                connector.add_collection(CollectionAdd(name=OCCAM_COLLECTION_NAME), community.uuid)
-                collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, connector.get_collections()), None)
+            collection_response = connector.add_collection(CollectionAdd(name=document.name), community_uuid)
+            collection_dict = xmltodict.parse(collection_response.tostring())
 
-            item = ItemAdd(**document.__dict__)
-            xml_response = connector.add_item(item, collection.uuid)
-
-            # coverting xml to Python dictionary
-            dict_data = xmltodict.parse(xml_response.tostring())
+            for page in self.queryset.filter(document=document_id):
+                #TODO: add page image, overlay + translations as bitstreams to OAI-PMH
+                metadata = {
+                    'name': page.file.name,
+                    'description': document.content
+                }
+                item = ItemAdd(name=metadata['name'])
+                connector.add_item(item, collection_dict['collection']['UUID'], metadata)
 
             # Save the uuid in the Django document
             document = Document.objects.get(pk=document_id)
-            document.oaipmh_item_id = dict_data["item"]["UUID"]
-            document.oaipmh_item_url = URL_DSPACE +  dict_data["item"]["link"]
+            document.oaipmh_collection_id = collection_dict["collection"]["UUID"]
+            document.oaipmh_collection_url = URL_DSPACE + collection_dict["collection"]["link"]
             document.save()
-
-            # coverting to json
-            json_data = json.dumps(dict_data, indent=2)
 
             serializer = DocumentSerializer(document, many=False)
             return Response(serializer.data, status=status.HTTP_200_OK)

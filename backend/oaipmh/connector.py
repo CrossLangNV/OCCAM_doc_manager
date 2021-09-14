@@ -1,7 +1,7 @@
 import urllib
 import warnings
 from types import SimpleNamespace
-from typing import List, Union, Callable
+from typing import List, Union, Callable, Optional
 
 import requests
 from lxml import etree
@@ -158,17 +158,18 @@ class ConnectorDSpaceREST(requests.Session):
 
         return l
 
-    def add_item(self, item: ItemAdd, collection_id: int) -> XMLResponse:
+    def add_item(self, item: ItemAdd, collection_id: int, metadata: dict) -> XMLResponse:
 
         url = self.url_collections + f"/{collection_id}/items"
 
-        data = dict(vars(item))
-
-        dcm = DCMetadata(title=item.name)
+        dcm = DCMetadata(title=item.name, description=metadata["description"])
 
         metadata = dcm.get_metadata()
 
-        data["metadata"] = metadata
+        data = {
+            'name': item.name,
+            "metadata": metadata
+        }
 
         response = self.post(url, json=data,
                              )
@@ -303,14 +304,16 @@ class DCMetadata:
     def __init__(
             self,
             # Required
-            title: Union[str],
+            title: str,
             # Not required
+            description: Optional[str],
             contributor_author: Union[list, str] = None,
             abstract: Union[list, str] = None,
     ):
 
         self.title = title
 
+        self.description = description
         self.contributor_author = contributor_author
         self.abstract = abstract
 
@@ -321,6 +324,9 @@ class DCMetadata:
         def add_title(title):
             metadata.append({"key": "dc.title", "value": title})
             # metadata.append({"key": "dcterms.title", "value": title})
+
+        def add_description(description):
+            metadata.append({"key": "dc.description", "value": description})
 
         def add_contributor_author(contributor_author):
             metadata.append({"key": "dc.contributor.author", "value": contributor_author})
@@ -337,6 +343,7 @@ class DCMetadata:
                 add_i(el_i)
 
         meta_factory(self.title, add_title)
+        meta_factory(self.description, add_description)
         meta_factory(self.contributor_author, add_contributor_author)
         meta_factory(self.abstract, add_abstract)
 

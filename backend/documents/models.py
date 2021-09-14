@@ -70,8 +70,8 @@ class Document(models.Model):
     )
 
     europeana_item_id = models.CharField(max_length=1000, blank=True, null=True)
-    oaipmh_item_id = models.CharField(max_length=1000, blank=True, null=True)
-    oaipmh_item_url = models.URLField(default="", blank=True)
+    oaipmh_collection_id = models.CharField(max_length=1000, blank=True, null=True)
+    oaipmh_collection_url = models.URLField(default="", blank=True)
 
     layout_analysis_model = models.ForeignKey(LayoutAnalysisModel, on_delete=models.SET_NULL, blank=True, null=True)
     website = models.ForeignKey(Website, on_delete=models.CASCADE, blank=True, null=True)
