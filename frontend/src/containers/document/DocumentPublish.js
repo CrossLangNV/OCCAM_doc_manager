@@ -56,6 +56,9 @@ const DocumentPublish = (props) => {
 
                 if (selectedPage.id === e.value.id) {
                     localSelectedPages.splice(i, 1);
+                    if (selectedMetadata.includes(e.value)) {
+                        selectedMetadata.splice(i, 1);
+                    }
                     break;
                 }
             }
@@ -64,10 +67,14 @@ const DocumentPublish = (props) => {
     }
 
     const onMetadataSelection = async (e) => {
-        let localSelectedMetadata = [...selectedMetadata];
+        let localSelectedMetadata = [...selectedMetadata]
+
 
         if (e.checked) {
             localSelectedMetadata.push(e.value);
+            if (!selectedPages.includes(e.value)) {
+                selectedPages.push(e.value);
+            }
         } else {
             for (let i = 0; i < localSelectedMetadata.length; i++) {
                 const selectedPage = localSelectedMetadata[i];
