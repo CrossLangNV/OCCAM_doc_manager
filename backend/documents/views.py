@@ -1,12 +1,16 @@
+import base64
 import io
 import json
 import logging
 import os
 import zipfile
+from datetime import date
 from io import BytesIO
 
 import xmltodict as xmltodict
 from django.http.response import HttpResponse
+from minio import Minio, ResponseError
+from minio.error import BucketAlreadyOwnedByYou, BucketAlreadyExists
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -314,25 +318,29 @@ class ExportMetadataAPIView(APIView):
     permission_classes = []
     queryset = Page.objects.all()
 
-    def get(self, request, format=None, *args, **kwargs):
-        document_id = self.request.GET.get(DOCUMENT, "")
+    def post(self, request, format=None, *args, **kwargs):
+        page_ids = request.data["page_ids"]
 
-        if document_id:
-            self.queryset = self.queryset.filter(document__id=str(document_id))
+        if page_ids:
+            self.queryset = self.queryset.filter(pk__in=list(page_ids))
             serializer = PageSerializer()
 
-            f = BytesIO()
-            z = zipfile.ZipFile(f, 'a', zipfile.ZIP_DEFLATED)
+            z = zipfile.ZipFile("export.zip", 'w', zipfile.ZIP_DEFLATED)
             for page in self.queryset:
+                print("page: ", page)
                 p_metadata = serializer.get_metadata(page)
                 p_metadata_xml = serializer.get_metadata_xml(page)
                 filename = os.path.splitext(p_metadata['titles'][0])[0]
                 z.writestr(filename + '.xml', p_metadata_xml)
+
             z.close()
 
-            response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
-            response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
-            return response
+            encoded = base64.b64encode(z)
+            print("encoded zip: ", encoded)
+
+            # response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
+            # response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
+            # return response
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

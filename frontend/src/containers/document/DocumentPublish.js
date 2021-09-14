@@ -3,7 +3,6 @@ import ProgressBar from "../ProgressBar";
 import {Col, Image, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {Button} from "primereact/button";
-import {baseUrl} from "../../constants/axiosConf";
 import {useDispatch, useSelector} from "react-redux";
 import {GetDocument, PublishDocument} from "../../actions/documentActions";
 import _ from "lodash";
@@ -14,6 +13,8 @@ import NotSelectedMessage from "../NotSelectedMessage";
 import {Checkbox} from "primereact/checkbox";
 import {Tag} from "primereact/tag";
 import {Toast} from "primereact/toast";
+import axios from "axios";
+import {baseUrl} from "../../constants/axiosConf";
 
 const DocumentPublish = (props) => {
     const documentId = props.match.params.documentId;
@@ -68,6 +69,25 @@ const DocumentPublish = (props) => {
     const onViewClick = (e) => {
         window.open(documentState.data[documentId].oaipmh_collection_url, '_blank');
     }
+
+    const downloadPDF = async (selectedPages) => {
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        let pageIdList = []
+        selectedPages.forEach(page => {
+            pageIdList.push(page.id)
+        })
+
+        await axios.post(`${baseUrl}/documents/api/export/metadata`,
+            {
+                "page_ids": pageIdList,
+            },
+            config)
+    };
 
     const showData = () => {
         if (!_.isEmpty(documentState.data[documentId])) {
@@ -153,7 +173,7 @@ const DocumentPublish = (props) => {
                                                               onChange={onPageSelection}
                                                               checked={selectedPages.some((item) => item.id === page.id)}/>
                                                     <label className="m-md-2"
-                                                           htmlFor={page.id}>{page.metadata.titles[0].split('/')[1]}</label>
+                                                           htmlFor={page.id}>{page.metadata.title}</label>
                                                 </div>
                                             </Row>
                                         </Card>
@@ -169,10 +189,9 @@ const DocumentPublish = (props) => {
 
                     <Row>
                         <Col>
-                            <Button>
-                                <a style={linkStyle}
-                                   href={`${baseUrl}/documents/api/export/metadata?document=${documentId}`}>{t("publish.Download")}</a>
-                            </Button>
+                            <Button label="Download" onClick={() => {
+                                downloadPDF(selectedPages)
+                            }}/>
                         </Col>
                     </Row>
 
