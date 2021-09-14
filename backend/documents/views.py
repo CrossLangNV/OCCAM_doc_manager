@@ -13,7 +13,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website
+from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website, Geojson
 from documents.processing.file_upload import pdf_image_generator
 from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
     LayoutAnalysisModelSerializer, WebsiteSerializer
@@ -328,6 +328,7 @@ class PublishDocumentAPIView(APIView):
             connector = ConnectorDSpaceREST(URL_DSPACE)
             connector.login(EMAIL_DSPACE, PASSWORD_DSPACE)
 
+            # Get the community from OAI-PMH, or create if it didn't exist yet
             communities = connector.get_communities()
             community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, communities), None)
             community_uuid = community.uuid
@@ -336,17 +337,29 @@ class PublishDocumentAPIView(APIView):
                 community_dict = xmltodict.parse(community_response.tostring())
                 community_uuid = community_dict['UUID']
 
+            # Create a new collection for the document and add to OAI-PMH
             collection_response = connector.add_collection(CollectionAdd(name=document.name), community_uuid)
             collection_dict = xmltodict.parse(collection_response.tostring())
 
+            # Create a new item for every page of the document
             for page in self.queryset.filter(document=document_id):
-                #TODO: add page image, overlay + translations as bitstreams to OAI-PMH
                 metadata = {
                     'name': page.file.name,
                     'description': document.content
                 }
                 item = ItemAdd(name=metadata['name'])
-                connector.add_item(item, collection_dict['collection']['UUID'], metadata)
+                # add to OAI-PMH
+                item_response = connector.add_item(item, collection_dict['collection']['UUID'], metadata)
+                item_dict = xmltodict.parse(item_response.tostring())
+                # add bitstreams to OAI-PMH for page image and for overlay, translations if available
+                connector.add_bitstream(page.file, page.file.name, item_dict["item"]["UUID"])
+                overlays = Overlay.objects.filter(page=page.id)
+                if overlays:
+                    overlay = overlays[0]
+                    connector.add_bitstream(overlay.file, overlay.file.name, item_dict["item"]["UUID"])
+                    geojsons = Geojson.objects.filter(overlay=overlay.id)
+                    for geojson in geojsons:
+                        connector.add_bitstream(geojson.file, geojson.file.name, item_dict["item"]["UUID"])
 
             # Save the uuid in the Django document
             document = Document.objects.get(pk=document_id)
