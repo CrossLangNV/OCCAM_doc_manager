@@ -330,29 +330,28 @@ class PublishDocumentAPIView(APIView):
 
             communities = connector.get_communities()
             community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, communities), None)
+            community_uuid = community.uuid
             if not community:
-                connector.add_community(CommunityAdd(name=OCCAM_COMMUNITY_NAME))
-                community = next(filter(lambda c: c.name == OCCAM_COMMUNITY_NAME, connector.get_communities()), None)
+                community_response = connector.add_community(CommunityAdd(name=OCCAM_COMMUNITY_NAME))
+                community_dict = xmltodict.parse(community_response.tostring())
+                community_uuid = community_dict['UUID']
 
-            collections = connector.get_collections()
-            collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, collections), None)
-            if not collection:
-                connector.add_collection(CollectionAdd(name=OCCAM_COLLECTION_NAME), community.uuid)
-                collection = next(filter(lambda c: c.name == OCCAM_COLLECTION_NAME, connector.get_collections()), None)
+            collection_response = connector.add_collection(CollectionAdd(name=document.name), community_uuid)
+            collection_dict = xmltodict.parse(collection_response.tostring())
 
-            metadata = document.__dict__
-            metadata['description'] = metadata['content']
-            item = ItemAdd(name=metadata['name'])
-            xml_response = connector.add_item(item, collection.uuid, metadata)
+            pages_response = []
+            for page in self.queryset.filter(document=document_id):
+                #TODO: add page image, overlay + translations as an item to OAI-PMH
+                metadata = {
+                    'name': page.file.name,
+                    'description': document.content
+                }
+                item = ItemAdd(name=metadata['name'])
+                xml_response = connector.add_item(item, collection_dict['collection']['UUID'], metadata)
+                # coverting xml to Python dictionary
+                pages_response.append(xmltodict.parse(xml_response.tostring()))
 
-            json_response = {'xml': xml_response.tostring()}
-
-            # coverting xml to Python dictionary
-            dict_data = xmltodict.parse(xml_response.tostring())
-            # coverting to json
-            json_data = json.dumps(dict_data, indent=2)
-
-            return Response(json_data, status=status.HTTP_200_OK)
+            return Response(pages_response, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
