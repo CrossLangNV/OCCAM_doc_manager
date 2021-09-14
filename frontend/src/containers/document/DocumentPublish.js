@@ -66,9 +66,7 @@ const DocumentPublish = (props) => {
     }
 
     const onViewClick = (e) => {
-        window.open(documentState.data[documentId].oaipmh_item_url, '_blank');
         window.open(documentState.data[documentId].oaipmh_collection_url, '_blank');
-
     }
 
     const showData = () => {
