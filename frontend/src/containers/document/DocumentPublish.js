@@ -22,6 +22,7 @@ const DocumentPublish = (props) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const [selectedPages, setSelectedPages] = useState([]);
+    const [selectedMetadata, setSelectedMetadata] = useState([]);
     const toast = useRef(null);
 
 
@@ -63,7 +64,21 @@ const DocumentPublish = (props) => {
     }
 
     const onMetadataSelection = async (e) => {
+        let localSelectedMetadata = [...selectedMetadata];
 
+        if (e.checked) {
+            localSelectedMetadata.push(e.value);
+        } else {
+            for (let i = 0; i < localSelectedMetadata.length; i++) {
+                const selectedPage = localSelectedMetadata[i];
+
+                if (selectedPage.id === e.value.id) {
+                    localSelectedMetadata.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        setSelectedMetadata(localSelectedMetadata);
     }
 
     const onOverlaySelection = async (e) => {
@@ -149,13 +164,14 @@ const DocumentPublish = (props) => {
                         <ScrollPanel className="occ-ui-publish-pages-list-scroll">
                             <Row className="flex-md-nowrap">
                                 {pageList.data.map(page => {
-                                    return <Col md={3}>
+                                    return <Col md={3} key={page.id}>
                                         <Card className="m-md-1" key={page.id}>
                                             <Row>
                                                 <Image
-                                                    className="page-card-img"
+                                                    className={selectedPages.some((item) => item.id === page.id) ? "page-card-img selectedForDownload" : "page-card-img"}
                                                     src={page.file}
                                                     onClick={e => onPageImageClick(page.file)}
+
                                                 />
                                             </Row>
                                             <Row>
@@ -170,7 +186,9 @@ const DocumentPublish = (props) => {
                                             <Row>
                                                 <div className="p-field-checkbox m-md-1">
                                                     <Checkbox inputId={page.id + "/metadata"} name="metadata"
-                                                              value={page.id}/>
+                                                              value={page}
+                                                              onChange={onMetadataSelection}
+                                                              checked={selectedMetadata.some((item) => item.id === page.id)}/>
                                                     <label className="m-md-2"
                                                            htmlFor={page.id + "/metadata"}>Metadata</label>
                                                 </div>
