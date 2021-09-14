@@ -12,8 +12,6 @@ import {ScrollPanel} from "primereact/scrollpanel";
 import {Card} from "primereact/card";
 import NotSelectedMessage from "../NotSelectedMessage";
 import {Checkbox} from "primereact/checkbox";
-import DocumentPublishOverlay from "./DocumentPublishOverlay";
-import DocumentPublishTranslation from "./DocumentPublishTranslation";
 import {Tag} from "primereact/tag";
 import {Toast} from "primereact/toast";
 
@@ -22,9 +20,7 @@ const DocumentPublish = (props) => {
     const dispatch = useDispatch();
     const {t} = useTranslation();
     const [selectedPages, setSelectedPages] = useState([]);
-    const [selectedMetadata, setSelectedMetadata] = useState([]);
     const toast = useRef(null);
-
 
     // Redux states
     const pageList = useSelector(state => state.pageList);
@@ -41,8 +37,9 @@ const DocumentPublish = (props) => {
         textDecoration: 'inherit'
     };
 
-    const onPageImageClick = async (pageFile) => {
+    const onPageImageClick = async (pageFile, pageId) => {
         console.log("Clicked on: " + pageFile)
+        onPageSelection(pageId)
     }
 
     const onPageSelection = async (e) => {
@@ -56,9 +53,6 @@ const DocumentPublish = (props) => {
 
                 if (selectedPage.id === e.value.id) {
                     localSelectedPages.splice(i, 1);
-                    if (selectedMetadata.includes(e.value)) {
-                        selectedMetadata.splice(i, 1);
-                    }
                     break;
                 }
             }
@@ -66,41 +60,13 @@ const DocumentPublish = (props) => {
         setSelectedPages(localSelectedPages);
     }
 
-    const onMetadataSelection = async (e) => {
-        let localSelectedMetadata = [...selectedMetadata]
-
-
-        if (e.checked) {
-            localSelectedMetadata.push(e.value);
-            if (!selectedPages.includes(e.value)) {
-                selectedPages.push(e.value);
-            }
-        } else {
-            for (let i = 0; i < localSelectedMetadata.length; i++) {
-                const selectedPage = localSelectedMetadata[i];
-
-                if (selectedPage.id === e.value.id) {
-                    localSelectedMetadata.splice(i, 1);
-                    break;
-                }
-            }
-        }
-        setSelectedMetadata(localSelectedMetadata);
-    }
-
-    const onOverlaySelection = async (e) => {
-
-    }
-
     const onPublishClick = async () => {
         dispatch(PublishDocument(documentId));
         toast.current.show({severity: 'success', summary: t("ui.success"), detail: t("oaipmh.uploaded")});
-
     }
 
     const onViewClick = (e) => {
         window.open(documentState.data[documentId].oaipmh_item_url, '_blank');
-
     }
 
     const showData = () => {
@@ -177,7 +143,7 @@ const DocumentPublish = (props) => {
                                                 <Image
                                                     className={selectedPages.some((item) => item.id === page.id) ? "page-card-img selectedForDownload" : "page-card-img"}
                                                     src={page.file}
-                                                    onClick={e => onPageImageClick(page.file)}
+                                                    onClick={e => onPageImageClick(e, page.file, page.id)}
 
                                                 />
                                             </Row>
@@ -189,22 +155,6 @@ const DocumentPublish = (props) => {
                                                     <label className="m-md-2"
                                                            htmlFor={page.id}>{page.metadata.titles[0].split('/')[1]}</label>
                                                 </div>
-                                            </Row>
-                                            <Row>
-                                                <div className="p-field-checkbox m-md-1">
-                                                    <Checkbox inputId={page.id + "/metadata"} name="metadata"
-                                                              value={page}
-                                                              onChange={onMetadataSelection}
-                                                              checked={selectedMetadata.some((item) => item.id === page.id)}/>
-                                                    <label className="m-md-2"
-                                                           htmlFor={page.id + "/metadata"}>Metadata</label>
-                                                </div>
-                                            </Row>
-                                            <Row>
-                                                <DocumentPublishOverlay page={page}/>
-                                            </Row>
-                                            <Row>
-                                                <DocumentPublishTranslation page={page}/>
                                             </Row>
                                         </Card>
                                     </Col>
