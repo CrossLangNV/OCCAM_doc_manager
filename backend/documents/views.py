@@ -326,35 +326,19 @@ class ExportMetadataAPIView(APIView):
             self.queryset = self.queryset.filter(pk__in=list(page_ids))
             serializer = PageSerializer()
 
-            # f = BytesIO()
+            # Create a zip file and add every page in it
             z = zipfile.ZipFile("export.zip", 'w', zipfile.ZIP_DEFLATED)
             for page in self.queryset:
-                print("page: ", page)
-
-                # p_metadata = serializer.get_metadata(page)
-                # p_metadata_xml = serializer.get_metadata_xml(page)
                 metadata = Metadata.objects.get(page=page)
-
                 z.writestr(metadata.title + '.xml', serializer.get_metadata_xml(page))
 
-            with open("export.zip", "rb") as f:
-                print("z.filelist: ", z.filelist)
-
-
-                encoded = base64.b64encode(f.read())
-                encoded_str = str(encoded.decode("utf-8"))
-                print("encoded: ", encoded)
-                print("encoded_str: ", encoded_str)
-
-                return Response(encoded_str, status=status.HTTP_200_OK)
-
+            # Save the zip file
             z.close()
 
-
-
-            # response = HttpResponse(f.getvalue(), status=status.HTTP_200_OK, content_type='application/force-download')
-            # response['Content-Disposition'] = 'attachment; filename="%s"' % 'metadata.zip'
-            # return response
+            # Read out the zipfile and encode it with base64, return the string to the response
+            with open("export.zip", "rb") as f:
+                encoded_str = base64.b64encode(f.read())
+                return Response(encoded_str, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

@@ -15,8 +15,6 @@ import {Tag} from "primereact/tag";
 import {Toast} from "primereact/toast";
 import axios from "axios";
 import {baseUrl} from "../../constants/axiosConf";
-import JSZip from "jszip";
-import { saveAs } from 'file-saver';
 
 
 const DocumentPublish = (props) => {
@@ -87,21 +85,14 @@ const DocumentPublish = (props) => {
 
         await axios.post(`${baseUrl}/documents/api/export/metadata`, {"page_ids": pageIdList}, config)
             .then((res) => {
-                // console.log(res.data)
-                // const linkSource = `data:application/zip;base64,${res.data}`;
-                // const downloadLink = document.createElement("a");
-                // const fileName = "export.zip";
-                //
-                // downloadLink.href = linkSource;
-                // downloadLink.download = fileName;
-                // downloadLink.click();
 
-                // var buffer = base64ToBuffer(res.data);
-                // var zip = new JSZip(buffer);
+                const linkSource = `data:application/zip;base64,${res.data}`;
+                const downloadLink = document.createElement("a");
+                const fileName = "export.zip";
 
-                var zip = new JSZip(res.data,{"base64": true});
-
-                saveAs(zip, "export_from_file_saver.zip");
+                downloadLink.href = linkSource;
+                downloadLink.download = fileName;
+                downloadLink.click();
             })
 
 
