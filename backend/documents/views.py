@@ -315,7 +315,6 @@ class TmStatsAPIView(APIView):
 
 
 class ExportMetadataAPIView(APIView):
-    # TODO: set auth with a cookie, see https://stackoverflow.com/a/23501687, for now no auth
     permission_classes = []
     queryset = Page.objects.all()
 
