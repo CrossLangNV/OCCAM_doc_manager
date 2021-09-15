@@ -135,6 +135,7 @@ export const PublishDocument = (id) => async dispatch => {
                 documentId: id,
                 payload: res.data
             });
+            console.log("res.data: ", res.data)
         })
 
 }
