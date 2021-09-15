@@ -319,23 +319,21 @@ const DocumentAdd = (props) => {
                     </Col>
                 </Row>
 
-                {(websiteId !== null) && (
-                    <Row>
-                        <Col md={3}/>
-                        <Col md={6}>
-                            <div className='occ-center'>
-                                <Button onClick={handleSubmit}
-                                        label={documentId !== undefined ? "Save" : "Next"}
-                                        style={{marginRight: '.25em'}}
-                                        disabled={!title}
-                                        className="margin-top doc-list-step-five"
-                                />
-                            </div>
-                        </Col>
+                <Row>
+                    <Col md={3}/>
+                    <Col md={6}>
+                        <div className='occ-center'>
+                            <Button onClick={handleSubmit}
+                                    label={documentId !== undefined ? "Save" : "Next"}
+                                    style={{marginRight: '.25em'}}
+                                    disabled={!title}
+                                    className="margin-top doc-list-step-five"
+                            />
+                        </div>
+                    </Col>
 
 
-                    </Row>
-                )}
+                </Row>
 
                 <Toast ref={toast}/>
 
