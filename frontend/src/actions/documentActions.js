@@ -118,26 +118,36 @@ export const ProcessOcrDocument = (id) => async dispatch => {
 
 export const PublishDocument = (id) => async dispatch => {
 
-    dispatch({
-        type: DocumentActionTypes.DOCUMENT_PUBLISH_LOADING
-    });
+    try {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_PUBLISH_LOADING
+        });
 
-    const config = {
-        headers: {
-            'Authorization': `Bearer ${localStorage.getItem("access")}`
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
         }
+
+        await axios.post(`${baseUrl}/documents/api/publish?document=${id}`, {document: id}, config)
+            .then((res) => {
+                dispatch({
+                    type: DocumentActionTypes.DOCUMENT_PUBLISH_SUCCESS,
+                    documentId: id,
+                    payload: res.data
+                });
+                console.log("res: ", res)
+                console.log("res.data: ", res.data)
+            })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_PUBLISH_FAIL,
+            payload: e
+        });
     }
 
-    const res = await axios.get(`${baseUrl}/documents/api/publish?document=${id}`, config)
-        .then((res) => {
-            dispatch({
-                type: DocumentActionTypes.DOCUMENT_PUBLISH_SUCCESS,
-                documentId: id,
-                payload: res.data
-            });
-            console.log("res: ", res)
-            console.log("res.data: ", res.data)
-        })
+
 
 }
 

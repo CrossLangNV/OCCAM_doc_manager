@@ -345,8 +345,8 @@ class ExportMetadataAPIView(APIView):
 class PublishDocumentAPIView(APIView):
     queryset = Page.objects.all()
 
-    def get(self, request, format=None, *args, **kwargs):
-        document_id = self.request.GET.get(DOCUMENT, "")
+    def post(self, request, format=None, *args, **kwargs):
+        document_id = request.data["document"]
 
         if document_id:
             document = Document.objects.get(id=document_id)
