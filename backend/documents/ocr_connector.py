@@ -10,6 +10,7 @@ import requests
 from activitylogs.models import ActivityLogState, ActivityLog
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
+LOCAL_PERO = os.environ['LOCAL_PERO']
 
 PERO_OCR_API = 'https://pero-ocr.fit.vutbr.cz/api/'
 
@@ -26,141 +27,129 @@ KEY_MODEL_NAME = 'name'
 logger = logging.getLogger(__name__)
 
 
-def get_request_status(request_id) -> dict:
-    """
-
-    Args:
-        request_id: The ID as returned by :func:`~get_request_id`
-
-    Returns:
-
-    """
-
-    response_status = requests.get(
-        PERO_OCR_API + f'request_status/{request_id}',
-        headers={'api-key': API_KEY_PERO_OCR,
-                 },
-    )
-
-    return response_status.json()
+class OcrConnector(abc.ABC):
+    pass
 
 
-def get_request_id(page_pk: str,
-                   pero_engine_id: int,
-                   b_info: bool = True) -> str:
-    """
+class PeroOcrWebApiConnector(OcrConnector):
 
-    Args:
-        page_pk:
-        pero_engine_id:
-            As defined by the PERO-OCR API engines.
-            Attention! Not te be confused with LayoutAnalysisModel.pk.
-        b_info: (bool) set to True to print info messages.
+    def get_request_id(self,
+                       page_pk: str,
+                       pero_engine_id: int,
+                       b_info: bool = True) -> str:
+        """
 
-    Returns:
+        Args:
+            page_pk:
+            pero_engine_id:
+                As defined by the PERO-OCR API engines.
+                Attention! Not te be confused with LayoutAnalysisModel.pk.
+            b_info: (bool) set to True to print info messages.
 
-    """
+        Returns:
 
-    data = {
-        "engine": pero_engine_id,
-        "images": {
-            page_pk: None
+        """
+
+        data = {
+            "engine": pero_engine_id,
+            "images": {
+                page_pk: None
+            }
         }
-    }
 
-    if b_info:
-        engines = get_engines()
-        engine_name = next(filter(lambda engine_name: engines.get(engine_name).get(KEY_ENGINE_ID) == pero_engine_id,
-                                  engines))
-        logger.info("Using OCR engine: %s", engine_name)
-        print("Using OCR engine: %s" % engine_name)
+        if b_info:
+            engines = self.get_pero_web_engines()
+            engine_name = next(filter(lambda engine_name: engines.get(engine_name).get(KEY_ENGINE_ID) == pero_engine_id,
+                                      engines))
+            logger.info("Using OCR engine: %s", engine_name)
+            print("Using OCR engine: %s" % engine_name)
 
-    response_request = requests.post(PERO_OCR_API + 'post_processing_request',
-                                     json=data,
-                                     headers={'api-key': API_KEY_PERO_OCR,
-                                              'Content-Type': 'application/json',
-                                              'accept': 'application/json'
-                                              },
-                                     )
+        response_request = requests.post(PERO_OCR_API + 'post_processing_request',
+                                         json=data,
+                                         headers={'api-key': API_KEY_PERO_OCR,
+                                                  'Content-Type': 'application/json',
+                                                  'accept': 'application/json'
+                                                  },
+                                         )
 
-    if not response_request.ok:
-        raise_response(response_request)
+        if not response_request.ok:
+            _raise_response(response_request)
 
-    request_id = response_request.json()['request_id']
+        request_id = response_request.json()['request_id']
 
-    if b_info:
-        status = get_request_status(request_id)
-        # logger.info("Request status: %s", status)
-        print("Request status: %s" % status)
-        logger.info("Request status 2: %s" % status)
+        if b_info:
+            status = self.get_request_status(request_id)
+            # logger.info("Request status: %s", status)
+            print("Request status: %s" % status)
+            logger.info("Request status 2: %s" % status)
 
-    return request_id
+        return request_id
 
+    def upload_file(self,
+                    file,
+                    request_id: str,
+                    page_pk: str,
+                    ) -> None:
+        """
 
-def upload_file(file,
-                request_id: str,
-                page_pk: str,
-                ) -> None:
-    """
+        Example:
+            >> with page.file.open() as file:
+            >>    upload_file(file,
+            >>                request_id=request_id,
+            >>                page_pk=page_pk
+            >>                )
+        """
 
-    Example:
-        >> with page.file.open() as file:
-        >>    upload_file(file,
-        >>                request_id=request_id,
-        >>                page_pk=page_pk
-        >>                )
-    """
+        files = {'file': file}
 
-    files = {'file': file}
+        response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_pk}',
+                                              files=files,
+                                              headers={'api-key': API_KEY_PERO_OCR,
+                                                       },
+                                              )
 
-    response_upload_image = requests.post(f'https://pero-ocr.fit.vutbr.cz/api/upload_image/{request_id}/{page_pk}',
-                                          files=files,
-                                          headers={'api-key': API_KEY_PERO_OCR,
-                                                   },
-                                          )
+        if not response_upload_image.ok:
+            _raise_response(response_upload_image)
 
-    if not response_upload_image.ok:
-        raise_response(response_upload_image)
+    def check_state(self,
+                    request_id: str, page_pk: str, activity_log) -> bool:
+        """
+        Check state of OCR request.
 
+        return: True if finished, else False
+        """
 
-def check_state(request_id: str, page_pk: str, activity_log) -> bool:
-    """
-    Check state of OCR request.
+        response_status = self.get_request_status(request_id)
+        state = response_status['request_status'][page_pk]['state']
 
-    return: True if finished, else False
-    """
+        if state == "PROCESSED":
+            activity_log.state = ActivityLogState.SUCCESS
+            activity_log.save()
+        else:
+            activity_log.state = ActivityLogState.PROCESSING
+            activity_log.save()
 
-    response_status = get_request_status(request_id)
-    state = response_status['request_status'][page_pk]['state']
-
-    if state == "PROCESSED":
-        activity_log.state = ActivityLogState.SUCCESS
         activity_log.save()
-    else:
-        activity_log.state = ActivityLogState.PROCESSING
-        activity_log.save()
 
-    activity_log.save()
+        return not (state in ('WAITING', 'PROCESSING'))
 
-    return not (state in ('WAITING', 'PROCESSING'))
+    def get_result(self,
+                   request_id,
+                   page_pk,
+                   result_format='page'  # alto, page, txt
+                   ) -> bytes:
+        """
+        Returns the Overlay xml as bytestring
+        """
 
+        response_download_results = requests.get(
+            f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_pk}/{result_format}',
+            headers={'api-key': API_KEY_PERO_OCR,
+                     },
+        )
 
-def get_result(request_id,
-               page_pk,
-               result_format='page'  # alto, page, txt
-               ) -> bytes:
-    """
-    Returns the Overlay xml as bytestring
-    """
-
-    response_download_results = requests.get(
-        f'https://pero-ocr.fit.vutbr.cz/api/download_results/{request_id}/{page_pk}/{result_format}',
-        headers={'api-key': API_KEY_PERO_OCR,
-                 },
-    )
-
-    if not response_download_results.ok:
-        raise_response(response_download_results)
+        if not response_download_results.ok:
+            _raise_response(response_download_results)
 
         return response_download_results.content
 

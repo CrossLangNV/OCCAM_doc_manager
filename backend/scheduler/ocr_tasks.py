@@ -2,14 +2,14 @@ import io
 import os
 import time
 
+from celery import shared_task
 from django.contrib.auth.models import User
 from langdetect import detect
 from xml_orm.orm import PageXML
 
 from activitylogs.models import ActivityLog, ActivityLogState
-from celery import shared_task
 from documents.models import Page, Overlay, LayoutAnalysisModel
-from documents.ocr_connector import get_request_id, check_state, get_result, upload_file
+from documents.ocr_connector import PeroOcrWebApiConnector, LocalOcrConnector
 from documents.ocr_engines import get_PERO_OCR_engine_id
 from scheduler.tasks import logger, get_activity_log
 
@@ -36,49 +36,63 @@ def ocr_page_pipeline(page_pk: Page.pk,
 def get_overlay_from_pero_ocr(page: Page,
                               engine_pk: LayoutAnalysisModel.pk,
                               user_pk: User.pk = None,
-                              activity_log: ActivityLog = None):
+                              activity_log: ActivityLog = None) -> bytes:
     if activity_log is None:
         activity_log = get_activity_log(page,
                                         user_pk=user_pk)
-
-    page_pk = str(page.pk)
 
     # POST to Pero OCR /post_processing_request
     # Creates the request
 
     layout_analysis_model = LayoutAnalysisModel.objects.get(pk=engine_pk)
     logger.info("Used engine: %s", layout_analysis_model)
-    pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
-    request_id = get_request_id(page_pk,
-                                pero_engine_id=int(pero_engine_id))
-    logger.info("Sent request to per ocr: %s", request_id)
 
-    # POST to Pero OCR /upload_image/{request_id}/{page_pk}
-    # Uploads image to the request
-    with page.file.open() as file:
-        upload_file(file,
-                    request_id=request_id,
-                    page_pk=page_pk,
-                    )
+    # Local engine
+    if layout_analysis_model.config.get('link') == 'LOCAL_PERO':
+        # TODO actually add the BRIS model!
+        connector = LocalOcrConnector(activity_log=activity_log)
 
-    # GET to Pero OCR /request_status/{request_id}
-    # Checks the processing state of the request
-    # Check if finished!
+        logger.info("Sent request to Pero OCR: local")
 
-    logger.info("Waiting for document to be processed....")
-    while True:
-        if check_state(request_id,
-                       page_pk, activity_log):
-            logger.info("Document is processed!")
-            break
-        else:  # 'PROCESSED'
-            time.sleep(1)
+        with page.file.open() as file:
+            overlay_xml = connector.ocr_image(file)
 
-    # GET to Pero OCR /download_results/{request_id}/{page_pk}/{format}
-    # Download results
-    overlay_xml = get_result(request_id,
-                             page_pk)
-    logger.info("OCR overlay xml: %s", overlay_xml)
+    else:
+        page_pk = str(page.pk)
+        pero_engine_id = get_PERO_OCR_engine_id(layout_analysis_model)
+
+        connector = PeroOcrWebApiConnector()
+
+        request_id = connector.get_request_id(page_pk,
+                                              pero_engine_id=int(pero_engine_id))
+        logger.info("Sent request to Pero OCR: %s", request_id)
+
+        # POST to Pero OCR /upload_image/{request_id}/{page_pk}
+        # Uploads image to the request
+        with page.file.open() as file:
+            connector.upload_file(file,
+                                  request_id=request_id,
+                                  page_pk=page_pk,
+                                  )
+
+        # GET to Pero OCR /request_status/{request_id}
+        # Checks the processing state of the request
+        # Check if finished!
+
+        logger.info("Waiting for document to be processed....")
+        while True:
+            if connector.check_state(request_id,
+                                     page_pk, activity_log):
+                logger.info("Document is processed!")
+                break
+            else:  # 'PROCESSED'
+                time.sleep(1)
+
+        # GET to Pero OCR /download_results/{request_id}/{page_pk}/{format}
+        # Download results
+        overlay_xml = connector.get_result(request_id,
+                                           page_pk)
+        logger.info("OCR overlay xml: %s", overlay_xml)
 
     return overlay_xml
 

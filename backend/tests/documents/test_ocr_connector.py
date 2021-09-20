@@ -1,6 +1,7 @@
 from django.test import TransactionTestCase
 
-from documents.ocr_connector import get_engines, get_request_id, KEY_ENGINE_ID, KEY_MODELS, KEY_MODEL_ID, KEY_MODEL_NAME
+from documents.ocr_connector import KEY_ENGINE_ID, KEY_MODELS, KEY_MODEL_ID, \
+    KEY_MODEL_NAME, PeroOcrWebApiConnector
 
 
 class TestGetEngines(TransactionTestCase):
@@ -66,12 +67,14 @@ class TestDifferentEngines(TransactionTestCase):
 
         page_id = 'page_id_tmp'
 
+        connector = PeroOcrWebApiConnector()
+
         with self.subTest("with engine id's"):
 
             for id in _engine_id_generator():
                 with self.subTest(f" * engine {id}"):
-                    r_id = get_request_id(page_id,
-                                          pero_engine_id=id)
+                    r_id = connector.get_request_id(page_id,
+                                                    pero_engine_id=id)
 
                     self.assertTrue(r_id)
 
@@ -80,8 +83,8 @@ class TestDifferentEngines(TransactionTestCase):
             with self.subTest("with model id's"):
                 for id in _model_id_generator():
                     with self.subTest(f" * model {id}"):
-                        r_id = get_request_id(page_id,
-                                              pero_engine_id=id)
+                        r_id = connector.get_request_id(page_id,
+                                                        pero_engine_id=id)
 
                         self.assertTrue(r_id)
 
@@ -100,8 +103,8 @@ class TestDifferentEngines(TransactionTestCase):
                         )
                 ):
                     with self.subTest(f" * id: {id}"):
-                        r_id = get_request_id(page_id,
-                                              pero_engine_id=id)
+                        r_id = connector.get_request_id(page_id,
+                                                        pero_engine_id=id)
 
                         self.assertTrue(r_id)
 

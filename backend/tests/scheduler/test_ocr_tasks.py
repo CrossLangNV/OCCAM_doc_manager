@@ -6,8 +6,8 @@ import signal
 from django.test import TransactionTestCase
 
 from backend.tests.documents.create_database_mock import create
+from documents.fixtures.engines_main import ENGINES_JSON
 from documents.models import Page, LayoutAnalysisModel
-from documents.ocr_engines import init_engines
 from scheduler.ocr_tasks import xml_lang_detect, ocr_page_pipeline
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
@@ -40,12 +40,14 @@ class XMLLangDetectTest(TransactionTestCase):
 
 
 class OcrPageTest(TransactionTestCase):
+    fixtures = [ENGINES_JSON]
+
     def setUp(self) -> None:
         create()
 
         self.page = Page.objects.all()[0]
 
-        init_engines()
+        # init_engines()
         self.printed_engine = LayoutAnalysisModel.objects.filter(name__icontains='printed')[0]
 
     def test_engine_object(self):

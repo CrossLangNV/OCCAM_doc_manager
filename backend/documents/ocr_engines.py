@@ -45,7 +45,7 @@ def init_engines() -> None:
 
 def get_PERO_OCR_engine_id(ocr_engine: LayoutAnalysisModel):
     if ocr_engine.config.get(KEY_LINK) != PERO_OCR_ENGINE:
-        warnings.warn("Expected conformation that this is a PERO-OCR engine.", UserWarning)
+        warnings.warn("Expected confirmation that this is a PERO-OCR engine.", UserWarning)
 
     pero_engine_id = ocr_engine.config[KEY_ENGINE_ID]
     return pero_engine_id
