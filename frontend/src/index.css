@@ -179,7 +179,12 @@ a {
 }
 
 .occ-plaintext {
-    text-align: center;
+    display: inline-block;
+    font-size: 50px;
+    background-color: green;
+    /*new:*/
+    line-height: 34px;
+    height: 35px;
 }
 
 .occ-table-result-count {

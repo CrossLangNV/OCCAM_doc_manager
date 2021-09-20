@@ -12,7 +12,8 @@ class TestGetEngines(TransactionTestCase):
 
         """
 
-        engines = get_engines()  # response_engines.get(key_engines)
+        connector = PeroOcrWebApiConnector()
+        engines = connector.get_pero_web_engines()  # response_engines.get(key_engines)
 
         with self.subTest('Layout engines'):
             for engine_name, abc in engines.items():
@@ -106,14 +107,16 @@ class TestDifferentEngines(TransactionTestCase):
 
 
 def _engine_id_generator():
-    engines = get_engines()
+    connector = PeroOcrWebApiConnector()
+    engines = connector.get_pero_web_engines()
 
     for engine_info in engines.values():
         yield engine_info.get(KEY_ENGINE_ID)
 
 
 def _model_id_generator():
-    engines = get_engines()
+    connector = PeroOcrWebApiConnector()
+    engines = connector.get_pero_web_engines()
 
     for _, engine_info in engines.items():
         for model_info in engine_info[KEY_MODELS]:

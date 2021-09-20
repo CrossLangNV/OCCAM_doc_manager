@@ -1,7 +1,7 @@
 from django.test import TransactionTestCase
 
 from documents.models import LayoutAnalysisModel
-from documents.ocr_connector import get_engines
+from documents.ocr_connector import PeroOcrWebApiConnector
 from documents.ocr_engines import init_engines, _nice_string
 
 
@@ -229,7 +229,8 @@ class LayoutAnalysisModelTest(TransactionTestCase):
         layout_anlysis_models = LayoutAnalysisModel.objects.all()
         layout_anlysis_models_names = [e.name for e in layout_anlysis_models]
 
-        engines = get_engines()
+        connector = PeroOcrWebApiConnector()
+        engines = connector.get_pero_web_engines()
         for engine_name, engine_info in engines.items():
             engine_name = _nice_string(engine_name)
             with self.subTest(f"Engine available in Django: {engine_name}"):
@@ -244,7 +245,8 @@ class LayoutAnalysisModelTest(TransactionTestCase):
         layout_anlysis_models = LayoutAnalysisModel.objects.all()
         layout_anlysis_models_names = [e.name for e in layout_anlysis_models]
 
-        engines = get_engines()
+        connector = PeroOcrWebApiConnector()
+        engines = connector.get_pero_web_engines()
         for engine_name, engine_info in engines.items():
             with self.subTest(f"Engine available in Django: {engine_name}"):
                 self.assertIn(_nice_string(engine_name), layout_anlysis_models_names)

@@ -1,7 +1,7 @@
 import warnings
 
 from documents.models import LayoutAnalysisModel
-from documents.ocr_connector import get_engines, KEY_DESCRIPTION, KEY_ENGINE_ID
+from documents.ocr_connector import KEY_DESCRIPTION, KEY_ENGINE_ID, PeroOcrWebApiConnector
 
 KEY_LINK = 'link'
 PERO_OCR_ENGINE = 'https://pero-ocr.fit.vutbr.cz/'
@@ -22,7 +22,8 @@ def init_engines() -> None:
                                                            }
                                                  )
 
-    for engine_name, engine_info in get_engines().items():
+    connector = PeroOcrWebApiConnector()
+    for engine_name, engine_info in connector.get_pero_web_engines().items():
         engine_info[KEY_LINK] = PERO_OCR_ENGINE
 
         description = engine_info.get(KEY_DESCRIPTION)

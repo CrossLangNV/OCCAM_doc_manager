@@ -323,7 +323,7 @@ const PageLeaflet = (props) => {
                     </Col>
 
                     <Col md={4}>
-                        {/* Plain Text View */}
+                        {/* SIDEBAR: Plain Text View */}
                         {(textViewSidebar &&
                             <div className="occ-plaintext white-space margin-top">
                                 <PagePlainText content={plainText}/>

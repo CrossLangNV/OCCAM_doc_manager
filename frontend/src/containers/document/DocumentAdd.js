@@ -175,6 +175,7 @@ const DocumentAdd = (props) => {
 
         const fetchEuropeanaItem = async (itemId) => {
             await axios.get(europeanaBaseUrl + itemId).then(response => {
+                console.log(response.data)
                 const $ = load(response.data);
                 const title = $('h1').text();
                 const imageUrl = $('div.item-hero a').attr('href');

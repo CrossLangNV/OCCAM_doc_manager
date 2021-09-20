@@ -1,13 +1,13 @@
 """
 Connector methods to PERO-OCR's API.
 """
-
+import abc
 import logging
 import os
 
 import requests
 
-from activitylogs.models import ActivityLogState
+from activitylogs.models import ActivityLogState, ActivityLog
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 
@@ -162,47 +162,108 @@ def get_result(request_id,
     if not response_download_results.ok:
         raise_response(response_download_results)
 
-    return response_download_results.content
+        return response_download_results.content
+
+    def get_request_status(self, request_id) -> dict:
+        """
+
+        Args:
+            request_id: The ID as returned by :func:`~get_request_id`
+
+        Returns:
+
+        """
+
+        response_status = requests.get(
+            PERO_OCR_API + f'request_status/{request_id}',
+            headers={'api-key': API_KEY_PERO_OCR,
+                     },
+        )
+
+        return response_status.json()
+
+    def get_pero_web_engines(self) -> dict:
+        """
+        info about the OCR engines in PERO-OCR. Engine includes layout analysis + OCR.
+
+        Returns a dictionary: {name_engine : info_engine, ...}.
+        info_engine contains another dictionary with additional info.
+        """
+
+        response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
+                                        headers={'api-key': API_KEY_PERO_OCR})
+
+        if not response_engines.ok:
+            content = {'message': 'PERO-OCR engines not found.',
+                       'status code': response_engines.status_code,
+                       'content': response_engines.content,
+                       }
+            raise ConnectionError(content)
+
+        b = 0
+        if b:
+            model_czech = response_engines.json()['engines']['czech_old_printed']
+            model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
+            model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
+
+        if not response_engines.ok:
+            _raise_response(response_engines)
+
+        d_response = response_engines.json()
+
+        if VALUE_STATUS not in d_response.get(KEY_STATUS):
+            _raise_response(response_engines,
+                            message='No success found')
+
+        return d_response[KEY_ENGINES]
 
 
-def get_engines() -> dict:
-    """
-    info about the OCR engines in PERO-OCR. Engine includes layout analysis + OCR.
+class LocalOcrConnector(OcrConnector):
+    def __init__(self,
+                 activity_log: ActivityLog = None):
+        self.activity_log = activity_log
 
-    Returns a dictionary: {name_engine : info_engine, ...}.
-    info_engine contains another dictionary with additional info.
-    """
+    def ocr_image(self,
+                  file,
+                  ) -> bytes:
+        """
+        OCRs a page and return the overlay as a page xml bytestring.
 
-    response_engines = requests.get('https://pero-ocr.fit.vutbr.cz/api/get_engines',
-                                    headers={'api-key': API_KEY_PERO_OCR})
+        args:
+            file: an image file to be OCR'ed
 
-    if not response_engines.ok:
-        content = {'message': 'PERO-OCR engines not found.',
-                   'status code': response_engines.status_code,
-                   'content': response_engines.content,
-                   }
-        raise ConnectionError(content)
+        Example:
+            >> with page.file.open() as file:
+            >>    overlay_xml = ocr_image(file)
+        """
 
-    b = 0
-    if b:
-        model_czech = response_engines.json()['engines']['czech_old_printed']
-        model_layout = next(filter(lambda x: 'layout' in x['name'], model_czech['models']))
-        model_ocr = next(filter(lambda x: 'layout' not in x['name'], model_czech['models']))
+        files = {'image': file}
 
-    if not response_engines.ok:
-        raise_response(response_engines)
+        if self.activity_log:
+            self.activity_log.state = ActivityLogState.PROCESSING
+            self.activity_log.save()
 
-    d_response = response_engines.json()
+        response_ocr_image = requests.post(f'{os.path.join(LOCAL_PERO, "ocr/")}',
+                                           files=files,
+                                           )
 
-    if VALUE_STATUS not in d_response.get(KEY_STATUS):
-        raise_response(response_engines,
-                       message='No success found')
+        if not response_ocr_image.ok:
+            if self.activity_log:
+                self.activity_log.state = ActivityLogState.FAILED
+                self.activity_log.save()
 
-    return d_response[KEY_ENGINES]
+            _raise_response(response_ocr_image)
+
+        if self.activity_log:
+            self.activity_log.state = ActivityLogState.SUCCESS
+            self.activity_log.save()
+
+        return response_ocr_image.json()['xml'].encode()
 
 
-def raise_response(response,
-                   message: str = None):
+def _raise_response(
+        response,
+        message: str = None):
     """
     Raises an exception with information about the response.
 

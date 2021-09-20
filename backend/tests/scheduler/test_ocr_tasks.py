@@ -81,16 +81,16 @@ class OcrPageTest(TransactionTestCase):
                 except TimeoutException:
                     # Expected behaviour
 
-                    ocr_engine_message = "Sent request to per ocr:"
+                    ocr_engine_message = "Sent request to pero ocr:".lower()
 
-                    log_messages = LOG_STREAM.getvalue()
+                    log_messages = LOG_STREAM.getvalue().lower()
                     # print(log_messages)
                     self.assertIn(ocr_engine_message, log_messages,
                                   "Couldn't find a message that indicates that a request for OCR is send.\n"
                                   "Make Sure that 1) this info is logged and "
                                   "2) that call is given enough time to get there.")
 
-                    self.assertIn(engine.name, log_messages,
+                    self.assertIn(engine.name.lower(), log_messages,
                                   "Couldn't find mention of this engine.")
 
                 except Exception as e:
