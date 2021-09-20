@@ -240,3 +240,7 @@ a {
 .page-list-sidebar-button {
   max-height: 40px !important;
 }
+
+.publish-card-image {
+  max-height: 589px !important;
+}

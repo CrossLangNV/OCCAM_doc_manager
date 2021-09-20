@@ -167,10 +167,10 @@ const DocumentPublish = (props) => {
                             <Row className="flex-md-nowrap">
                                 {pageList.data.map(page => {
                                     return <Col md={3} key={page.id}>
-                                        <Card className="m-md-1" key={page.id}>
+                                        <Card key={page.id}>
                                             <Row>
                                                 <Image
-                                                    className={selectedPages.some((item) => item.id === page.id) ? "page-card-img selectedForDownload" : "page-card-img"}
+                                                    className={selectedPages.some((item) => item.id === page.id) ? "page-card-img publish-card-image selectedForDownload" : "page-card-img publish-card-image"}
                                                     src={page.file}
                                                     onClick={e => onPageImageClick(e, page.file, page.id)}
 
