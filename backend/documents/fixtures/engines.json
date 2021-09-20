@@ -1,7 +1,7 @@
 [
   {
     "model": "documents.layoutanalysismodel",
-    "pk": 1,
+    "pk": 100,
     "fields": {
       "name": "No OCR",
       "description": "Skip OCR and upload your own transcription.",
@@ -10,7 +10,7 @@
   },
   {
     "model": "documents.layoutanalysismodel",
-    "pk": 2,
+    "pk": 4,
     "fields": {
       "name": "Arabic handwritten",
       "description": "",
@@ -38,10 +38,10 @@
   },
   {
     "model": "documents.layoutanalysismodel",
-    "pk": 3,
+    "pk": 2,
     "fields": {
-      "name": "Czech old handwritten",
-      "description": "",
+      "name": "Handwritten",
+      "description": "This model is able to transcribe most handwritten documents. It works best for Czech handwritten text.",
       "config": {
         "id": 2,
         "link": "https://pero-ocr.fit.vutbr.cz/",
@@ -62,10 +62,10 @@
   },
   {
     "model": "documents.layoutanalysismodel",
-    "pk": 4,
+    "pk": 1,
     "fields": {
-      "name": "Czech old printed",
-      "description": "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.",
+      "name": "Printed",
+      "description": "This model is able to transcribe most European prints in antiqua fonts. It works best for low-quality Czech prints such as old newspapers.",
       "config": {
         "id": 1,
         "link": "https://pero-ocr.fit.vutbr.cz/",
@@ -82,6 +82,15 @@
         "description": "The model is able to transcribe most european prints in antiqua fonts. Is work best for low-quality czech prints such as old newspapers.",
         "engine_version": "2021-01-26"
       }
+    }
+  },
+  {
+    "model": "documents.layoutanalysismodel",
+    "pk": 3,
+    "fields": {
+      "name": "Business registers",
+      "description": "This model is optimized to transcribe documents from the Belgian Official Gazette.",
+      "config": {}
     }
   }
 ]

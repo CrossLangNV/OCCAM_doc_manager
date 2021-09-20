@@ -2,7 +2,6 @@ import io
 import json
 import os
 import uuid
-
 from django.core.files import File
 from django.db import models
 from django.utils import timezone
@@ -21,7 +20,7 @@ class LayoutAnalysisModel(models.Model):
                               )
 
     class Meta:
-        ordering = ["name"]
+        ordering = ["pk"]
 
     def __str__(self):
         return str(self.name)
