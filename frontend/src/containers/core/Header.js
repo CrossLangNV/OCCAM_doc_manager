@@ -1,10 +1,8 @@
 import React from 'react';
-import {Button, Form, FormControl, Nav, Navbar} from "react-bootstrap";
+import {Nav, Navbar} from "react-bootstrap";
 
 import {Link, useLocation} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {ModifyDocumentQuery} from "../../actions/uiActions";
-import {GetDocumentList} from "../../actions/documentActions";
 import {ProgressSpinner} from "primereact/progressspinner";
 import {Logout} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
@@ -43,7 +41,7 @@ const Header = () => {
                 <Nav className="mr-auto">
                     <Nav.Link as={Link} to="/">{t("nav.documents")}</Nav.Link>
                     <Nav.Link as={Link} to="/activity">{t("nav.activity-logs")}</Nav.Link>
-                    <Nav.Link as={Link} to="/help">{t("nav.help")}</Nav.Link>
+                    {/*<Nav.Link as={Link} to="/help">{t("nav.help")}</Nav.Link>*/}
                     <Nav.Link as={Link} to="/settings">{t("nav.settings")}</Nav.Link>
 
                     {/* Loading spinner */}

@@ -86,7 +86,8 @@ const Document = (props) => {
                                 icon="pi pi-refresh"
                                 className="p-button-primary margin-left"
                             />
-                            {(documentData.layout_analysis_model === 4 && documentData.document_page.length > 0) && (
+                            {/* 100 is the id of "NO OCR"*/}
+                            {(documentData.layout_analysis_model !== 100 && documentData.document_page.length > 0) && (
                                 <Button
                                     onClick={() => confirmStartOcr(documentId)}
                                     label={t("document.OCR all pages")}
