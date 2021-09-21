@@ -86,6 +86,8 @@ a {
 
 .occ-leaflet-tooltip {
   font-size: 1.2rem;
+  /*max-width: 600px !important;*/
+  /*white-space: normal;*/
 }
 
 .p-scrollpanel.occ-scrollbar .p-scrollpanel-bar {

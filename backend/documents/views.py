@@ -1,17 +1,10 @@
 import base64
 import io
-import json
 import logging
 import os
 import zipfile
-from datetime import date
-from io import BytesIO
 
 import xmltodict as xmltodict
-from django.forms import model_to_dict
-from django.http.response import HttpResponse
-from minio import Minio, ResponseError
-from minio.error import BucketAlreadyOwnedByYou, BucketAlreadyExists
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -387,7 +380,7 @@ class PublishDocumentAPIView(APIView):
             # Save the uuid in the Django document
             document = Document.objects.get(pk=document_id)
             document.oaipmh_collection_id = collection_dict["collection"]["UUID"]
-            document.oaipmh_collection_url = URL_DSPACE + collection_dict["collection"]["link"]
+            document.oaipmh_collection_url = URL_DSPACE + "/xmlui/handle/" + collection_dict["collection"]["handle"]
             document.save()
 
             serializer = DocumentSerializer(document, many=False)
