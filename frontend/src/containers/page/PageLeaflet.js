@@ -182,7 +182,8 @@ const PageLeaflet = (props) => {
                     }}
                 >
 
-                    <Tooltip className="occ-leaflet-tooltip" direction="bottom" sticky>{marker.popupMessage}</Tooltip>
+                    <Tooltip className="occ-leaflet-tooltip" direction="bottom" offset={[0, 20]}
+                             opacity={1}>{marker.popupMessage}</Tooltip>
                 </Polygon>
             })
         )
