@@ -179,12 +179,7 @@ a {
 }
 
 .occ-plaintext {
-    display: inline-block;
-    font-size: 50px;
-    background-color: green;
-    /*new:*/
-    line-height: 34px;
-    height: 35px;
+  text-align: center;
 }
 
 .occ-table-result-count {
@@ -248,4 +243,9 @@ a {
 
 .publish-card-image {
   max-height: 589px !important;
+}
+
+.occ-page-plain-text {
+  white-space: pre-line !important;
+  text-align: left !important;
 }

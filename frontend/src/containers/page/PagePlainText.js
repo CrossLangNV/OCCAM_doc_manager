@@ -12,7 +12,10 @@ const PagePlainText = (props) => {
                 <p>{t("page-plaintext.No plain text available")}</p>
             )}
 
-            { content }
+            <p className={"occ-page-plain-text"}>
+                {content}
+            </p>
+
         </ScrollPanel>
     );
 };
