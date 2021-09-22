@@ -12,7 +12,7 @@
   "settings": {
     "translation-memory": "Mémoire de traduction",
     "language-pair": "Paire de langues",
-    "amount-of-tus": "Quantité de segments",
+    "amount-of-tus": "Nombre de segments",
     "upload-tmx": "Télécharger MTX",
     "product-tour": "Visite guidée",
     "show-product-tour": "Afficher la visite guidée",
@@ -46,7 +46,8 @@
     "view": "Afficher",
     "save": "Sauvegarder",
     "saved-metadata": "Les métadonnées ont été sauvegardées avec succès",
-    "no-results": "Désolé, nous n'avons pas pu trouver de résultats."
+    "no-results": "Désolé, nous n'avons pas pu trouver de résultats.",
+    "suggested": "Suggéré"
   },
 
   "document": {

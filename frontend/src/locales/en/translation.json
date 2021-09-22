@@ -12,7 +12,7 @@
   "settings": {
     "translation-memory": "Translation Memory",
     "language-pair": "Language pair",
-    "amount-of-tus": "Amount of segments",
+    "amount-of-tus": "Number of segments",
     "upload-tmx": "Upload TMX",
     "product-tour": "Guided tour",
     "show-product-tour": "Show guided tour",
@@ -46,7 +46,8 @@
     "view": "View",
     "save": "Save",
     "saved-metadata": "Metadata has been saved successfully",
-    "no-results": "Sorry, we couldn't find any results."
+    "no-results": "Sorry, we couldn't find any results.",
+    "suggested": "Suggested"
   },
 
   "document": {

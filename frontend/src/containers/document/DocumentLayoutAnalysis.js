@@ -87,9 +87,9 @@ const DocumentLayoutAnalysis = (props) => {
     const showSuggestedTag = (option) => {
         if (documentState.data[documentId]) {
             if (documentState.data[documentId].suggested_model && option.name === "Business registers") {
-                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value="Suggested"/>
+                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value={t("ui.suggested")}/>
             } else if (documentState.data[documentId].suggested_model === false && option.name === "Printed") {
-                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value="Suggested"/>
+                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value={t("ui.suggested")}/>
             }
         }
     }
