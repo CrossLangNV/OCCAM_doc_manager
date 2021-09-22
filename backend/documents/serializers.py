@@ -102,7 +102,11 @@ class PageSerializer(serializers.ModelSerializer):
 
             page_document_type_pred = page.page_doc_type_pred.all()
             for doc_type_pred in page_document_type_pred:
-                data.setdefault(doc_type_pred.name, doc_type_pred.prediction)
+                # The string representation prediction of BOG vs NBB is in the label instead of prediction (boolean)
+                if str(doc_type_pred) == "BOG vs. NBB":
+                    data.setdefault(doc_type_pred.name, doc_type_pred.label)
+                else:
+                    data.setdefault(doc_type_pred.name, doc_type_pred.prediction)
 
             return data
         else:

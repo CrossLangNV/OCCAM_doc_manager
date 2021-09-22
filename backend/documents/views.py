@@ -149,6 +149,8 @@ class PageListAPIView(ListCreateAPIView):
                 prediction = pred_scanned["prediction"]
                 label = pred_scanned["label"]
 
+                print("name: ", name)
+
                 if name == "Scanned document":
                     if not prediction:
                         label = False
