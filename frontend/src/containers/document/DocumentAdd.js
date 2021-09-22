@@ -33,8 +33,8 @@ const DocumentAdd = (props) => {
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
 
-    const [websiteId, setWebsiteId] = useState(null);
-        const [title, setTitle] = useState("");
+    const [websiteId, setWebsiteId] = useState(0);
+    const [title, setTitle] = useState("");
         const [content, setContent] = useState("");
 
         const europeanaBaseUrl = "https://www.europeana.eu/en/item/";

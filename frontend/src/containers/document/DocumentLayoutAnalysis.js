@@ -84,6 +84,16 @@ const DocumentLayoutAnalysis = (props) => {
         }
     ]
 
+    const showSuggestedTag = (option) => {
+        if ("suggested_model" in documentState.data[documentId]) {
+            if (documentState.data[documentId].suggested_model && option.name === "Business registers") {
+                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value="Suggested"/>
+            } else if (documentState.data[documentId].suggested_model === false && option.name === "Printed") {
+                return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value="Suggested"/>
+            }
+        }
+    }
+
     return (
         <>
             <Tour
@@ -116,11 +126,7 @@ const DocumentLayoutAnalysis = (props) => {
                                                     <label htmlFor={option.value}>
                                                         {t(option.name)}
 
-                                                        {((documentState.data[documentId].suggested_model && option.name === "Business registers") && (
-                                                            <Tag className="p-mr-2 margin-left"
-                                                                 icon="pi pi-info-circle"
-                                                                 value="Suggested"/>
-                                                        ))}
+                                                        {showSuggestedTag(option)}
 
                                                     </label>
                                                 </Col>
@@ -137,8 +143,14 @@ const DocumentLayoutAnalysis = (props) => {
 
                                         {(_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
-                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={selectedOption === option.value} />
-                                                <label htmlFor={option.value}>{t(option.name)}</label>
+                                                <RadioButton inputId={option.value} name="layout_model" value={option}
+                                                             onChange={(e) => changeSelected(e.value)}
+                                                             checked={selectedOption === option.value}/>
+                                                <label htmlFor={option.value}>
+                                                    {t(option.name)}
+
+                                                    {showSuggestedTag(option)}
+                                                </label>
                                             </>
                                         )}
 
