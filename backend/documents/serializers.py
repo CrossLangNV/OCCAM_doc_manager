@@ -4,7 +4,8 @@ from rest_framework import serializers
 from activitylogs.models import ActivityLog, ActivityLogType
 from activitylogs.serializers import ActivityLogSerializer
 from documents.metadata_django import MetadataDjango
-from documents.models import Document, Page, Overlay, Geojson, Label, LayoutAnalysisModel, Website, Metadata
+from documents.models import Document, Page, Overlay, Geojson, LayoutAnalysisModel, Website, Metadata, \
+    DocumentTypePrediction
 
 
 class GeojsonSerializer(serializers.ModelSerializer):
@@ -99,9 +100,9 @@ class PageSerializer(serializers.ModelSerializer):
                 ],
             )
 
-            page_labels = page.page_labels.all()
-            for page_label in page_labels:
-                data.setdefault(page_label.name, page_label.value)
+            page_document_type_pred = page.page_doc_type_pred.all()
+            for doc_type_pred in page_document_type_pred:
+                data.setdefault(doc_type_pred.name, doc_type_pred.prediction)
 
             return data
         else:
@@ -129,9 +130,9 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LabelSerializer(serializers.ModelSerializer):
+class DocumentTypePredictionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Label
+        model = DocumentTypePrediction
         fields = "__all__"
 
 

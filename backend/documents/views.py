@@ -11,9 +11,10 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from documents.models import Document, Page, Overlay, Label, LayoutAnalysisModel, Website, Metadata, Geojson
+from documents.models import Document, Page, Overlay, LayoutAnalysisModel, Website, Metadata, Geojson, \
+    DocumentTypePrediction
 from documents.processing.file_upload import pdf_image_generator
-from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, LabelSerializer, \
+from documents.serializers import DocumentSerializer, PageSerializer, OverlaySerializer, \
     LayoutAnalysisModelSerializer, WebsiteSerializer
 from documents.tm_connector import MouseTmConnector
 from oaipmh.connector import ConnectorDSpaceREST
@@ -34,6 +35,7 @@ FILE = 'file'
 DOCUMENT = "document"
 KEY_PAGE_ID = "PageId"
 KEY_LABEL_NAME = 'labelName'
+KEY_LABEL_VALUE = 'labelValue'
 
 logger = logging.getLogger(__name__)
 
@@ -141,9 +143,23 @@ class PageListAPIView(ListCreateAPIView):
                 page_id = page.id
                 classify_document_pipeline.delay(page_id)
 
-                label = Label.objects.update_or_create(page=page, name='scanned document',
-                                                       defaults={'name': "scanned", 'value': b_scanned})
-                print("Created label: ", label)
+                name = pred_scanned["name"]
+                description = pred_scanned["description"]
+                certainty = pred_scanned["certainty"]
+                prediction = pred_scanned["prediction"]
+                label = pred_scanned["label"]
+
+                dtp = DocumentTypePrediction.objects.update_or_create(
+                    page=page,
+                    name=name,
+                    defaults={
+                        "description": description,
+                        "certainty": certainty,
+                        "prediction": prediction,
+                        "label": label
+                    }
+                )
+                print("Created DocumentTypePrediction: ", dtp)
 
                 page_ids.append(page_id)
 
@@ -161,21 +177,25 @@ class PageListAPIView(ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class LabelsListAPIView(ListCreateAPIView):
-    queryset = Label.objects.all()
-    serializer_class = LabelSerializer
+class DocumentTypePredictionListAPIView(ListCreateAPIView):
+    queryset = DocumentTypePrediction.objects.all()
+    serializer_class = DocumentTypePrediction
 
     def get_queryset(self):
-        q = Label.objects.all()
+        q = DocumentTypePrediction.objects.all()
 
         page_id = self.request.GET.get(KEY_PAGE_ID, "")
         name = self.request.GET.get(KEY_LABEL_NAME, "")
+        label_value = self.request.GET.get(KEY_LABEL_VALUE, "")
 
         if page_id:
             q = q.filter(page__id=str(page_id))
 
         if name:
             q = q.filter(name=name)
+
+        if label_value:
+            q = q.filter(label=label_value)
 
         return q
 

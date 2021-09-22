@@ -6,7 +6,7 @@ from activitylogs.models import ActivityLog, ActivityLogState
 from celery import shared_task
 
 from documents.metadata_django import MetadataDjango
-from documents.models import Page, Label, Metadata
+from documents.models import Page, Metadata, DocumentTypePrediction
 from scheduler.tasks import logger, get_activity_log
 
 DOCUMENT_CLASSIFIER_URL = os.environ["DOCUMENT_CLASSIFIER_URL"]
@@ -60,7 +60,7 @@ def classify_scanned(file, verbose=1) -> bool:
     return b_scanned
 
 
-def get_document_classification(page):
+def get_document_classification(page, model_id):
     headers = {
         "model-id": DOC_CLASSIFIER_MODEL_ID,
     }
@@ -78,43 +78,61 @@ def get_document_classification(page):
 
 
 def classify_document(page):
+    # Create Metadata object
+    generated_metadata = MetadataDjango.from_page(page)
+    data = generated_metadata.get_dict()
+    print("data: ", data)
+
+    title = ", ".join(data["titles"])
+    creators = ", ".join(data["creators"])
+    subjects = ", ".join(data["subjects"])
+    descriptions = ", ".join(data["descriptions"])
+    publishers = ", ".join(data["publishers"])
+    contributors = ", ".join(data["contributors"])
+    dates = ", ".join(data["dates"])
+    types = ", ".join(data["types"])
+    formats = ", ".join(data["formats"])
+    sources = ", ".join(data["sources"])
+
+    metadata = Metadata.objects.update_or_create(
+        page=page,
+        title=title,
+        creator=creators,
+        subject=subjects,
+        description=descriptions,
+        publisher=publishers,
+        contributor=contributors,
+        date=dates,
+        type=types,
+        format=formats,
+        source=sources,
+    )
+
+    print("Metadata has been saved in Django: ", metadata)
+
     # POST to Document Classifier
-    classification_results = get_document_classification(page)
 
-    if classification_results:
-        # Create Metadata object
-        generated_metadata = MetadataDjango.from_page(page)
-        data = generated_metadata.get_dict()
-        print("data: ", data)
+    for i in [1, 2]:
+        document_classification_results = get_document_classification(page, i)
 
-        title = ", ".join(data["titles"])
-        creators = ", ".join(data["creators"])
-        subjects = ", ".join(data["subjects"])
-        descriptions = ", ".join(data["descriptions"])
-        publishers = ", ".join(data["publishers"])
-        contributors = ", ".join(data["contributors"])
-        dates = ", ".join(data["dates"])
-        types = ", ".join(data["types"])
-        formats = ", ".join(data["formats"])
-        sources = ", ".join(data["sources"])
+        if document_classification_results:
+            print("classification results: ", document_classification_results.items())
 
-        metadata = Metadata.objects.update_or_create(
-            page=page,
-            title=title,
-            creator=creators,
-            subject=subjects,
-            description=descriptions,
-            publisher=publishers,
-            contributor=contributors,
-            date=dates,
-            type=types,
-            format=formats,
-            source=sources
-        )
+            name = document_classification_results["name"]
+            description = document_classification_results["description"]
+            certainty = document_classification_results["certainty"]
+            prediction = document_classification_results["prediction"]
+            label = document_classification_results["label"]
 
-        print("Metadata has been saved in Django: ", metadata)
+            pred_obj = DocumentTypePrediction.objects.update_or_create(
+                page=page,
+                name=name,
+                defaults={
+                    "description": description,
+                    "certainty": certainty,
+                    "prediction": prediction,
+                    "label": label
+                }
+            )
 
-        # Create labels from classifier
-        for label, value in classification_results.items():
-            Label.objects.update_or_create(page=page, name=label, defaults={"name": label, "value": value})
-            print("Created label: ", label)
+            print("Created DocumentTypePrediction object: ", pred_obj)

@@ -1,7 +1,7 @@
 from django.test import TransactionTestCase
 
 from backend.tests.documents.create_database_mock import create
-from documents.models import Label, Overlay
+from documents.models import Overlay, DocumentTypePrediction
 from documents.serializers import PageSerializer
 
 
@@ -16,7 +16,9 @@ class PageSerializerTest(TransactionTestCase):
         self.page0 = overlay.page
 
         # Add a label
-        self.label = Label(name="classifier", value="Epic model", page=self.page0)
+        self.label = DocumentTypePrediction(name="classifier", description="Epic description",
+                                            certainty="Epic certainty", prediction=True,
+                                            label="Epic label", page=self.page0)
         self.label.save()
 
     def test_get_metadata(self):
@@ -62,7 +64,9 @@ class PageSerializerTest(TransactionTestCase):
         name = self.label.name
 
         # Add a label
-        label2 = Label(name=name, value="A mediocre classifier", page=self.page0)
+        label2 = DocumentTypePrediction(name="Another classifier", description="Another description",
+                                            certainty="Another certainty", prediction=True,
+                                            label="Another label", page=self.page0)
         label2.save()
 
         d_meta = self.page_serializer.get_metadata(self.page0)
@@ -73,7 +77,7 @@ class PageSerializerTest(TransactionTestCase):
         label_values = d_meta.get(name)
 
         with self.subTest("Old label value"):
-            self.assertIn(self.label.value, label_values, "Should contain old label value")
+            self.assertIn(self.label.label, label_values, "Should contain old label value")
 
         with self.subTest("New label value"):
-            self.assertIn(label2.value, label_values, "Should contain new label value")
+            self.assertIn(label2.label, label_values, "Should contain new label value")

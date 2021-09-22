@@ -277,13 +277,16 @@ class Geojson(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Label(models.Model):
+class DocumentTypePrediction(models.Model):
     name = models.CharField(default="", max_length=1000)
-    value = models.TextField(default="", blank=True)
+    description = models.TextField(default="", blank=True)
+    certainty = models.TextField(default="", blank=True)
+    prediction = models.BooleanField(null=True, blank=True)
+    label = models.TextField(default="", blank=True)
 
     page = models.ForeignKey(
         Page,
-        related_name="page_labels",
+        related_name="page_doc_type_pred",
         on_delete=models.CASCADE,
     )
 
