@@ -85,7 +85,7 @@ const DocumentLayoutAnalysis = (props) => {
     ]
 
     const showSuggestedTag = (option) => {
-        if ("suggested_model" in documentState.data[documentId]) {
+        if (documentState.data[documentId]) {
             if (documentState.data[documentId].suggested_model && option.name === "Business registers") {
                 return <Tag className="p-mr-2 margin-left" icon="pi pi-info-circle" value="Suggested"/>
             } else if (documentState.data[documentId].suggested_model === false && option.name === "Printed") {

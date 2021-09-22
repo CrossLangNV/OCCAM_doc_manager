@@ -128,7 +128,6 @@ class DocumentSerializer(serializers.ModelSerializer):
     suggested_model = serializers.SerializerMethodField()
 
     def get_suggested_model(self, document):
-
         dh_count = 0
         bris_count = 0
 
