@@ -103,17 +103,14 @@ class PageSerializer(serializers.ModelSerializer):
             page_document_type_pred = page.page_doc_type_pred.all()
             for doc_type_pred in page_document_type_pred:
                 # The string representation prediction of BOG vs NBB is in the label instead of prediction (boolean)
-                if str(doc_type_pred) == "BOG vs. NBB":
-                    data.setdefault(doc_type_pred.name, doc_type_pred.label)
-                else:
+                if "scanned" in str(doc_type_pred).lower():
                     data.setdefault(doc_type_pred.name, doc_type_pred.prediction)
+                else:
+                    data.setdefault(doc_type_pred.name, doc_type_pred.label)
 
             return data
         else:
             return ""
-
-
-
 
 
     def get_metadata_xml(self, page):
@@ -128,6 +125,26 @@ class PageSerializer(serializers.ModelSerializer):
 
 class DocumentSerializer(serializers.ModelSerializer):
     document_page = PageSerializer(many=True, read_only=True)
+    suggested_model = serializers.SerializerMethodField()
+
+    def get_suggested_model(self, document):
+
+        dh_count = 0
+        bris_count = 0
+
+        for page in document.document_page.all():
+            print("page: ", page)
+
+            page_document_type_pred = page.page_doc_type_pred.all()
+
+            for doc_type_pred in page_document_type_pred:
+                if doc_type_pred.name == "Digital Humanities":
+                    if doc_type_pred.prediction:
+                        dh_count += 1
+                    else:
+                        bris_count += 1
+
+        return bris_count > dh_count
 
     class Meta:
         model = Document

@@ -15,6 +15,8 @@ import Tour from "reactour";
 import {ChangeTutorialState, CloseTutorial} from "../../actions/authActions";
 import {useTranslation} from "react-i18next";
 import {Message} from "primereact/message";
+import {Tag} from "primereact/tag";
+import {GetDocument} from "../../actions/documentActions";
 
 const DocumentLayoutAnalysis = (props) => {
     const documentId = props.match.params.documentId
@@ -25,6 +27,7 @@ const DocumentLayoutAnalysis = (props) => {
 
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth);
+    const documentState = useSelector(state => state.document)
 
     const [selectedOption, setSelectedOption] = useState([]);
 
@@ -37,6 +40,7 @@ const DocumentLayoutAnalysis = (props) => {
     }
 
     useEffect(() => {
+        dispatch(GetDocument(documentId))
         dispatch(GetLayoutEngines(documentId));
     }, [])
 
@@ -105,9 +109,20 @@ const DocumentLayoutAnalysis = (props) => {
 
                                         {(!_.isEmpty(uiStates.selected_layout_engine) &&
                                             <>
-                                                <RadioButton inputId={option.value} name="layout_model" value={option} onChange={(e) => changeSelected(e.value)} checked={uiStates.selected_layout_engine[0].name === option.name} />
+                                                <RadioButton inputId={option.value} name="layout_model" value={option}
+                                                             onChange={(e) => changeSelected(e.value)}
+                                                             checked={uiStates.selected_layout_engine[0].name === option.name}/>
                                                 <Col md={4}>
-                                                    <label htmlFor={option.value}>{t(option.name)}</label>
+                                                    <label htmlFor={option.value}>
+                                                        {t(option.name)}
+
+                                                        {((documentState.data[documentId].suggested_model && option.name === "Business registers") && (
+                                                            <Tag className="p-mr-2 margin-left"
+                                                                 icon="pi pi-info-circle"
+                                                                 value="Suggested"/>
+                                                        ))}
+
+                                                    </label>
                                                 </Col>
 
                                                 <Col md={8}>

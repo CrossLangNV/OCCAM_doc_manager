@@ -60,15 +60,18 @@ def classify_scanned(file, verbose=1) -> dict:
     return res
 
 
-def get_document_classification(page, model_id):
+def get_document_classification(file, model_id):
+    print("model_id: ", model_id)
     headers = {
-        "model-id": DOC_CLASSIFIER_MODEL_ID,
+        "model-id": str(model_id),
     }
 
-    f = page.file  # image
+    f = file  # image
     files = {"file": f}
 
     r = requests.post(DOCUMENT_CLASSIFIER_URL, headers=headers, files=files)
+
+    print("r : ", r.content)
 
     res = r.json()
 
@@ -112,8 +115,9 @@ def classify_document(page):
 
     # POST to Document Classifier
 
+    file_read = page.file.read()
     for i in [1, 2]:
-        document_classification_results = get_document_classification(page, i)
+        document_classification_results = get_document_classification(file_read, i)
 
         if document_classification_results:
             print("classification results: ", document_classification_results.items())
