@@ -26,11 +26,9 @@ const PageMetadata = (props) => {
 
         const metadata = Object.entries(page.metadata)
         metadata.forEach(label => {
-            if (label[1].length > 0) {
-                // labels.push({status: `${label[0]}`, date: label[1].join(", ")})
-                labels.push({status: `${label[0]}`, date: label[1]})
+            if (label[1].toString().length > 0) {
+                labels.push({status: `${label[0]}`, date: label[1].toString()})
             }
-
         })
 
         setMetadata(labels)

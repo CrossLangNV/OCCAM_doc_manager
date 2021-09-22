@@ -279,10 +279,10 @@ class Geojson(models.Model):
 
 class DocumentTypePrediction(models.Model):
     name = models.CharField(default="", max_length=1000)
-    description = models.TextField(default="", blank=True)
-    certainty = models.TextField(default="", blank=True)
+    description = models.TextField(default="", null=True, blank=True)
+    certainty = models.TextField(default="", null=True, blank=True)
     prediction = models.BooleanField(null=True, blank=True)
-    label = models.TextField(default="", blank=True)
+    label = models.TextField(default="", blank=True, null=True)
 
     page = models.ForeignKey(
         Page,

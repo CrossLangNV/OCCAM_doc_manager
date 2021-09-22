@@ -149,10 +149,17 @@ class PageListAPIView(ListCreateAPIView):
                 prediction = pred_scanned["prediction"]
                 label = pred_scanned["label"]
 
+                if name == "Scanned document":
+                    if not prediction:
+                        label = False
+                    else:
+                        label = True
+
                 dtp = DocumentTypePrediction.objects.update_or_create(
                     page=page,
-                    name=name,
+                    # name=name,
                     defaults={
+                        "name": name,
                         "description": description,
                         "certainty": certainty,
                         "prediction": prediction,
