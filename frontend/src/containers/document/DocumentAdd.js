@@ -20,17 +20,20 @@ import {AddPage} from "../../actions/pageActions";
 
 
 const DocumentAdd = (props) => {
-        const documentId = props.match.params.documentId
+    const documentId = props.match.params.documentId
 
-        let history = useHistory();
-        const dispatch = useDispatch();
-        const {t} = useTranslation();
+    // Enable/disable Europeana functionality
+    const EUROPEANA_ENABLED = false;
 
-        // Redux states
-        const uiStates = useSelector(state => state.uiStates);
-        const auth = useSelector(state => state.auth);
+    let history = useHistory();
+    const dispatch = useDispatch();
+    const {t} = useTranslation();
 
-        const [websiteId, setWebsiteId] = useState(null);
+    // Redux states
+    const uiStates = useSelector(state => state.uiStates);
+    const auth = useSelector(state => state.auth);
+
+    const [websiteId, setWebsiteId] = useState(null);
         const [title, setTitle] = useState("");
         const [content, setContent] = useState("");
 
@@ -228,23 +231,28 @@ const DocumentAdd = (props) => {
                                     </Col>
                                     <Col md={8}>
                                         {(websiteId === 0) && (
-                                            <Message className="margin-left" severity="info" text={t("document-add.Manual")}/>
+                                            <Message className="margin-left" severity="info"
+                                                     text={t("document-add.Manual")}/>
                                         )}
                                     </Col>
                                 </div>
-                                <div key="europeana" className="p-field-radiobutton">
-                                    <RadioButton inputId="europeana" name="documentType" value="5"
-                                                 onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
-                                                 checked={websiteId === 5}/>
-                                    <Col md={4}>
-                                        <label htmlFor="europeana">{t("document-add.Europeana")}</label>
-                                    </Col>
-                                    <Col md={8}>
-                                        {(websiteId === 5) && (
-                                            <Message className="margin-left" severity="info" text={t("document-add.Europeana")}/>
-                                        )}
-                                    </Col>
-                                </div>
+                                {(EUROPEANA_ENABLED) && (
+                                    <div key="europeana" className="p-field-radiobutton">
+                                        <RadioButton inputId="europeana" name="documentType" value="5"
+                                                     onChange={(e) => changeDocumentWebsite(parseInt(e.value))}
+                                                     checked={websiteId === 5}
+                                        />
+                                        <Col md={4}>
+                                            <label htmlFor="europeana">{t("document-add.Europeana")}</label>
+                                        </Col>
+                                        <Col md={8}>
+                                            {(websiteId === 5) && (
+                                                <Message className="margin-left" severity="info"
+                                                         text={t("document-add.Europeana")}/>
+                                            )}
+                                        </Col>
+                                    </div>
+                                )}
                             </Card>
                         </Col>
                     </Row>
