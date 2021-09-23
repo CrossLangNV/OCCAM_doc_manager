@@ -9,6 +9,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "cheerio": "^1.0.0-rc.10",
+    "feeder-react-feedback": "^0.0.6",
     "history": "^5.0.0",
     "html-react-parser": "^1.2.7",
     "i18next": "^20.3.2",

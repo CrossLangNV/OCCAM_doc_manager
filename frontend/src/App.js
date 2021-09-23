@@ -10,7 +10,7 @@ import 'primeicons/primeicons.css'
 import ActivityLogs from "./containers/ActivityLogs";
 import GoogleLoginPage from "./containers/core/GoogleLoginPage";
 import PrivateRoute from "./containers/core/PrivateRoute";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {load_user} from "./actions/authActions";
 import {useDispatch} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
@@ -21,6 +21,8 @@ import DocumentLayoutAnalysis from "./containers/document/DocumentLayoutAnalysis
 import HelpComponent from "./containers/HelpComponent";
 import DocumentPublish from "./containers/document/DocumentPublish";
 import {GetWebsites} from "./actions/uiActions";
+import Feedback from "feeder-react-feedback";
+import "feeder-react-feedback/dist/feeder-react-feedback.css";
 
 function App() {
     // Don't remove these unused location/history variables, otherwise react tour will only open after refreshing
@@ -54,7 +56,8 @@ function App() {
                 </div>
             </div>
             <Footer />
-            <ScrollTop />
+            <ScrollTop/>
+            <Feedback projectId={"614c89c976003e00042e592a"} tooltip={true}/>
         </div>
     );
 }
