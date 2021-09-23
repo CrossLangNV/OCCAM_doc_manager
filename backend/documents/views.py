@@ -1,10 +1,12 @@
 import base64
 import io
+import json
 import logging
 import os
 import zipfile
 
 import xmltodict as xmltodict
+from django.core.files.base import File
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import LimitOffsetPagination
@@ -273,9 +275,6 @@ class UpdatePageMetadataAPIView(APIView):
             return Response("Page not found", status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
 class TranslatePageAPIView(APIView):
     queryset = Page.objects.none()
 
@@ -351,7 +350,27 @@ class ExportMetadataAPIView(APIView):
             z = zipfile.ZipFile("export.zip", 'w', zipfile.ZIP_DEFLATED)
             for page in self.queryset:
                 metadata = Metadata.objects.get(page=page)
-                z.writestr(metadata.title + '.xml', serializer.get_metadata_xml(page))
+                z.writestr('metadata-'+metadata.title + '.xml', serializer.get_metadata_xml(page))
+
+                for overlay in page.page_overlay.all():
+
+                    # serializer = OverlaySerializer(overlay, many=False)
+                    with File(overlay.file) as django_overlay:
+                        z.writestr('overlay-'+metadata.title+'.xml', django_overlay.read())
+
+                    for geojson in overlay.overlay_geojson.all():
+                        with File(geojson.file) as django_file:
+                            name = os.path.split(django_file.name)[-1]
+                            content = json.loads(django_file.read())
+
+                            plain_text_arr = []
+                            for c in content["features"]:
+                                plain_text_arr.append(c["properties"]["name"])
+
+                            plain_text = "\r\n".join(plain_text_arr)
+                            z.writestr('plain-text-'+metadata.title + '.txt', plain_text)
+
+
 
             # Save the zip file
             z.close()
