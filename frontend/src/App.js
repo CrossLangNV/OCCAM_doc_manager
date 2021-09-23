@@ -12,7 +12,7 @@ import GoogleLoginPage from "./containers/core/GoogleLoginPage";
 import PrivateRoute from "./containers/core/PrivateRoute";
 import React, {useEffect} from "react";
 import {load_user} from "./actions/authActions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ScrollTop} from "primereact/scrolltop";
 import Footer from "./containers/core/Footer";
 import Settings from './containers/Settings';
@@ -35,6 +35,9 @@ function App() {
         dispatch(GetWebsites())
     })
 
+    const auth = useSelector(state => state.auth);
+
+
     return (
         <div className="App">
             <Header/>
@@ -48,16 +51,24 @@ function App() {
                         <PrivateRoute path={"/document-edit/:documentId"} exact component={DocumentAdd}/>
                         <PrivateRoute path={"/activity"} exact component={ActivityLogs}/>
                         <PrivateRoute path={"/settings"} exact component={Settings}/>
-                        <PrivateRoute path={"/document-edit/:documentId/layout_model"} exact component={DocumentLayoutAnalysis}/>
+                        <PrivateRoute path={"/document-edit/:documentId/layout_model"} exact
+                                      component={DocumentLayoutAnalysis}/>
                         <PrivateRoute path={"/help"} exact component={HelpComponent}/>
                         <PrivateRoute path={"/publish/:documentId"} exact component={DocumentPublish}/>
                         <Route path={"/login"} exact component={GoogleLoginPage}/>
                     </Switch>
                 </div>
             </div>
-            <Footer />
+            <Footer/>
             <ScrollTop/>
-            <Feedback projectId={"614c89c976003e00042e592a"} tooltip={true}/>
+            <Feedback
+                projectId={"614c89c976003e00042e592a"}
+                tooltip={true}
+                email={true}
+                emailRequired={true}
+                emailDefaultValue={auth.user}
+                primaryColor={"#2196F3"}
+            />
         </div>
     );
 }

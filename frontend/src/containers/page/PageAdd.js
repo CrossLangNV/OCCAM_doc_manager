@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {FileUpload} from "primereact/fileupload";
 import {useDispatch, useSelector} from "react-redux";
 import {AddPage} from "../../actions/pageActions";
@@ -27,16 +27,34 @@ const PageAdd = (props) => {
 
     const scannedDocumentsMessages = useRef(null);
 
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+
 
     React.useEffect(() => {
         checkMachineReadablePages()
     }, []);
 
     const pagesUploader = async (event) => {
-        const files = event.files
+        const event_files = event.files
+        console.log("event_files: ", event_files)
 
-        if (files) {
-            await dispatch(AddPage(documentId, files))
+        let filesToUpload = []
+        event_files.forEach(f => {
+            if (!uploadedFiles.includes(f)) {
+                filesToUpload.push(f)
+            }
+        })
+
+        if (filesToUpload) {
+            await dispatch(AddPage(documentId, filesToUpload))
+
+            event_files.forEach(f => {
+                uploadedFiles.push(f)
+            })
+
+            console.log("uploadedFiles: ", uploadedFiles)
+
+
             toast.current.show({
                 severity: 'info',
                 summary: 'Success',
@@ -44,7 +62,7 @@ const PageAdd = (props) => {
             });
             setTimeout(() => {
                 checkMachineReadablePages()
-            }, 3000);
+            }, 4000);
         }
     }
 
