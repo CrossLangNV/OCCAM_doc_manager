@@ -1,4 +1,5 @@
 import {UiActionTypes} from "../constants/ui-action-types";
+import {PageActionTypes} from "../constants/page-action-types";
 
 
 const DefaultState = {
@@ -57,6 +58,13 @@ const UiReducer = (state = DefaultState, action) => {
             return {
                 ...state,
                 websites: action.payload
+            }
+        case PageActionTypes.PAGE_LIST_SUCCESS:
+            return state.selectedPage ? {
+                ...state
+            } : {
+                ...state,
+                selectedPage: action.payload.results[0]
             }
         default:
             return state

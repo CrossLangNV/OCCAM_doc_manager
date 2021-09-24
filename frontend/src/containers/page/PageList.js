@@ -45,7 +45,7 @@ const PageList = (props) => {
     const [translationOverlaySourceLang, setTranslationOverlaySourceLang] = useState("");
     const [contextMenuPage, setContextMenuPage] = useState("");
     const [displayUploadOverlayDialog, setDisplayUploadOverlayDialog] = useState(false);
-    const [checkedTM, setCheckedTM] = useState(false);
+    const [checkedTM, setCheckedTM] = useState(true);
     const [tourOpened, setTourOpened] = useState(false);
     const cm = useRef(null);
     const [pageListSidebar, setPageListSidebar] = useState(true);
@@ -228,7 +228,15 @@ const PageList = (props) => {
                 }}
             />
 
-            <br/>
+            <Row>
+                <Col md={2}>
+                    {!_.isEmpty(pageList.data) && (
+                        <div className="margin-left-10">
+                            <b>Pages:</b> {pageList.data.length}
+                        </div>
+                    )}
+                </Col>
+            </Row>
             <Row>
                 <Button icon={pageListSidebar ? "pi pi-angle-double-left" : "pi pi-angle-double-right"}
                         onClick={() => setPageListSidebar(!pageListSidebar)}
@@ -261,6 +269,7 @@ const PageList = (props) => {
                                         </Col>
                                     </Row>
 
+                                        {page.file.split("/").pop()}
                                     <hr/>
 
                                     <Row>

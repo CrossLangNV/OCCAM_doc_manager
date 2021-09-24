@@ -8,7 +8,7 @@ import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import PageList from "../page/PageList";
 import {ModifySelectedPage} from "../../actions/uiActions";
-import {GetPageList, OcrPage, TranslatePage, UpdatePageState} from "../../actions/pageActions";
+import {GetPageList, OcrPage, UpdatePageState} from "../../actions/pageActions";
 import ProgressBar from "../ProgressBar";
 import {useTranslation} from "react-i18next";
 import {Dropdown} from "primereact/dropdown";
@@ -26,7 +26,7 @@ const Document = (props) => {
     const toast = useRef(null);
     const translationSelectionOverlay = useRef(null);
     const [targetLanguage, setTargetLanguage] = useState("");
-    const [checkedTM, setCheckedTM] = useState(false);
+    const [checkedTM, setCheckedTM] = useState(true);
 
 
     // Redux states
