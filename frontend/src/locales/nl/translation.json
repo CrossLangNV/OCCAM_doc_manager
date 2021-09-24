@@ -47,7 +47,8 @@
     "save": "Opslaan",
     "saved-metadata": "Metadata is succesvol opgeslagen",
     "no-results": "Sorry, we konden geen resultaten vinden.",
-    "suggested": "Aanbevolen"
+    "suggested": "Aanbevolen",
+    "Translate all pages": "Vertaal alle pagina's"
   },
 
   "document": {
@@ -55,6 +56,7 @@
     "Do you want to start the OCR process for all the pages of this document?": "Wilt u het OCR proces starten voor alle pagina's van dit document?",
     "OCR all pages": "OCR alle pagina's",
     "Starts layout analysis for every page": "Start een OCR taak voor elke pagina",
+    "Translates all pages to your selected language": "Vertaal alle pagina's naar een gewenste taal",
     "Delete document": "Document verwijderen",
     "Error fetching document": "Fout bij ophalen document"
   },

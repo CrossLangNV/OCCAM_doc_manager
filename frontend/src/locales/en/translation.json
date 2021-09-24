@@ -47,7 +47,8 @@
     "save": "Save",
     "saved-metadata": "Metadata has been saved successfully",
     "no-results": "Sorry, we couldn't find any results.",
-    "suggested": "Suggested"
+    "suggested": "Suggested",
+    "Translate all pages": "Translate all pages"
   },
 
   "document": {
@@ -55,6 +56,7 @@
     "Do you want to start the OCR process for all the pages of this document?": "Do you want to start the OCR process for all the pages of this document?",
     "OCR all pages": "OCR all pages",
     "Starts layout analysis for every page": "Starts OCR task for every page",
+    "Translates all pages to your selected language": "Translates all pages to your selected language",
     "Delete document": "Delete document",
     "Error fetching document": "Error fetching document"
   },
@@ -87,7 +89,7 @@
     "Translation is not possible when no overlay is available. Upload an overlay or OCR the page": "Translation is not possible when no overlay is available. Upload an overlay or OCR the page.",
     "No overlay available. Upload an overlay or OCR the page first": "No overlay available. Upload an overlay or OCR the page first.",
     "Start OCR": "Start OCR",
-    "Translate...": "Translate...",
+    "Translate": "Translate",
     "Upload transcription...": "Upload transcription...",
     "View page overlay": "View page overlay",
     "View full-size page": "View full-size page",

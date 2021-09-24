@@ -4,7 +4,7 @@ from .views import PageListAPIView, PageDetailAPIView, TranslatePageAPIView, Ove
     DocumentListAPIView, \
     DocumentDetailAPIView, OverlayDetailAPIView, PageLaunchOCRAPIView, TmxUploadAPIView, \
     TmStatsAPIView, LayoutAnalysisModelsAPIView, ExportMetadataAPIView, WebsiteListAPIView, UpdatePageMetadataAPIView, \
-    PublishDocumentAPIView, DocumentTypePredictionListAPIView
+    PublishDocumentAPIView, DocumentTypePredictionListAPIView, TranslateAllPagesAPIView
 
 urlpatterns = [
     path("api/documents", DocumentListAPIView.as_view(), name="document_list_api"),
@@ -27,6 +27,7 @@ urlpatterns = [
 
     path('api/export/metadata', ExportMetadataAPIView.as_view(), name='export_metadata_api'),
     path('api/publish', PublishDocumentAPIView.as_view(), name='publish_document_api'),
+    path('api/translate_all', TranslateAllPagesAPIView.as_view(), name='translate_all_pages_api'),
 
     path('api/websites', WebsiteListAPIView.as_view(),
          name='website_list_api'),

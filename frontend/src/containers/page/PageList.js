@@ -151,7 +151,7 @@ const PageList = (props) => {
             command: () => startOcrForPage(contextMenuPage.id)
         },
         {
-            label: t("page-list.Translate..."),
+            label: t("page-list.Translate")+ "...",
             icon: 'pi pi-globe',
             command: (event) => toggleTranslationMenu(event.originalEvent, contextMenuPage)
         },
@@ -192,7 +192,7 @@ const PageList = (props) => {
                             <b>{(t("ui.refresh"))}:</b> {t("page-list.refreshes the states of the document and its pages")}
                         </li>
                         <li>
-                            <b>{t("document.OCR all pages")}:</b> {t("page-list.starts the layout engine analysis for all the pages of the document")}
+                            <b>{t("ui.ocr")}:</b> {t("page-list.starts the layout engine analysis for all the pages of the document")}
                         </li>
                         <li>
                             <b>{t("document.Delete document")}: </b> {t("page-list.deletes the document with all its pages")}

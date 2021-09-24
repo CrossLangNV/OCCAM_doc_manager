@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
-import {DeleteDocument, GetDocument, GetDocumentList} from "../../actions/documentActions";
-import React from "react";
+import {DeleteDocument, GetDocument, GetDocumentList, TranslateAllPages} from "../../actions/documentActions";
+import React, {useRef, useState} from "react";
 import _ from "lodash"
 import {Button} from "primereact/button";
 import {confirmPopup} from "primereact/confirmpopup";
@@ -8,20 +8,39 @@ import {Col, Row} from "react-bootstrap";
 import {useHistory} from "react-router-dom";
 import PageList from "../page/PageList";
 import {ModifySelectedPage} from "../../actions/uiActions";
-import {GetPageList, OcrPage, UpdatePageState} from "../../actions/pageActions";
+import {GetPageList, OcrPage, TranslatePage, UpdatePageState} from "../../actions/pageActions";
 import ProgressBar from "../ProgressBar";
 import {useTranslation} from "react-i18next";
+import {Dropdown} from "primereact/dropdown";
+import {InputSwitch} from "primereact/inputswitch";
+import {OverlayPanel} from "primereact/overlaypanel";
+import {Toast} from "primereact/toast";
 
 const Document = (props) => {
     const documentId = props.match.params.documentId
+
     const dispatch = useDispatch()
     let history = useHistory();
     const {t} = useTranslation();
+
+    const toast = useRef(null);
+    const translationSelectionOverlay = useRef(null);
+    const [targetLanguage, setTargetLanguage] = useState("");
+    const [checkedTM, setCheckedTM] = useState(false);
+
 
     // Redux states
     const documentState = useSelector(state => state.document)
     const auth = useSelector(state => state.auth);
     const uiStates = useSelector(state => state.uiStates);
+
+    const languageSelectItems = [
+        {label: t("translated-languages.english"), value: 'EN'},
+        {label: t("translated-languages.dutch"), value: 'NL'},
+        {label: t("translated-languages.french"), value: 'FR'},
+        {label: t("translated-languages.german"), value: 'DE'},
+        {label: t("translated-languages.czech"), value: 'CS'},
+    ];
 
 
     React.useEffect(() => {
@@ -66,12 +85,48 @@ const Document = (props) => {
         });
     }
 
+
+    const toggleTranslationMenu = (e) => {
+        if (!_.isEmpty(documentState.data[documentId])) {
+            const documentData = documentState.data[documentId]
+            if (!_.isEmpty(documentData.document_page)) {
+                // Toggle the menu
+                translationSelectionOverlay.current.toggle(e);
+            }
+        } else {
+            toast.current.show({severity: 'error', summary: t("ui.failed"), detail: t("page-list.Translation is not possible when no overlay is available. Upload an overlay or OCR the page")});
+        }
+
+    }
+
+
+    const startTranslationForAllPages = (e) => {
+        if (targetLanguage !== "ORIGINAL") {
+
+            dispatch(TranslateAllPages(documentId, targetLanguage, checkedTM, auth.user));
+
+            toast.current.show({
+                severity: 'success',
+                summary: t("ui.success"),
+                detail: "Started translation for all the pages of your document."
+            });
+
+            translationSelectionOverlay.current.hide(e);
+            dispatch(GetPageList(100, 1, documentId, checkedTM))
+        } else {
+            toast.current.show({severity: 'error', summary: t("ui.failed"), detail: t("page-list.Target language cannot be the same as the source language")});
+        }
+
+    }
+
+
     const showData = () => {
         if (!_.isEmpty(documentState.data[documentId])) {
 
             const documentData = documentState.data[documentId]
             return (
                 <div>
+
                     <Row className="justify-content-between">
                         <Col md={3}>
                             <h2>{documentData.name}</h2>
@@ -88,14 +143,30 @@ const Document = (props) => {
                             />
                             {/* 100 is the id of "NO OCR"*/}
                             {(documentData.layout_analysis_model !== 100 && documentData.document_page.length > 0) && (
-                                <Button
-                                    onClick={() => confirmStartOcr(documentId)}
-                                    label={t("document.OCR all pages")}
-                                    icon="pi pi-play"
-                                    className="p-button-primary margin-left"
-                                    tooltip={t("document.Starts layout analysis for every page")}
-                                    tooltipOptions={{position: 'bottom'}}
-                                />
+                                <>
+                                    <Button
+                                        onClick={() => confirmStartOcr(documentId)}
+                                        label={t("ui.ocr")}
+                                        icon="pi pi-play"
+                                        className="p-button-primary margin-left"
+                                        tooltip={t("document.Starts layout analysis for every page")}
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
+                                    <Button
+                                        onClick={() => toggleTranslationMenu(documentId)}
+                                        label={t("page-list.Translate")}
+                                        icon="pi pi-globe"
+                                        className="p-button-primary margin-left"
+                                        tooltip={t("document.Translates all pages to your selected language")}
+                                        tooltipOptions={{position: 'bottom'}}
+                                    />
+
+
+                                </>
+
+
+
+
                             )}
 
                             <Button
@@ -107,6 +178,50 @@ const Document = (props) => {
                         </Col>
                     </Row>
 
+                    <OverlayPanel ref={translationSelectionOverlay} showCloseIcon id="overlay_panel_translate_all"
+                                  className={"occ-translate-all-pages-overlay"}>
+                        <h6>{t("ui.Translate all pages")}</h6>
+                        <Row>
+                            <Col md={2}>
+                                {t("page-list.To")}
+                            </Col>
+                            <Col>
+                                <Dropdown
+                                    md={7}
+                                    value={targetLanguage}
+                                    options={languageSelectItems}
+                                    onChange={(e) => setTargetLanguage(e.value)}
+                                    placeholder={t("page-list.Select a language")}
+                                />
+                            </Col>
+
+                        </Row>
+                        <br/>
+
+                        <Row>
+                            <Col>
+                                <div className="p-field-checkbox">
+                                    <InputSwitch inputId="useTM" checked={checkedTM} onChange={e => setCheckedTM(e.value)} />
+                                    <label htmlFor="useTM">{t("page-list.Use translation memory")}</label>
+                                </div>
+                                {t("page-list.Click")} <a className="occ-link" onClick={() => history.push("/settings")} >{t("page-list.here")}</a> {t("page-list.to see translation memory configuration")}
+                            </Col>
+                        </Row>
+                        <br/>
+
+                        <Row>
+                            <Col>
+                                <Button onClick={(e) => startTranslationForAllPages(e)}
+                                        label="Translate"
+                                        icon="pi pi-check"
+                                        style={{marginRight: '.25em'}}
+                                        disabled={(targetLanguage.length === 0)}
+                                />
+                            </Col>
+
+                        </Row>
+                    </OverlayPanel>
+
                     <br/>
 
                         <div>
@@ -114,6 +229,7 @@ const Document = (props) => {
 
                             <br/><br/>
                         </div>
+                    <Toast ref={toast} />
                 </div>
             )
         }

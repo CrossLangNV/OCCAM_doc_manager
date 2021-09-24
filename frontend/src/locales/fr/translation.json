@@ -47,7 +47,8 @@
     "save": "Sauvegarder",
     "saved-metadata": "Les métadonnées ont été sauvegardées avec succès",
     "no-results": "Désolé, nous n'avons pas pu trouver de résultats.",
-    "suggested": "Suggéré"
+    "suggested": "Suggéré",
+    "Translate all pages": "Traduire toutes les pages"
   },
 
   "document": {
@@ -55,6 +56,7 @@
     "Do you want to start the OCR process for all the pages of this document?": "Voulez-vous lancer le processus d'OCR pour toutes les pages de ce document ?",
     "OCR all pages": "OCR toutes les pages",
     "Starts layout analysis for every page": "Lance l'OCR pour chaque page",
+    "Translates all pages to your selected language": "Traduit toutes les pages dans la langue sélectionnée",
     "Delete document": "Supprimer le document",
     "Error fetching document": "Erreur de récupération du document"
   },

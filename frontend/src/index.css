@@ -251,3 +251,9 @@ a {
   white-space: pre-line !important;
   text-align: left !important;
 }
+
+.occ-translate-all-pages-overlay {
+  width: 450px;
+  top: 130px;
+  right: 50px;
+}

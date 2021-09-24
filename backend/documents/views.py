@@ -23,7 +23,7 @@ from oaipmh.connector import ConnectorDSpaceREST
 from oaipmh.models import CommunityAdd, CollectionAdd, ItemAdd
 from scheduler.classification_tasks import classify_document_pipeline, classify_scanned
 from scheduler.ocr_tasks import ocr_page_pipeline, xml_lang_detect
-from scheduler.translation_tasks import translate_overlay
+from scheduler.translation_tasks import translate_overlay, translate_all_pages
 
 API_KEY_PERO_OCR = os.environ['API_KEY_PERO_OCR']
 URL_DSPACE = os.environ['URL_DSPACE']
@@ -440,3 +440,20 @@ class PublishDocumentAPIView(APIView):
 class WebsiteListAPIView(ListCreateAPIView):
     queryset = Website.objects.all()
     serializer_class = WebsiteSerializer
+
+
+class TranslateAllPagesAPIView(APIView):
+    queryset = Document.objects.all()
+
+    def post(self, request, format=None, *args, **kwargs):
+        document_id = request.data["documentId"]
+        target_language = request.data["targetLanguage"]
+        use_tm = request.data["useTM"]
+        user = request.data["user"]
+
+        if document_id:
+            translate_all_pages.delay(document_id, target_language, use_tm, user)
+
+            return Response("Translation task launched", status=status.HTTP_201_CREATED)
+        else:
+            return Response("Bad request", status=status.HTTP_400_BAD_REQUEST)

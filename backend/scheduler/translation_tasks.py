@@ -6,10 +6,31 @@ from django.contrib.auth.models import User
 
 from activitylogs.models import ActivityLog, ActivityLogType, ActivityLogState
 from celery import shared_task
-from documents.models import Overlay
+from documents.models import Overlay, Document
 from documents.translation_connector import CEFeTranslationConnector
 
 logger = logging.getLogger(__name__)
+
+
+@shared_task
+def translate_all_pages(document_id, target_language, use_tm, user_email):
+    logger.info("Translating all pages:")
+    logger.info("document_id: %s", document_id)
+    logger.info("target_language: %s", target_language)
+    logger.info("use_tm: %s", use_tm)
+    logger.info("user_email: %s", user_email)
+
+    user_pk = User.objects.get(email=user_email).pk
+    document = Document.objects.get(id=document_id)
+
+    for page in document.document_page.all():
+        print("page: ", page)
+
+        overlay = page.page_overlay.last()
+        print("overlay: ", overlay)
+
+        translate_overlay.delay(overlay.pk, target_language, use_tm, user_pk)
+
 
 
 @shared_task

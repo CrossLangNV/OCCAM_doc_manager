@@ -117,7 +117,6 @@ export const ProcessOcrDocument = (id) => async dispatch => {
 }
 
 export const PublishDocument = (id) => async dispatch => {
-
     try {
         dispatch({
             type: DocumentActionTypes.DOCUMENT_PUBLISH_LOADING
@@ -146,8 +145,34 @@ export const PublishDocument = (id) => async dispatch => {
             payload: e
         });
     }
-
-
-
 }
 
+export const TranslateAllPages = (documentId, targetLanguage, useTM, user) => async dispatch => {
+    try {
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_TRANSLATE_ALL_PAGES_LOADING
+        });
+
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem("access")}`
+            }
+        }
+
+        await axios.post(`${baseUrl}/documents/api/translate_all`,
+            {documentId, targetLanguage, useTM, user},
+            config)
+            .then((res) => {
+                dispatch({
+                    type: DocumentActionTypes.DOCUMENT_TRANSLATE_ALL_PAGES_SUCCESS,
+                    payload: res.data
+                });
+            })
+    } catch (e) {
+        console.log(e)
+        dispatch({
+            type: DocumentActionTypes.DOCUMENT_TRANSLATE_ALL_PAGES_FAIL,
+            payload: e
+        });
+    }
+}
