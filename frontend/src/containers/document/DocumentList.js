@@ -30,7 +30,7 @@ const DocumentList = () => {
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
 
-    useAnalytics('');
+    useAnalytics(window.location.pathname + window.location.search);
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery);
