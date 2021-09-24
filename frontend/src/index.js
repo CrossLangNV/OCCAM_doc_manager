@@ -11,6 +11,8 @@ import {I18nextProvider} from "react-i18next";
 import i18n from "./i18n";
 import ReactGA from 'react-ga';
 
+ReactGA.initialize('UA-208541797-1');
+
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
@@ -23,8 +25,6 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('root')
 );
-
-ReactGA.initialize('UA-208541797-1');
 
 
 // If you want to start measuring performance in your app, pass a function
