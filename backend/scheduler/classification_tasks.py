@@ -38,7 +38,7 @@ def classify_document_pipeline(page_pk, user_pk=None, activity_log: ActivityLog 
         activity_log = get_activity_log(page, user_pk=user_pk)
 
     classify_document(page)
-    activity_log.state = ActivityLogState.CLASSIFIED
+    activity_log.state = ActivityLogState.NOT_STARTED
     activity_log.save()
 
     if verbose:

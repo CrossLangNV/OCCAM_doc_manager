@@ -6,6 +6,7 @@ from documents.models import Page, Overlay
 
 class ActivityLogState(models.TextChoices):
     CREATED = "Created"
+    NOT_STARTED = "Not started"
     CLASSIFIED = "Classified"
     WAITING = "Waiting"
     STARTED = "Started"
@@ -42,7 +43,7 @@ class ActivityLog(models.Model):
     state = models.CharField(
         max_length=50,
         choices=ActivityLogState.choices,
-        default=ActivityLogState.CREATED,
+        default=ActivityLogState.NOT_STARTED,
     )
 
     user = models.ForeignKey("auth.User", on_delete=models.CASCADE, blank=True, null=True)
