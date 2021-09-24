@@ -24,7 +24,7 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-ReactGA.initialize('G-D5GDHEHR61');
+ReactGA.initialize('UA-208541797-1');
 
 
 // If you want to start measuring performance in your app, pass a function
