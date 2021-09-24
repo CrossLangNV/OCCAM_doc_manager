@@ -17,6 +17,7 @@ import {ModifyDocumentQuery, ModifySelectedWebsite} from "../../actions/uiAction
 import {Dropdown} from "primereact/dropdown";
 import {InputText} from "primereact/inputtext";
 import SkeletonLoadingRow from "./SkeletonLoadingRow";
+import {useAnalytics} from "../utils/googleAnalytics";
 
 
 const DocumentList = () => {
@@ -28,6 +29,8 @@ const DocumentList = () => {
     const documentList = useSelector(state => state.documentList);
     const uiStates = useSelector(state => state.uiStates);
     const auth = useSelector(state => state.auth)
+
+    useAnalytics('');
 
     React.useEffect(() => {
         fetchDocuments(5, 1, uiStates.documentQuery);

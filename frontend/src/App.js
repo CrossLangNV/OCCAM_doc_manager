@@ -30,10 +30,12 @@ function App() {
     let history = useHistory();
 
     const dispatch = useDispatch();
+
+
     useEffect(() => {
         dispatch(load_user())
         dispatch(GetWebsites())
-    })
+    }, [])
 
     const auth = useSelector(state => state.auth);
 

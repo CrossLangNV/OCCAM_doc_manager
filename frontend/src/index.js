@@ -9,6 +9,7 @@ import {BrowserRouter} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {I18nextProvider} from "react-i18next";
 import i18n from "./i18n";
+import ReactGA from 'react-ga';
 
 ReactDOM.render(
     <React.StrictMode>
@@ -22,6 +23,9 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('root')
 );
+
+ReactGA.initialize('G-D5GDHEHR61');
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
