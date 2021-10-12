@@ -28,7 +28,6 @@ services:
       - ./secrets/django-docker.env
 
 
-  # Not working yet!! Fix later for production
   django_nginx:
     restart: always
     build: ./backend/nginx
