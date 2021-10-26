@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'drf_yasg',
     'documents',
     'tutorial',
     'activitylogs',
@@ -62,7 +63,7 @@ REST_FRAMEWORK = {
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',  # TODO is this still necessary?
 }
 
 AUTHENTICATION_BACKENDS = (
@@ -180,7 +181,6 @@ MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 MINIO_STORAGE_MEDIA_URL = os.environ["MINIO_STORAGE_MEDIA_URL"]
 MINIO_STORAGE_STATIC_URL = os.environ["MINIO_STORAGE_STATIC_URL"]
 
-
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = "/static/"
 
@@ -200,3 +200,17 @@ CACHES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 APPEND_SLASH = False
+
+# DRF-YASG
+SWAGGER_SETTINGS = {
+    # 'SECURITY_DEFINITIONS': {
+    #     'basic': {
+    #         'type': 'basic'
+    #     }
+    # },
+    'LOGIN_URL': 'admin/',
+    'USE_SESSION_AUTH': True
+}
+# REDOC_SETTINGS = {
+#    # 'LAZY_RENDERING': False,
+# }
